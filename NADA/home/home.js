@@ -43,7 +43,7 @@
     }
   }
 
-  window.logout = function () {
+window.logout = function () {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("userRole");
     localStorage.removeItem("bridgeway_current_role");
