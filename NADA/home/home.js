@@ -43,12 +43,12 @@ function renderNavbar() {
   }
 }
 
-function logout() {
-  localStorage.removeItem("currentUser");
-  localStorage.removeItem("userRole");
-  localStorage.removeItem("bridgeway_current_role");
-  window.location.href = "../../GAITH/login.html";
-}
+window.logout = function () {
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("bridgeway_current_role");
+    window.location.href = "../../GAITH/login.html";
+  }
 
 loadCurrentUser();
 renderNavbar();
