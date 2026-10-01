@@ -2,460 +2,519 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masar — HR Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="../home/MASAR.png">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <!-- Fonts: Inter & Quicksand (Matching Masar Home) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
-    <title>HR Dashboard</title>
-
-    <!-- Fonts -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
-    <!-- Bootstrap -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Bootstrap Icons -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
-    <!-- SHARED HR CSS -->
-    <link
-        rel="stylesheet"
-        href="../../Shared/HR-shared.css">
-
-    <!-- DASHBOARD CSS -->
-    <link
-        rel="stylesheet"
-        href="hrdashboard.css">
-
+    <!-- Shared HR Styles -->
+    <link rel="stylesheet" href="../../Shared/HR-shared.css">
     <link rel="stylesheet" href="../../Shared/HR-sidebar.css">
-</head>
 
+    <!-- Dashboard CSS (Masar Light Aesthetic) -->
+    <link rel="stylesheet" href="hrdashboard.css">
+</head>
 
 <body>
 
     <div class="hr-page-wrapper">
 
         <!-- ================= SIDEBAR ================= -->
-
         <div id="hrSidebar"></div>
 
-
-        <!-- ================= MAIN AREA ================= -->
-
+        <!-- ================= MAIN CONTENT AREA ================= -->
         <div class="hr-page-content">
 
             <!-- ================= SHARED HEADER ================= -->
-
             <div id="hrHeader"></div>
 
+            <div class="container-fluid px-4">
 
-            <!-- ================= DASHBOARD HEADER ================= -->
+                <!-- ================= DASHBOARD HERO / HEADER (LIGHT AESTHETIC) ================= -->
+                <header class="page-header" id="dashboardHero">
+                    <div class="header-inner">
+                        <div class="header-content">
+                            <span class="page-eyebrow">
+                                <span class="eyebrow-pulse"></span>
+                                HR Portal &middot; Masar Platform
+                            </span>
+                            <h1 class="page-title">
+                                HR <span class="accent">Dashboard</span>
+                            </h1>
+                            <p class="page-subtitle">
+                                Welcome back, Hana &mdash; here&rsquo;s your organization&rsquo;s real-time overview across teams, leaves, and workflows.
+                            </p>
+                        </div>
 
-            <header class="page-header text-white">
-
-                <div class="container">
-
-                    <p class="page-eyebrow">
-                        HR PORTAL
-                    </p>
-
-                    <h1 class="page-title">
-                        HR Dashboard
-                    </h1>
-
-                    <p class="page-subtitle">
-                        Welcome back, Hana — here’s today’s overview
-                    </p>
-
-                </div>
-
-            </header>
-
-
-            <!-- ================= DASHBOARD CONTENT ================= -->
-
-            <div class="container page-main">
-
+                        <div class="header-widgets">
+                            <div class="header-meta-pill" title="System operational status">
+                                <span class="meta-status-dot"></span>
+                                <span>Platform Live</span>
+                            </div>
+                            <div class="header-meta-pill" id="liveDatePill">
+                                <i class="bi bi-calendar-event"></i>
+                                <span id="currentDateDisplay">Today</span>
+                            </div>
+                        </div>
+                    </div>
+                </header>
 
                 <!-- ================= TOOLBAR ================= -->
-
-                <div class="toolbar d-flex align-items-center justify-content-between">
-
-                    <div class="search-box flex-grow-1 me-3">
-
+                <div class="toolbar" id="dashboardToolbar">
+                    <!-- Search Input -->
+                    <div class="search-box flex-grow-1">
                         <i class="bi bi-search"></i>
-
                         <input
-                            type="text"
+                            type="search"
+                            id="dashboardSearch"
                             class="form-control"
-                            placeholder="Search dashboard items...">
-
+                            placeholder="Search employees, tasks, or leave requests..."
+                            aria-label="Search dashboard">
                     </div>
 
+                    <!-- Category Filter Chips -->
+                    <div class="toolbar-filters">
+                        <button type="button" class="filter-chip active" data-filter="all">All Modules</button>
+                        <button type="button" class="filter-chip" data-filter="employees">Employees</button>
+                        <button type="button" class="filter-chip" data-filter="leaves">Leaves (7)</button>
+                        <button type="button" class="filter-chip" data-filter="tasks">Tasks (23)</button>
+                        <button type="button" class="filter-chip" data-filter="meetings">Meetings (2)</button>
+                    </div>
 
-                    <span class="count-chip">
-                        4 sections
-                    </span>
-
-
+                    <!-- Primary Action Button -->
                     <a
                         href="../../OMAR/ManageEmployeesPage/ManageEmployeesPage.html"
-                        class="btn btn-lb">
-
+                        class="btn-masar">
                         <i class="bi bi-plus-lg"></i>
-
-                        Add item
-
+                        <span>Add Item</span>
                     </a>
-
                 </div>
 
+                <!-- ================= SUMMARY METRIC CARDS ================= -->
+                <div class="row g-4 mb-4" id="summaryCardsRow">
 
-                <!-- ================= SUMMARY CARDS ================= -->
-
-                <div class="row g-4 mb-4">
-
-
-                    <!-- Total Employees -->
-
-                    <div class="col-md-3">
-
-                        <div class="summary-card text-center p-4">
-
-                            <h2 class="fw-bold text-primary">
-                                128
-                            </h2>
-
-                            <p class="text-secondary">
-                                Total Employees
-                            </p>
-
+                    <!-- 1. Total Employees -->
+                    <div class="col-sm-6 col-xl-3 summary-item" data-module="employees">
+                        <div class="summary-card">
+                            <div class="summary-top">
+                                <div class="summary-icon-box">
+                                    <i class="bi bi-people-fill"></i>
+                                </div>
+                                <span class="summary-pill">+4 this month</span>
+                            </div>
+                            <div class="summary-value">128</div>
+                            <div class="summary-label">Total Active Employees</div>
                             <a
                                 href="../../OMAR/ManageEmployeesPage/ManageEmployeesPage.html"
-                                class="dashboard-view-btn">
-
-                                <i class="bi bi-people"></i>
-
-                                View
-
+                                class="dashboard-view-btn"
+                                aria-label="View employees directory">
+                                <span><i class="bi bi-person-lines-fill"></i> Directory</span>
+                                <i class="bi bi-arrow-right arrow-ico"></i>
                             </a>
-
                         </div>
-
                     </div>
 
-
-                    <!-- Pending Leave Requests -->
-
-                    <div class="col-md-3">
-
-                       <div class="summary-card text-center p-4">
-
-    <h2 class="fw-bold text-primary">
-        7
-    </h2>
-
-    <p class="text-secondary">
-        Pending Leave Requests
-    </p>
-
-    <a
-        href="../../Amneh/leaves-hr.html"
-        class="dashboard-view-btn">
-
-        <i class="bi bi-calendar3"></i>
-        View
-
-    </a>
-
-</div>
-
+                    <!-- 2. Pending Leave Requests -->
+                    <div class="col-sm-6 col-xl-3 summary-item" data-module="leaves">
+                        <div class="summary-card">
+                            <div class="summary-top">
+                                <div class="summary-icon-box">
+                                    <i class="bi bi-calendar3"></i>
+                                </div>
+                                <span class="summary-pill">Requires review</span>
+                            </div>
+                            <div class="summary-value">7</div>
+                            <div class="summary-label">Pending Leave Requests</div>
+                            <a
+                                href="../../Amneh/leaves-hr.html"
+                                class="dashboard-view-btn"
+                                aria-label="Review leave requests">
+                                <span><i class="bi bi-calendar-check"></i> Review leaves</span>
+                                <i class="bi bi-arrow-right arrow-ico"></i>
+                            </a>
+                        </div>
                     </div>
 
-
-                    <!-- Open Tasks -->
-
-                    <div class="col-md-3">
-
-                        <div class="summary-card text-center p-4">
-
-                            <h2 class="fw-bold text-primary">
-                                23
-                            </h2>
-
-                            <p class="text-secondary">
-                                Open Tasks
-                            </p>
-
+                    <!-- 3. Open Tasks -->
+                    <div class="col-sm-6 col-xl-3 summary-item" data-module="tasks">
+                        <div class="summary-card">
+                            <div class="summary-top">
+                                <div class="summary-icon-box">
+                                    <i class="bi bi-check2-circle"></i>
+                                </div>
+                                <span class="summary-pill">12 due today</span>
+                            </div>
+                            <div class="summary-value">23</div>
+                            <div class="summary-label">Open Department Tasks</div>
                             <a
                                 href="../../TAREQ/HR%20TASK/HR_TASK.html"
-                                class="dashboard-view-btn">
-
-                                <i class="bi bi-check-circle"></i>
-
-                                View
-
+                                class="dashboard-view-btn"
+                                aria-label="View open tasks">
+                                <span><i class="bi bi-kanban"></i> View tasks</span>
+                                <i class="bi bi-arrow-right arrow-ico"></i>
                             </a>
-
                         </div>
-
                     </div>
 
-
-                    <!-- Tasks Awaiting Review -->
-
-                    <div class="col-md-3">
-
-                        <div class="summary-card text-center p-4">
-
-                            <h2 class="fw-bold text-primary">
-                                2
-                            </h2>
-
-                            <p class="text-secondary">
-                                Tasks Awaiting Review
-                            </p>
-
+                    <!-- 4. Tasks Awaiting Review -->
+                    <div class="col-sm-6 col-xl-3 summary-item" data-module="tasks">
+                        <div class="summary-card">
+                            <div class="summary-top">
+                                <div class="summary-icon-box">
+                                    <i class="bi bi-hourglass-split"></i>
+                                </div>
+                                <span class="summary-pill">2 urgent</span>
+                            </div>
+                            <div class="summary-value">2</div>
+                            <div class="summary-label">Tasks Awaiting Review</div>
                             <a
                                 href="../../TAREQ/HR%20TASK/HR_TASK.html"
-                                class="dashboard-view-btn">
-
-                                <i class="bi bi-search"></i>
-
-                                View
-
+                                class="dashboard-view-btn"
+                                aria-label="Approve pending tasks">
+                                <span><i class="bi bi-shield-check"></i> Approve tasks</span>
+                                <i class="bi bi-arrow-right arrow-ico"></i>
                             </a>
-
                         </div>
-
                     </div>
 
                 </div>
 
+                <!-- ================= LOWER SECTION: LEAVES TABLE & MEETINGS PIPELINE ================= -->
+                <div class="row g-4" id="detailsSectionRow">
 
-                <!-- ================= LOWER SECTION ================= -->
+                    <!-- Left Column: Recent Leave Requests Table -->
+                    <div class="col-lg-7" id="leavesSection" data-module="leaves">
+                        <div class="card-section">
+                            <div class="card-header-bar">
+                                <div class="card-title-group">
+                                    <div class="card-title-icon">
+                                        <i class="bi bi-calendar2-range"></i>
+                                    </div>
+                                    <h2 class="card-title-text">Recent Leave Requests</h2>
+                                </div>
+                                <a href="../../Amneh/leaves-hr.html" class="card-header-link">
+                                    <span>View all</span>
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
 
-                <div class="row g-4">
+                            <div class="table-responsive-wrapper">
+                                <table class="masar-table" id="leavesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Employee</th>
+                                            <th>Type &amp; Period</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="leavesTableBody">
+                                        <tr class="table-data-row">
+                                            <td>
+                                                <div class="emp-profile-cell">
+                                                    <span class="emp-avatar">SA</span>
+                                                    <div class="emp-details">
+                                                        <span class="emp-name">Sara Ahmad</span>
+                                                        <span class="emp-role">UI/UX Designer</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="leave-type-badge">
+                                                    <i class="bi bi-sun"></i>
+                                                    Annual Leave &middot; 4 days
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge badge-pending">
+                                                    <i class="bi bi-hourglass-bottom"></i>
+                                                    Pending
+                                                </span>
+                                            </td>
+                                        </tr>
 
+                                        <tr class="table-data-row">
+                                            <td>
+                                                <div class="emp-profile-cell">
+                                                    <span class="emp-avatar">LH</span>
+                                                    <div class="emp-details">
+                                                        <span class="emp-name">Lina Haddad</span>
+                                                        <span class="emp-role">Senior Developer</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="leave-type-badge">
+                                                    <i class="bi bi-hospital"></i>
+                                                    Sick Leave &middot; 2 days
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge badge-approved">
+                                                    <i class="bi bi-check-circle-fill"></i>
+                                                    Approved
+                                                </span>
+                                            </td>
+                                        </tr>
 
-                    <!-- Recent Leave Requests -->
+                                        <tr class="table-data-row">
+                                            <td>
+                                                <div class="emp-profile-cell">
+                                                    <span class="emp-avatar">OK</span>
+                                                    <div class="emp-details">
+                                                        <span class="emp-name">Omar Khalil</span>
+                                                        <span class="emp-role">QA Engineer</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="leave-type-badge">
+                                                    <i class="bi bi-briefcase"></i>
+                                                    Personal Leave &middot; 1 day
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge badge-pending">
+                                                    <i class="bi bi-hourglass-bottom"></i>
+                                                    Pending
+                                                </span>
+                                            </td>
+                                        </tr>
 
-                    <div class="col-lg-7">
-
-                        <div class="card p-4">
-
-                            <h5 class="fw-bold mb-3">
-                                Recent Leave Requests
-                            </h5>
-
-
-                            <table class="table align-middle table-hover">
-
-                                <thead class="table-header">
-
-                                    <tr>
-
-                                        <th>
-                                            Employee
-                                        </th>
-
-                                        <th>
-                                            Type
-                                        </th>
-
-                                        <th>
-                                            Status
-                                        </th>
-
-                                    </tr>
-
-                                </thead>
-
-
-                                <tbody>
-
-                                    <tr>
-
-                                        <td>
-                                            Sara Ahmad
-                                        </td>
-
-                                        <td>
-                                            Annual
-                                        </td>
-
-                                        <td>
-
-                                            <span
-                                                class="badge bg-warning text-dark">
-
-                                                Pending
-
-                                            </span>
-
-                                        </td>
-
-                                    </tr>
-
-
-                                    <tr>
-
-                                        <td>
-                                            Lina Haddad
-                                        </td>
-
-                                        <td>
-                                            Sick
-                                        </td>
-
-                                        <td>
-
-                                            <span
-                                                class="badge bg-success">
-
-                                                Approved
-
-                                            </span>
-
-                                        </td>
-
-                                    </tr>
-
-
-                                    <tr>
-
-                                        <td>
-                                            Omar Khalil
-                                        </td>
-
-                                        <td>
-                                            Personal
-                                        </td>
-
-                                        <td>
-
-                                            <span
-                                                class="badge bg-warning text-dark">
-
-                                                Pending
-
-                                            </span>
-
-                                        </td>
-
-                                    </tr>
-
-                                </tbody>
-
-                            </table>
-
+                                        <tr class="table-data-row">
+                                            <td>
+                                                <div class="emp-profile-cell">
+                                                    <span class="emp-avatar">ZM</span>
+                                                    <div class="emp-details">
+                                                        <span class="emp-name">Zaid Mansour</span>
+                                                        <span class="emp-role">Frontend Engineer</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="leave-type-badge">
+                                                    <i class="bi bi-house-door"></i>
+                                                    Remote Day &middot; 1 day
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge badge-approved">
+                                                    <i class="bi bi-check-circle-fill"></i>
+                                                    Approved
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div id="tableEmptyNotice" class="empty-search-state d-none">
+                                    <i class="bi bi-search"></i>
+                                    <span>No matching leave requests found</span>
+                                </div>
+                            </div>
                         </div>
-
                     </div>
 
+                    <!-- Right Column: Upcoming Meetings Pipeline -->
+                    <div class="col-lg-5" id="meetingsSection" data-module="meetings">
+                        <div class="card-section">
+                            <div class="card-header-bar">
+                                <div class="card-title-group">
+                                    <div class="card-title-icon">
+                                        <i class="bi bi-camera-video"></i>
+                                    </div>
+                                    <h2 class="card-title-text">Upcoming Meetings</h2>
+                                </div>
+                                <span class="summary-pill active-now">Live Sync</span>
+                            </div>
 
-                    <!-- Upcoming Meetings -->
+                            <div class="meetings-pipeline" id="meetingsList">
+                                <!-- Meeting 1 -->
+                                <div class="meeting-item">
+                                    <div class="meeting-date-box">
+                                        <span class="meeting-date-month">Oct</span>
+                                        <span class="meeting-date-day">01</span>
+                                    </div>
+                                    <div class="meeting-info">
+                                        <div class="meeting-title">Weekly Team Sync</div>
+                                        <div class="meeting-meta">
+                                            <span><i class="bi bi-clock"></i> 10:00 AM</span>
+                                            <span>&middot;</span>
+                                            <span><i class="bi bi-geo-alt"></i> Engineering Hub</span>
+                                        </div>
+                                    </div>
+                                    <span class="meeting-tag">Auto</span>
+                                </div>
 
-                    <div class="col-lg-5">
+                                <!-- Meeting 2 -->
+                                <div class="meeting-item">
+                                    <div class="meeting-date-box">
+                                        <span class="meeting-date-month">Oct</span>
+                                        <span class="meeting-date-day">05</span>
+                                    </div>
+                                    <div class="meeting-info">
+                                        <div class="meeting-title">Company Town Hall</div>
+                                        <div class="meeting-meta">
+                                            <span><i class="bi bi-clock"></i> 02:00 PM</span>
+                                            <span>&middot;</span>
+                                            <span><i class="bi bi-building"></i> Main Hall &middot; Zoom</span>
+                                        </div>
+                                    </div>
+                                    <span class="meeting-tag">Live</span>
+                                </div>
 
-                        <div class="card p-4">
-
-                            <h5 class="fw-bold mb-3">
-                                Upcoming Meetings
-                            </h5>
-
-
-                            <ul class="list-unstyled mb-3">
-
-                                <li class="mb-2">
-
-                                    <i
-                                        class="bi bi-people-fill text-primary">
-                                    </i>
-
-                                    <strong>
-                                        Weekly Team Sync
-                                    </strong>
-
-                                    — Oct 1, 10:00 · Engineering
-
-                                </li>
-
-
-                                <li>
-
-                                    <i
-                                        class="bi bi-building text-primary">
-                                    </i>
-
-                                    <strong>
-                                        Company Town Hall
-                                    </strong>
-
-                                    — Oct 5, 14:00 · All staff
-
-                                </li>
-
-                            </ul>
-
+                                <!-- Meeting 3 -->
+                                <div class="meeting-item">
+                                    <div class="meeting-date-box">
+                                        <span class="meeting-date-month">Oct</span>
+                                        <span class="meeting-date-day">08</span>
+                                    </div>
+                                    <div class="meeting-info">
+                                        <div class="meeting-title">Q4 Policy &amp; Benefits Review</div>
+                                        <div class="meeting-meta">
+                                            <span><i class="bi bi-clock"></i> 11:30 AM</span>
+                                            <span>&middot;</span>
+                                            <span><i class="bi bi-shield-check"></i> HR &amp; Ops</span>
+                                        </div>
+                                    </div>
+                                    <span class="meeting-tag">Review</span>
+                                </div>
+                            </div>
+                            <div id="meetingsEmptyNotice" class="empty-search-state d-none">
+                                <i class="bi bi-calendar-x"></i>
+                                <span>No matching meetings found</span>
+                            </div>
 
                             <a
                                 href="../../OMAR/HRMeetings/HRMeetings.html"
                                 class="dashboard-meeting-btn">
-
-                                <i class="bi bi-camera-video"></i>
-
-                                Schedule Meeting
-
+                                <i class="bi bi-calendar-plus"></i>
+                                <span>Schedule New Meeting</span>
                             </a>
-
                         </div>
-
                     </div>
 
                 </div>
 
-
             </div>
 
-
-            <!-- ================= FOOTER ================= -->
-
+            <!-- ================= SHARED FOOTER ================= -->
             <div id="hrFooter"></div>
-
 
         </div>
 
     </div>
 
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Bootstrap JS -->
-
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-    </script>
-
-
-    <!-- IMPORTANT:
-         Dashboard is:
-         NADA/hrdashboard/hrdashboard.html
-
-         Shared is:
-         Shared/HR-shared.js
-
-         Therefore we need ../../
-    -->
-
+    <!-- Shared HR Script (Loads Sidebar & Header dynamically) -->
     <script src="../../Shared/HR-shared.js"></script>
 
+    <!-- Dashboard Interactive Enhancement Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Format today's date in header badge
+            const dateElem = document.getElementById('currentDateDisplay');
+            if (dateElem) {
+                const now = new Date();
+                const options = { month: 'short', day: 'numeric', year: 'numeric' };
+                dateElem.textContent = now.toLocaleDateString('en-US', options);
+            }
+
+            // 2. Interactive Search Filtering
+            const searchInput = document.getElementById('dashboardSearch');
+            const tableRows = document.querySelectorAll('#leavesTableBody .table-data-row');
+            const meetingItems = document.querySelectorAll('#meetingsList .meeting-item');
+            const tableNotice = document.getElementById('tableEmptyNotice');
+            const meetingsNotice = document.getElementById('meetingsEmptyNotice');
+
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.trim().toLowerCase();
+
+                    // Filter Leaves Table
+                    let visibleTableCount = 0;
+                    tableRows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        if (!query || text.includes(query)) {
+                            row.style.display = '';
+                            visibleTableCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                    if (tableNotice) {
+                        tableNotice.classList.toggle('d-none', visibleTableCount > 0);
+                    }
+
+                    // Filter Meetings List
+                    let visibleMeetingsCount = 0;
+                    meetingItems.forEach(item => {
+                        const text = item.textContent.toLowerCase();
+                        if (!query || text.includes(query)) {
+                            item.style.display = '';
+                            visibleMeetingsCount++;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                    if (meetingsNotice) {
+                        meetingsNotice.classList.toggle('d-none', visibleMeetingsCount > 0);
+                    }
+                });
+            }
+
+            // 3. Module Filter Chips
+            const filterChips = document.querySelectorAll('.filter-chip');
+            const summaryCards = document.querySelectorAll('.summary-item');
+            const leavesSection = document.getElementById('leavesSection');
+            const meetingsSection = document.getElementById('meetingsSection');
+
+            filterChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    filterChips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+
+                    const filter = chip.getAttribute('data-filter');
+
+                    // Filter summary cards
+                    summaryCards.forEach(card => {
+                        const mod = card.getAttribute('data-module');
+                        if (filter === 'all' || filter === mod) {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    // Filter lower sections
+                    if (filter === 'all') {
+                        if (leavesSection) leavesSection.style.display = '';
+                        if (meetingsSection) meetingsSection.style.display = '';
+                    } else if (filter === 'leaves') {
+                        if (leavesSection) leavesSection.style.display = '';
+                        if (meetingsSection) meetingsSection.style.display = 'none';
+                    } else if (filter === 'meetings') {
+                        if (leavesSection) leavesSection.style.display = 'none';
+                        if (meetingsSection) meetingsSection.style.display = '';
+                    } else {
+                        if (leavesSection) leavesSection.style.display = '';
+                        if (meetingsSection) meetingsSection.style.display = '';
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 

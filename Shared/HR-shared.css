@@ -1,7 +1,9 @@
 /* =========================================================
    HR SHARED CSS
-   Bridgeway.hr
+   Masar.hr
    ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
 
 
 /* =========================================================
@@ -10,7 +12,7 @@
 
 :root {
 
-    --primary: #0079F1;
+    --primary: #0179F1;
     --primary-dark: #005BB5;
     --primary-light: #4DA3FF;
 
@@ -42,25 +44,15 @@ html {
 }
 
 body {
-
     margin: 0;
-
     min-height: 100vh;
-
-    background:
-        linear-gradient(
-            135deg,
-            #F7FAFC,
-            #E8F3FF
-        );
-
+    background: linear-gradient(135deg, #E2E8F0 0%, #CDDEEE 100%);
     font-family:
-        "Segoe UI",
-        Arial,
+        'Inter',
+        system-ui,
+        -apple-system,
         sans-serif;
-
-    color: var(--text-dark);
-
+    color: #172033;
     overflow-x: hidden;
 }
 
@@ -78,17 +70,16 @@ body {
 
     height: calc(100vh - 40px);
 
-    background: linear-gradient(
-        180deg,
-        #0079F1,
-        #0877DF
-    );
+    background: #FFFFFF;
 
-    border-radius: 28px;
+    border: 1px solid #CBD5E1;
+    border-bottom: 6px solid var(--primary);
 
-    color: white;
+    border-radius: 24px;
 
-    padding: 18px 16px;
+    color: #172033;
+
+    padding: 20px 16px;
 
     display: flex;
     flex-direction: column;
@@ -96,8 +87,10 @@ body {
     z-index: 1000;
 
     box-shadow:
-        0 15px 40px
-        rgba(0,121,241,.25);
+        0 12px 36px -6px
+        rgba(23, 32, 51, 0.12),
+        0 2px 8px
+        rgba(23, 32, 51, 0.05);
 
     overflow: hidden;
 }
@@ -108,63 +101,55 @@ body {
    ========================================================= */
 
 .sidebar-header {
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     min-height: 48px;
-
-    padding:
-        0 4px 12px;
-
-    border-bottom:
-        1px solid
-        rgba(255,255,255,.25);
+    padding: 0 4px 16px;
+    border-bottom: 1px solid #E2E8F0;
 }
 
-
 .sidebar-logo {
-
     display: flex;
-
     align-items: center;
-
-    gap: 8px;
-
-    font-size: 18px;
-
-    font-weight: 800;
-
+    gap: 10px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #172033;
     white-space: nowrap;
 }
 
-
-.sidebar-logo i {
-    font-size: 18px;
+.sidebar-masar-icon {
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 121, 241, 0.3);
 }
 
-
-.sidebar-logo span span {
-    font-weight: 400;
+.sidebar-logo-accent {
+    color: #0079F1;
+    font-weight: 700;
 }
-
 
 .sidebar-toggle {
-
-    border: 0;
-
-    background: transparent;
-
-    color: white;
-
-    font-size: 22px;
-
+    border: 1px solid #E2E8F0;
+    background: #F8FAFC;
+    color: #64748B;
+    font-size: 20px;
     cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
 
-    padding: 4px;
+.sidebar-toggle:hover {
+    background: #E8F3FF;
+    border-color: #BAE6FD;
+    color: #0079F1;
 }
 
 
@@ -173,43 +158,25 @@ body {
    ========================================================= */
 
 .sidebar-nav {
-
     list-style: none;
-
-    padding:
-        12px 0 0;
-
+    padding: 16px 0 0;
     margin: 0;
-
     flex: 1;
-
     overflow-y: auto;
-
     overflow-x: hidden;
 }
 
-
 .sidebar-nav::-webkit-scrollbar {
-    width: 7px;
+    width: 5px;
 }
 
-
 .sidebar-nav::-webkit-scrollbar-thumb {
-
-    background:
-        rgba(255,255,255,.45);
-
+    background: #CBD5E1;
     border-radius: 10px;
 }
 
-
-.sidebar-nav::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-
 .sidebar-nav > li {
-    margin-bottom: 4px;
+    margin-bottom: 5px;
 }
 
 
@@ -218,157 +185,54 @@ body {
    ========================================================= */
 
 .sidebar-link {
-
     width: 100%;
-
-    min-height: 43px;
-
+    min-height: 42px;
     display: flex;
-
     align-items: center;
-
-    gap: 13px;
-
-    padding:
-        0 12px;
-
-    border: 0;
-
-    border-radius: 10px;
-
+    gap: 12px;
+    padding: 0 14px;
+    border: 1px solid transparent;
+    border-radius: 12px;
     background: transparent;
-
-    color: white;
-
+    color: #64748B;
     text-decoration: none;
-
-    font-size: 14px;
-
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
     cursor: pointer;
-
     text-align: left;
-
-    transition:
-        background .2s ease,
-        transform .2s ease;
+    transition: all 0.2s ease;
 }
-
 
 .sidebar-link:hover {
-
-    background:
-        rgba(255,255,255,.13);
-
-    color: white;
+    background: #F1F6FD;
+    color: #0179F1;
 }
 
-
-.sidebar-group.active > .sidebar-link {
-
-    background:
-        rgba(255,255,255,.13);
-
-    color: white;
+.sidebar-link:hover > i:first-child {
+    color: #0179F1;
 }
 
+.sidebar-link.active {
+    background: #0179F1 !important;
+    border-color: #005BB5 !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 14px rgba(1, 121, 241, 0.35) !important;
+}
+
+.sidebar-link.active > i:first-child,
+.sidebar-link.active span {
+    color: #FFFFFF !important;
+}
 
 .sidebar-link > i:first-child {
-
     width: 20px;
-
     text-align: center;
-
     flex-shrink: 0;
-}
-
-
-.menu-arrow {
-
-    margin-left: auto;
-
-    transition:
-        transform .2s ease;
-}
-
-
-.sidebar-group.active .menu-arrow {
-
-    transform:
-        rotate(180deg);
-}
-
-
-/* =========================================================
-   SUBMENU
-   ========================================================= */
-
-.sidebar-submenu {
-
-    display: none;
-
-    padding:
-        3px 0 5px 32px;
-}
-
-
-.sidebar-group.active
-.sidebar-submenu {
-
-    display: block;
-}
-
-
-.sidebar-submenu a {
-
-    display: block;
-
-    position: relative;
-
-    padding:
-        7px 8px 7px 17px;
-
-    color:
-        rgba(255,255,255,.92);
-
-    text-decoration: none;
-
-    font-size: 13px;
-
-    border-radius: 8px;
-
-    transition:
-        background .2s ease;
-}
-
-
-.sidebar-submenu a::before {
-
-    content: "";
-
-    position: absolute;
-
-    left: 4px;
-
-    top: 50%;
-
-    width: 5px;
-
-    height: 5px;
-
-    transform:
-        translateY(-50%);
-
-    border-radius: 50%;
-
-    background:
-        rgba(255,255,255,.7);
-}
-
-
-.sidebar-submenu a:hover {
-
-    background:
-        rgba(255,255,255,.10);
+    font-size: 16px;
+    color: inherit;
+    transition: color 0.2s ease;
 }
 
 
@@ -377,37 +241,24 @@ body {
    ========================================================= */
 
 .sidebar-bottom {
-
-    border-top:
-        1px solid
-        rgba(255,255,255,.25);
-
-    padding-top: 9px;
-
+    border-top: 1px solid #E2E8F0;
+    padding-top: 12px;
     flex-shrink: 0;
 }
 
-
 .sidebar-bottom .sidebar-link {
-
     margin-top: 3px;
 }
 
-
 .sidebar-bottom button.sidebar-link {
-
     font-family: inherit;
-
     border: 0;
-
     outline: none;
 }
 
-
 .sidebar-bottom button.sidebar-link:hover {
-
-    background:
-        rgba(255,255,255,.13);
+    background: #FEF2F2;
+    color: #DC2626;
 }
 
 
@@ -441,37 +292,53 @@ body {
    ========================================================= */
 
 .hr-shared-header {
-    min-height: 80px;
+    min-height: 76px;
     width: 100%;
-    background: white;
-    border-radius: 20px;
-    padding: 14px 22px;
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-bottom: 4px solid var(--primary);
+    border-radius: 18px;
+    padding: 14px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 8px 25px rgba(0,0,0,.06);
+    box-shadow: 0 4px 20px -2px rgba(23, 32, 51, 0.07);
 
     margin-top: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
 }
 
+.header-brand-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-platform-tag {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #0079F1;
+    background: #E8F3FF;
+    border: 1px solid rgba(0, 121, 241, 0.2);
+    padding: 2px 8px;
+    border-radius: 999px;
+}
 
 .hr-header-title h3 {
-
     margin: 0;
-
-    font-size: 25px;
-
-    font-weight: 800;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #172033;
 }
 
-
 .hr-header-title small {
-
-    color:
-        var(--text-gray);
-
-    font-size: 12px;
+    color: #64748B;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
 }
 
 

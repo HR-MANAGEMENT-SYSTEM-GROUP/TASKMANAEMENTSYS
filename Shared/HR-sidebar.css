@@ -1,2 +1,246 @@
-/* Shared HR Sidebar */
-.hr-sidebar{position:fixed;top:20px;left:20px;width:260px;height:calc(100vh - 40px);background:linear-gradient(180deg,#0079F1,#0877DF);border-radius:28px;color:#fff;padding:18px 16px;display:flex;flex-direction:column;z-index:1000;box-shadow:0 15px 40px rgba(0,121,241,.25);overflow:hidden;font-family:"Segoe UI",Arial,sans-serif}.sidebar-header{display:flex;align-items:center;justify-content:space-between;min-height:48px;padding:0 4px 12px;border-bottom:1px solid rgba(255,255,255,.25)}.sidebar-logo{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:800;white-space:nowrap}.sidebar-logo i{font-size:18px}.sidebar-logo span span{font-weight:400}.sidebar-toggle{border:0;background:transparent;color:#fff;font-size:22px;cursor:pointer;padding:4px}.sidebar-nav{list-style:none;padding:12px 0 0;margin:0;flex:1;overflow-y:auto;overflow-x:hidden}.sidebar-nav::-webkit-scrollbar{width:7px}.sidebar-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.45);border-radius:10px}.sidebar-nav::-webkit-scrollbar-track{background:transparent}.sidebar-nav>li{margin-bottom:4px}.sidebar-link{width:100%;min-height:43px;display:flex;align-items:center;gap:13px;padding:0 12px;border:0;border-radius:10px;background:transparent;color:#fff;text-decoration:none;font-size:14px;cursor:pointer;text-align:left;transition:background .2s ease,transform .2s ease}.sidebar-link:hover{background:rgba(255,255,255,.13);color:#fff}.sidebar-link>i:first-child{width:20px;text-align:center;flex-shrink:0}.sidebar-bottom{border-top:1px solid rgba(255,255,255,.25);padding-top:9px;flex-shrink:0}.sidebar-bottom .sidebar-link{margin-top:3px}.sidebar-bottom button.sidebar-link{font-family:inherit;border:0;outline:none}.sidebar-bottom button.sidebar-link:hover{background:rgba(255,255,255,.13)}.hr-sidebar.collapsed{width:78px}.hr-sidebar.collapsed .sidebar-logo span,.hr-sidebar.collapsed .sidebar-link span{display:none}.hr-sidebar.collapsed .sidebar-link{justify-content:center;padding:0}.hr-sidebar.collapsed .sidebar-header{justify-content:center}.hr-with-sidebar-content{margin-left:300px;min-height:100vh;padding:20px 28px 40px 0}.hr-sidebar-page{min-height:100vh}.sidebar-nav a,.sidebar-bottom a{color:#fff}.sidebar-nav a:hover,.sidebar-bottom a:hover{color:#fff}@media(max-width:900px){.hr-sidebar{left:10px;top:10px;height:calc(100vh - 20px);width:220px}.hr-with-sidebar-content{margin-left:245px;padding-right:15px}}@media(max-width:650px){.hr-sidebar{width:72px;left:8px}.hr-sidebar .sidebar-logo span,.hr-sidebar .sidebar-link span{display:none}.hr-sidebar .sidebar-link{justify-content:center;padding:0}.hr-sidebar .sidebar-header{justify-content:center}.hr-with-sidebar-content{margin-left:95px;padding-right:10px}}
+/* =========================================================
+   MASAR HR SIDEBAR CSS (LIGHT AESTHETIC)
+   Clean, modern, light sidebar with Masar royal blue accents
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
+
+.hr-sidebar {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 260px;
+    height: calc(100vh - 40px);
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-bottom: 6px solid #0179F1;
+    border-radius: 24px;
+    color: #172033;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    box-shadow: 0 12px 36px -6px rgba(23, 32, 51, 0.12), 0 2px 8px rgba(23, 32, 51, 0.05);
+    overflow: hidden;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    transition: width 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 48px;
+    padding: 0 4px 16px;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #172033;
+    white-space: nowrap;
+}
+
+.sidebar-masar-icon {
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 121, 241, 0.3);
+}
+
+.sidebar-logo-accent {
+    color: #0079F1;
+    font-weight: 700;
+}
+
+.sidebar-toggle {
+    border: 1px solid #E2E8F0;
+    background: #F8FAFC;
+    color: #64748B;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+    background: #E8F3FF;
+    border-color: #BAE6FD;
+    color: #0079F1;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 16px 0 0;
+    margin: 0;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 10px;
+}
+
+.sidebar-nav > li {
+    margin-bottom: 5px;
+}
+
+.sidebar-link {
+    width: 100%;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background: transparent;
+    color: #64748B;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.sidebar-link:hover {
+    background: #F1F6FD;
+    color: #0179F1;
+}
+
+.sidebar-link:hover > i:first-child {
+    color: #0179F1;
+}
+
+.sidebar-link.active {
+    background: #0179F1 !important;
+    border-color: #005BB5 !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 14px rgba(1, 121, 241, 0.35) !important;
+}
+
+.sidebar-link.active > i:first-child,
+.sidebar-link.active span {
+    color: #FFFFFF !important;
+}
+
+.sidebar-link > i:first-child {
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+    font-size: 16px;
+    color: inherit;
+    transition: color 0.2s ease;
+}
+
+.sidebar-bottom {
+    border-top: 1px solid #E2E8F0;
+    padding-top: 12px;
+    flex-shrink: 0;
+}
+
+.sidebar-bottom .sidebar-link {
+    margin-top: 3px;
+}
+
+.sidebar-bottom button.sidebar-link {
+    font-family: inherit;
+    border: 0;
+    outline: none;
+}
+
+.sidebar-bottom button.sidebar-link:hover {
+    background: #FEF2F2;
+    color: #DC2626;
+}
+
+.hr-sidebar.collapsed {
+    width: 78px;
+}
+
+.hr-sidebar.collapsed .sidebar-logo span,
+.hr-sidebar.collapsed .sidebar-link span {
+    display: none;
+}
+
+.hr-sidebar.collapsed .sidebar-link {
+    justify-content: center;
+    padding: 0;
+}
+
+.hr-sidebar.collapsed .sidebar-header {
+    justify-content: center;
+}
+
+.hr-with-sidebar-content {
+    margin-left: 300px;
+    min-height: 100vh;
+    padding: 20px 28px 40px 0;
+}
+
+.hr-sidebar-page {
+    min-height: 100vh;
+}
+
+.sidebar-nav a,
+.sidebar-bottom a {
+    color: #64748B;
+}
+
+.sidebar-nav a:hover,
+.sidebar-bottom a:hover {
+    color: #0079F1;
+}
+
+@media (max-width: 900px) {
+    .hr-sidebar {
+        left: 10px;
+        top: 10px;
+        height: calc(100vh - 20px);
+        width: 220px;
+    }
+    .hr-with-sidebar-content {
+        margin-left: 245px;
+        padding-right: 15px;
+    }
+}
+
+@media (max-width: 650px) {
+    .hr-sidebar {
+        width: 72px;
+        left: 8px;
+    }
+    .hr-sidebar .sidebar-logo span,
+    .hr-sidebar .sidebar-link span {
+        display: none;
+    }
+    .hr-sidebar .sidebar-link {
+        justify-content: center;
+        padding: 0;
+    }
+    .hr-sidebar .sidebar-header {
+        justify-content: center;
+    }
+    .hr-with-sidebar-content {
+        margin-left: 95px;
+        padding-right: 10px;
+    }
+}
