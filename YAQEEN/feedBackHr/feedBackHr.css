@@ -22,22 +22,29 @@
   --lb-font: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* ---------- Base ---------- */
-body {
+/* ---------- Page wrapper ----------
+   Font and colors are set here, not on body, so the shared
+   sidebar/header keep the look from Shared/HR-shared.css. */
+.fb-hr {
+  padding-bottom: 56px;
   font-family: var(--lb-font);
-  background: var(--lb-bg);
   color: var(--lb-text);
   -webkit-font-smoothing: antialiased;
 }
-h1, h2, h3, .btn, .form-control, .form-label { font-family: var(--lb-font); }
 
-/* ---------- Header ---------- */
+/* ---------- Banner ---------- */
 .page-header {
   position: relative;
   overflow: hidden;
-  padding: 64px 0 110px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: clamp(28px, 4vw, 44px) clamp(24px, 4vw, 48px) calc(52px + clamp(26px, 3vw, 36px));
+  border-radius: 24px;
   color: #fff;
   background: linear-gradient(135deg, var(--lb-primary-dark), var(--lb-primary));
+  box-shadow: 0 20px 40px -24px rgba(29, 78, 216, 0.6);
 }
 .page-header::before,
 .page-header::after {
@@ -49,7 +56,7 @@ h1, h2, h3, .btn, .form-control, .form-label { font-family: var(--lb-font); }
 }
 .page-header::before { width: 340px; height: 340px; top: -150px; right: -80px; }
 .page-header::after  { width: 200px; height: 200px; bottom: -110px; left: 8%; }
-.page-header .container { position: relative; z-index: 1; }
+.page-header-text { position: relative; z-index: 1; min-width: 0; }
 
 .page-eyebrow {
   margin: 0 0 8px;
@@ -61,8 +68,9 @@ h1, h2, h3, .btn, .form-control, .form-label { font-family: var(--lb-font); }
 }
 .page-title {
   margin: 0 0 10px;
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
   font-weight: 800;
+  line-height: 1.15;
   letter-spacing: -0.02em;
 }
 .page-subtitle {
@@ -71,38 +79,300 @@ h1, h2, h3, .btn, .form-control, .form-label { font-family: var(--lb-font); }
   color: rgba(255, 255, 255, 0.82);
   font-size: 1.02rem;
 }
-.card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+
+/* Glass icon tile */
+.page-header-icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 108px; height: 108px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 20px 36px -18px rgba(11, 31, 58, 0.65);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 2.9rem;
+  transform: rotate(-6deg);
+  animation: glassFloat 6s ease-in-out infinite;
+}
+
+/* ---------- Toolbar + cards ----------
+   Grid: row 1 = toolbar (title + count chip), row 2 = cards, row 3 = empty state.
+   ::before paints the white toolbar behind row 1. */
+.fb-board {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  margin: -52px clamp(12px, 2.5vw, 28px) 0;
+}
+.fb-board::before {
+  content: "";
+  grid-row: 1;
+  grid-column: 1 / -1;
+  align-self: stretch;
   background: var(--lb-surface);
   border: 1px solid var(--lb-border);
-  border-radius: 18px;
-  padding: 24px;
-  box-shadow: 0 1px 2px var(--lb-border-subtle);
-  transition: transform .3s var(--lb-ease), box-shadow .3s var(--lb-ease), border-color .3s;
-  animation: cardIn .45s var(--lb-ease) both;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px var(--lb-border-subtle), 0 12px 28px -14px rgba(15, 23, 42, 0.18);
 }
-.card:hover {
-  transform: translateY(-4px);
-  border-color: var(--lb-primary-border);
-  box-shadow: 0 1px 2px var(--lb-border-subtle), 0 18px 36px -16px rgba(37, 99, 235, 0.25);
+.fb-board-title {
+  grid-row: 1;
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 14px 18px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--lb-text);
 }
-    .badge-custom {
-      background-color: var(--background);
-      color: var(--primary);
-    }
-    .content-area {
-      flex: 1;
-      background-color: #f8fafc;
-    }
+.fb-board-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 38px; height: 38px;
+  border: 1px solid var(--lb-primary-border);
+  border-radius: 12px;
+  background: var(--lb-primary-light);
+  color: var(--lb-primary);
+  font-size: 1.05rem;
+}
 
-    .badge-soft-danger {
-      background-color: #ffeef0;
-      color: #f83245;
-    }
-    .badge-soft-success {
-      background-color: #e6f9f0;
-      color: #2dce89;
-    }
-  
+/* Count chip: a CSS counter over the cards in #parent */
+#parent { counter-reset: feedback; }
+#parent > * { counter-increment: feedback; }
+.count-chip {
+  grid-row: 1;
+  grid-column: 2;
+  margin-right: 16px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--lb-primary-light);
+  border: 1px solid var(--lb-primary-border);
+  color: var(--lb-primary-dark);
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.count-chip::after { content: counter(feedback) " submissions"; }
+#parent:has(> :only-child) ~ .count-chip::after { content: counter(feedback) " submission"; }
+
+#parent {
+  grid-row: 2;
+  grid-column: 1 / -1;
+  margin-top: 4px; /* + the row's 24px gutter = 28px under the toolbar */
+}
+
+/* ---------- Feedback cards (markup comes from feedBackHr.js) ----------
+   !important only where a Bootstrap utility on that markup would win. */
+#parent > * { animation: cardIn .55s var(--lb-ease) backwards; }
+#parent > :nth-child(2) { animation-delay: .06s; }
+#parent > :nth-child(3) { animation-delay: .12s; }
+#parent > :nth-child(4) { animation-delay: .18s; }
+#parent > :nth-child(5) { animation-delay: .24s; }
+#parent > :nth-child(6) { animation-delay: .3s; }
+#parent > :nth-child(7) { animation-delay: .36s; }
+#parent > :nth-child(8) { animation-delay: .42s; }
+#parent > :nth-child(n+9) { animation-delay: .48s; }
+
+#parent .card {
+  position: relative;
+  overflow: hidden;
+  padding: 22px 22px 20px !important;
+  background: var(--lb-surface);
+  border: 1px solid var(--lb-border) !important;
+  border-radius: 20px;
+  box-shadow: 0 1px 2px var(--lb-border-subtle) !important;
+  transition: transform .3s var(--lb-ease), box-shadow .3s var(--lb-ease), border-color .3s;
+}
+#parent .card:hover {
+  transform: translateY(-4px);
+  border-color: var(--lb-primary-border) !important;
+  box-shadow: 0 1px 2px var(--lb-border-subtle), 0 18px 36px -16px rgba(37, 99, 235, 0.3) !important;
+}
+/* Gradient accent on top - grows on hover */
+#parent .card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 22px; right: 22px;
+  z-index: 2;
+  height: 4px;
+  border-radius: 0 0 6px 6px;
+  background: linear-gradient(90deg, var(--lb-primary-dark), var(--lb-primary), #60a5fa);
+  transform: scaleX(0.22);
+  transform-origin: left;
+  transition: transform .45s var(--lb-ease);
+}
+#parent .card:hover::before { transform: scaleX(1); }
+/* Big faint quote mark (bi-quote) */
+#parent .card::after {
+  content: "\f6b0";
+  position: absolute;
+  right: 14px; bottom: -16px;
+  font-family: "bootstrap-icons";
+  font-size: 92px;
+  line-height: 1;
+  color: var(--lb-primary);
+  opacity: 0.06;
+  pointer-events: none;
+  transition: opacity .3s, transform .45s var(--lb-ease);
+}
+#parent .card:hover::after { opacity: 0.1; transform: translateY(-4px) rotate(-6deg); }
+
+#parent .card-body { position: relative; z-index: 1; display: flex; flex-direction: column; }
+#parent .card-body > .d-flex { gap: 12px; margin-bottom: 16px !important; }
+
+/* Name + avatar (bi-person-fill) */
+#parent .card h6 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  font-size: 1rem;
+  color: var(--lb-text) !important;
+  overflow-wrap: anywhere;
+}
+#parent .card h6::before {
+  content: "\f4da";
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--lb-primary-dark), #60a5fa);
+  box-shadow: 0 6px 14px -6px rgba(37, 99, 235, 0.6);
+  color: #fff;
+  font-family: "bootstrap-icons";
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* Date pill (bi-calendar3) */
+#parent .card small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border: 1px solid var(--lb-border);
+  border-radius: 999px;
+  background: var(--lb-surface-muted);
+  color: var(--lb-text-secondary) !important;
+  font-size: 0.76rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+#parent .card small::before {
+  content: "\f214";
+  font-family: "bootstrap-icons";
+  font-size: 0.85em;
+  line-height: 1;
+  color: var(--lb-primary);
+}
+
+/* Category badge (bi-tag-fill) */
+#parent .card .badge {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0 !important;
+  padding: 6px 12px !important;
+  border: 1px solid var(--lb-primary-border);
+  background: var(--lb-primary-light);
+  color: var(--lb-primary-dark);
+  font-size: 0.76rem;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em;
+}
+#parent .card .badge::before {
+  content: "\f5af";
+  font-family: "bootstrap-icons";
+  font-size: 0.9em;
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* Subject as a quote block */
+#parent .card .card-text {
+  margin: 14px 0 0 !important;
+  padding: 12px 14px 12px 16px;
+  border-left: 3px solid var(--lb-primary);
+  border-radius: 4px 12px 12px 4px;
+  background: linear-gradient(90deg, var(--lb-primary-light), rgba(239, 246, 255, 0.35));
+  color: var(--lb-text) !important;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Empty state (shown while #parent has no cards) ---------- */
+.feedback-empty {
+  grid-row: 3;
+  grid-column: 1 / -1;
+  display: none;
+  margin-top: 28px;
+  padding: 56px 20px;
+  text-align: center;
+  background: var(--lb-surface);
+  border: 1px dashed var(--lb-primary-border);
+  border-radius: 20px;
+}
+#parent:empty ~ .feedback-empty { display: block; }
+.empty-icon {
+  display: grid;
+  place-items: center;
+  width: 68px; height: 68px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--lb-primary-light);
+  color: var(--lb-primary);
+  font-size: 1.7rem;
+}
+.feedback-empty h3 { margin: 0 0 6px; font-size: 1.15rem; font-weight: 700; color: var(--lb-text); }
+.feedback-empty p { margin: 0; color: var(--lb-text-secondary); }
+
+/* ---------- Keyframes ---------- */
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes glassFloat {
+  0%, 100% { transform: rotate(-6deg) translateY(0); }
+  50%      { transform: rotate(-3deg) translateY(-6px); }
+}
+
+/* ---------- Responsive ---------- */
+/* Next to the sidebar, 3 columns are too narrow here */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  #parent > .col-lg-4 { width: 50%; }
+}
+@media (max-width: 575.98px) {
+  .page-header { border-radius: 20px; }
+  .page-header-icon { display: none; }
+  .fb-board { grid-template-columns: minmax(0, 1fr); }
+  .fb-board::before { grid-row: 1 / 3; }
+  .fb-board-title { padding-bottom: 8px; }
+  .count-chip { grid-row: 2; grid-column: 1; justify-self: start; margin: 0 0 14px 18px; }
+  #parent { grid-row: 3; }
+  .feedback-empty { grid-row: 4; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #parent > *,
+  .page-header-icon { animation: none; }
+  #parent .card,
+  #parent .card::before,
+  #parent .card::after { transition: none; }
+}

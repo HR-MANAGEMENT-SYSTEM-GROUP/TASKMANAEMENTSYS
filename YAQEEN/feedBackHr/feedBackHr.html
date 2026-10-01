@@ -1,30 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-     <link rel="styleSheet" href="feedBackHr.css">
-</head>
-<header class="page-header  text-white p-4 p-md-5 mb-5">
-    <div class="container">
-      <h2 class="fw-bold mb-1">Employee Feedback</h2>
-      <p class="text-white-50 mb-0">Feedback submitted by employees</p>
-    </div>
-  </header>
-  
-  </div>
-  <main>
-     <div class="container py-4">
-      <div class="row g-4" id="parent">
-        
-      </div>
-    </div>
-  </main>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Feedback</title>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-<script src="feedBackHr.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../../Shared/HR-shared.css">
+  <link rel="stylesheet" href="feedBackHr.css">
+  <link rel="stylesheet" href="../../Shared/HR-sidebar.css">
+</head>
+<body>
+  <div class="hr-page-wrapper">
+
+    <!-- Shared sidebar (loaded by HR-shared.js) -->
+    <div id="hrSidebar"></div>
+
+    <div class="hr-page-content">
+
+      <!-- Shared header (loaded by HR-shared.js) -->
+      <div id="hrHeader"></div>
+
+      <main class="fb-hr">
+
+        <!-- Banner -->
+        <header class="page-header">
+          <div class="page-header-text">
+            <p class="page-eyebrow">HR Portal</p>
+            <h1 class="page-title">Employee Feedback</h1>
+            <p class="page-subtitle">Feedback submitted by employees</p>
+          </div>
+          <span class="page-header-icon" aria-hidden="true"><i class="bi bi-chat-dots-fill"></i></span>
+        </header>
+
+        <!-- Toolbar + cards.
+             The count chip comes after #parent so its CSS counter can count the cards;
+             CSS grid shows it on the toolbar row. -->
+        <section class="fb-board" aria-labelledby="boardTitle">
+          <h2 class="fb-board-title" id="boardTitle"><span class="fb-board-icon" aria-hidden="true"><i class="bi bi-inbox-fill"></i></span>All submissions</h2>
+
+          <!-- Filled by feedBackHr.js (keep it empty so :empty can show the empty state) -->
+          <div class="row g-4" id="parent"></div>
+
+          <span class="count-chip"></span>
+
+          <div class="feedback-empty">
+            <span class="empty-icon" aria-hidden="true"><i class="bi bi-chat-square-text"></i></span>
+            <h3>No feedback yet</h3>
+            <p>New submissions from employees will show up here.</p>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script src="feedBackHr.js"></script>
+  <script src="../../Shared/HR-shared.js"></script>
 </body>
 </html>
