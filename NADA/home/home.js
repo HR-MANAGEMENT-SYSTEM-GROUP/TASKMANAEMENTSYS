@@ -1,12 +1,14 @@
 (function () {
   'use strict';
   var NS = 'http://www.w3.org/2000/svg';
-  // Node coordinates on the road (match the path in index.html)
+  // Node coordinates on the road
   var NODES = [[1000, 400], [1450, 1150], [650, 1900], [1350, 2650], [1000, 3400]];
   var $ = function (s) { return document.querySelector(s); };
   var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
 
-
+  // ========================================================
+  // 1. نظام المستخدم وحالة تسجيل الدخول
+  // ========================================================
   let currentUser = null;
 
   function loadCurrentUser() {
@@ -26,6 +28,7 @@
     }
   }
 
+  // تحديث الناف بار حسب وجود المستخدم
   function renderNavbar() {
     const navAuth = document.getElementById("navAuth");
     const navUser = document.getElementById("navUser");
@@ -33,9 +36,9 @@
 
     if (!navAuth || !navUser) return;
 
-    const loggedIn = currentUser && currentUser.role === "employee";
+    const loggedIn = !!currentUser; // صحيح إذا كان المستخدم مسجل دخول
 
-    navAuth.classList.toggle("hidden", !!loggedIn);
+    navAuth.classList.toggle("hidden", loggedIn);
     navUser.classList.toggle("hidden", !loggedIn);
 
     if (loggedIn && userName) {
@@ -43,16 +46,42 @@
     }
   }
 
-window.logout = function () {
+  // ========================================================
+  // 2. التحكم في أزرار قسم الخدمات (قبل وبعد تسجيل الدخول)
+  // ========================================================
+  function setupServiceButtons() {
+    // جلب جميع أزرار الخدمات داخل قسم Services
+    const serviceButtons = document.querySelectorAll("#stop-2 .svc-detail a");
+
+    serviceButtons.forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        // إذا لم يكن مسجل دخول، امنع فتح الرابط وحوّله لصفحة تسجيل الدخول
+        if (!currentUser) {
+          e.preventDefault();
+          window.location.href = "../../GAITH/login.html";
+        }
+        // إذا كان مسجل دخول، سيعمل الرابط بشكل طبيعي ويأخذه لصفحة الخدمة
+      });
+    });
+  }
+
+  // تسجيل الخروج
+  window.logout = function () {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("userRole");
     localStorage.removeItem("bridgeway_current_role");
-    window.location.href = "../../GAITH/login.html";
-  }
+    localStorage.setItem("loggedIn", "false");
+    window.location.reload(); // تحديث الصفحة ليعود الناف بار للوضع الأولي
+  };
 
+  // تهيئة تسجيل الدخول والخدمات
   loadCurrentUser();
   renderNavbar();
+  setupServiceButtons();
 
+  // ========================================================
+  // 3. كود مسار الطريق والأنيميشن والتفاعل
+  // ========================================================
   var path = $('#roadPath'), world = $('#world'), trav = $('#traveler'), spacer = $('#spacer');
   var panels = $$('.stop-panel'), N = panels.length, I = N - 1;
   var names = panels.map(function (p) { return p.dataset.name; });
@@ -74,7 +103,6 @@ window.logout = function () {
     total = path.getTotalLength();
     trail.style.strokeDasharray = total + ' ' + total;
 
-    // Find each node's distance along the road (no hardcoded lengths)
     dist = NODES.map(function (n) {
       var best = 0, bd = Infinity;
       for (var l = 0; l <= total; l += 2) {
@@ -109,7 +137,6 @@ window.logout = function () {
     var a = path.getPointAtLength(Math.min(len + 4, total)), b = path.getPointAtLength(Math.max(len - 4, 0));
     var deg = Math.atan2(a.y - b.y, a.x - b.x) * 180 / Math.PI;
 
-    // Camera: keep traveler at the focal point; ease up on the final stretch so the road leads into the footer
     var mobile = window.innerWidth <= 768, H = window.innerHeight;
     var fy = H * (mobile ? 0.72 : 0.65), last = (N - 2) / I;
     if (p > last) {
@@ -120,7 +147,6 @@ window.logout = function () {
     trav.style.transform = 'translate3d(' + pt.x.toFixed(1) + 'px,' + pt.y.toFixed(1) + 'px,0) rotate(' + (deg - 90).toFixed(1) + 'deg)';
     trail.style.strokeDashoffset = Math.max(0, total - len).toFixed(1);
 
-    // Blueprint is only for the top of the page: fades and slides away as soon as you leave Home
     saVis = Math.max(0, Math.min(1, 1 - p / 0.0875));
     if (reduce && saRoot) paintAssembly(1);
 
@@ -142,11 +168,10 @@ window.logout = function () {
 
   function onStop(i) {
     sideEls.forEach(function (el, j) { if (j === i) el.setAttribute('aria-current', 'step'); else el.removeAttribute('aria-current'); });
-    // Top nav: Home/About/Services/Contact; Stats has no link so none is highlighted
     navLinks.forEach(function (l) { l.classList.toggle('active', +l.dataset.jump === i); });
     hint.textContent = i < I ? 'Next: ' + names[i + 1] : 'You have arrived';
     live.textContent = 'Stop ' + (i + 1) + ' of ' + N + ': ' + names[i];
-    if (i === 0) layoutAssembly(); // side nav width changes with the active label, so re-measure on Home
+    if (i === 0) layoutAssembly();
   }
 
   function connect(i, dwell) {
@@ -170,7 +195,6 @@ window.logout = function () {
     pipB.setAttribute('cx', tx); pipB.setAttribute('cy', ty);
   }
 
-  // Numbers section: count up from 0 each time the stop is reached
   function setStat(e, v) { e.textContent = Math.round(v) + (e.dataset.suffix || ''); }
   function countStats(on) {
     cancelAnimationFrame(countRaf);
@@ -184,7 +208,6 @@ window.logout = function () {
     })(t0);
   }
 
-  // Services: click a row to expand its details in place (one open at a time)
   function initServices() {
     var panel = $('#stop-2'), items = $$('.svc-item');
     items.forEach(function (item) {
@@ -206,11 +229,9 @@ window.logout = function () {
         if (e.propertyName === 'grid-template-rows' && item.classList.contains('is-open')) reveal();
       });
     });
-    // keep the dotted connector attached while the card grows/shrinks
     if (window.ResizeObserver) new ResizeObserver(function () { connect(cur, dwelling); }).observe(panel);
   }
 
-  // Software assembly: a small blueprint that builds itself from the journey's own progress (no extra ScrollTrigger)
   function initAssembly() {
     if (!saRoot) return;
     saSegs = $$('.sa-seg b');
@@ -261,11 +282,9 @@ window.logout = function () {
     if (saTag) saTag.classList.toggle('is-on', live);
   }
 
-  // Place the blueprint to the right of the hero card and the Home node, clear of the side nav
   function layoutAssembly() {
     if (!saRoot) return;
     var W = window.innerWidth, H = window.innerHeight, hero = panels[0];
-    // Side nav slides its label open on a short transition, so reserve its expanded width instead of measuring it
     var sn = $('#sideNav'), snW = sn && sn.offsetWidth ? 108 + Math.min(32, Math.max(14, W * 0.02)) : 24;
     var left = Math.max(hero.offsetLeft + hero.offsetWidth + 16, W / 2 + 70), right = W - snW - 16;
     saRoot.classList.toggle('is-off', right - left < 300);
@@ -278,12 +297,10 @@ window.logout = function () {
     saRoot.style.transform = 'translate3d(' + ((1 - saVis) * 40).toFixed(1) + 'px,0,0)';
   }
 
-  // Background "video": timed loop (build -> hold -> fade out -> restart), independent of scroll.
-  // It restarts from the beginning every time you come back to the top.
   var SA_BUILD = 11000, SA_HOLD = 3500, SA_FADE = 1200, SA_CYCLE = SA_BUILD + SA_HOLD + SA_FADE + 600;
   function playAssembly() {
     if (!saRoot) return;
-    if (reduce) { assemble(1); paintAssembly(1); return; } // static finished frame
+    if (reduce) { assemble(1); paintAssembly(1); return; }
     var t0 = performance.now(), hidden = false;
     (function frame(now) {
       requestAnimationFrame(frame);
@@ -302,8 +319,6 @@ window.logout = function () {
     window.scrollTo({ top: Math.max(0, Math.min(I, i)) / I * max, behavior: reduce ? 'auto' : 'smooth' });
   }
 
-
-  // Theme: light = original B, dark = project A's background (choice is remembered)
   function initTheme() {
     var root = document.documentElement, btn = $('#themeToggle'), lab = $('#themeLabel');
     if (!btn) return;
@@ -335,7 +350,7 @@ window.logout = function () {
     window.addEventListener('keydown', function (e) {
       var t = document.activeElement && document.activeElement.tagName;
       if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
-      if (e.key === ' ' && (t === 'BUTTON' || t === 'A')) return; // let Space activate focused buttons/links
+      if (e.key === ' ' && (t === 'BUTTON' || t === 'A')) return;
       var next = { ArrowDown: cur + 1, PageDown: cur + 1, ' ': cur + 1, ArrowUp: cur - 1, PageUp: cur - 1, Home: 0, End: I }[e.key];
       if (next === undefined || next < 0 || next > I) return;
       e.preventDefault(); goTo(next);

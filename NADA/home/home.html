@@ -37,12 +37,14 @@
         <span class="theme-label" id="themeLabel">Dark</span>
       </button>
 
+      <!-- تظهر قبل تسجيل الدخول -->
       <div class="nav-auth" id="navAuth">
         <a href="../../GAITH/login.html" class="header-btn">
           Login <span aria-hidden="true">&rarr;</span>
         </a>
       </div>
 
+      <!-- تظهر بعد تسجيل الدخول -->
       <div class="nav-auth hidden" id="navUser">
         <a href="../../GAITH/profile/profile.html" class="nav-menu-link">Profile</a>
         <span class="username">Name: <span id="userName">Employee</span></span>
@@ -78,8 +80,6 @@
       <path id="cLine" d=""/><circle id="pipA" r="3.5"/><circle id="pipB" r="3.5"/>
     </svg>
 
-    
-
     <main id="main-content" class="journey-stops">
 
       <!-- 1. HERO -->
@@ -114,7 +114,9 @@
             <div class="about-details">
               <p>Masar builds the testing infrastructure modern teams rely on. From automated pipelines to full-scale QA audits, we make sure your software ships fast and breaks nothing. Hundreds of releases, zero surprises.</p>
               <div class="actions">
-                <button type="button" class="btn btn-cut" data-jump="4">Learn more <span aria-hidden="true">&rarr;</span></button>
+                <button type="button" class="btn btn-cut" onclick="window.location.href='team.html'">
+                  Learn more <span aria-hidden="true">&rarr;</span>
+                </button>
               </div>
             </div>
           </div>
@@ -128,61 +130,60 @@
         <ul class="svc-list">
           <li class="svc-item">
             <button type="button" class="svc-toggle" aria-expanded="false" aria-controls="svc-1"><b>01</b><span><small>HR Portal</small><strong>Leave Application</strong><em>Form for leave type, dates, and reason with local storage support.</em></span><i class="svc-chevron" aria-hidden="true"></i></button>
-            <div class="svc-body" id="svc-1" role="region" aria-label="Leave Application details"><div class="svc-body-inner"><div class="svc-detail"><div class="svc-info"><ul class="svc-points"><li>Choose the leave type and pick your dates</li><li>Add a reason so your request is clear</li><li>Requests are saved in your browser's local storage</li></ul><ul class="svc-chips"><li>Local storage</li><li>Form</li></ul><a href="../../Amneh/leaves-emp.html" class="btn">Open Leave Application <span aria-hidden="true">&rarr;</span></a></div><div class="svc-preview" aria-hidden="true"><div class="pv-top"><i></i><i></i><i></i><span>leave-hr</span></div><div class="pv-body"><div class="pv-field"><small>Leave type</small><div class="pv-input">Annual leave</div></div><div class="pv-row"><div class="pv-field"><small>From</small><div class="pv-input">12 Oct</div></div><div class="pv-field"><small>To</small><div class="pv-input">16 Oct</div></div></div><div class="pv-field"><small>Reason</small><div class="pv-input pv-tall"><b class="pv-bar w80"></b><b class="pv-bar w50"></b></div></div><div class="pv-pill">Submit request</div></div></div></div></div></div>
+            <div class="svc-body" id="svc-1" role="region" aria-label="Leave Application details"><div class="svc-body-inner"><div class="svc-detail"><div class="svc-info"><ul class="svc-points"><li>Choose the leave type and pick your dates</li><li>Add a reason so your request is clear</li><li>Requests are saved in your browser's local storage</li></ul><ul class="svc-chips"><li>Local storage</li><li>Form</li></ul><a href="../../Amneh/EMP/leaves-emp.html" class="btn">Open Leave Application <span aria-hidden="true">&rarr;</span></a></div><div class="svc-preview" aria-hidden="true"><div class="pv-top"><i></i><i></i><i></i><span>leave-hr</span></div><div class="pv-body"><div class="pv-field"><small>Leave type</small><div class="pv-input">Annual leave</div></div><div class="pv-row"><div class="pv-field"><small>From</small><div class="pv-input">12 Oct</div></div><div class="pv-field"><small>To</small><div class="pv-input">16 Oct</div></div></div><div class="pv-field"><small>Reason</small><div class="pv-input pv-tall"><b class="pv-bar w80"></b><b class="pv-bar w50"></b></div></div><div class="pv-pill">Submit request</div></div></div></div></div></div>
           </li>
-         <li class="svc-item">
-  <button type="button" class="svc-toggle" aria-expanded="false" aria-controls="svc-2">
-    <b>02</b>
-    <span>
-      <small>Meetings</small>
-      <strong>Request Zoom Meeting</strong>
-      <em>Easily schedule and join Zoom meetings with your team.</em>
-    </span>
-    <i class="svc-chevron" aria-hidden="true"></i>
-  </button>
 
-  <div class="svc-body" id="svc-2" role="region" aria-label="Zoom Meeting">
-    <div class="svc-body-inner">
-      <div class="svc-detail">
-        <div class="svc-info">
-          <ul class="svc-points">
-            <li>Send meeting requests instantly</li>
-            <li>Meeting details are saved automatically</li>
-            <li>Join or manage meetings in one place</li>
-          </ul>
-
-          <ul class="svc-chips">
-            <li>Zoom</li>
-            <li>Schedule</li>
-          </ul>
-
-          <a href="../../OMAR/EmployeeMeetings/EmployeeMeetings.html" class="btn">
-            Open Zoom Meeting Request <span aria-hidden="true">&rarr;</span>
-          </a>
-        </div>
-
-        <div class="svc-preview" aria-hidden="true">
-          <div class="pv-top"><i></i><i></i><i></i><span>zoom meetings</span></div>
-          <div class="pv-body">
-            <div class="pv-input">Enter meeting title</div>
-            <div class="pv-line is-hot"><i class="pv-avatar"></i><b class="pv-bar w60"></b><em class="pv-tag">HR</em></div>
-            <div class="pv-line"><i class="pv-avatar"></i><b class="pv-bar w70"></b><em class="pv-tag">IT</em></div>
-            <div class="pv-line"><i class="pv-avatar"></i><b class="pv-bar w50"></b><em class="pv-tag">Ops</em></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</li>
+          <li class="svc-item">
+            <button type="button" class="svc-toggle" aria-expanded="false" aria-controls="svc-2">
+              <b>02</b>
+              <span>
+                <small>Meetings</small>
+                <strong>Request Zoom Meeting</strong>
+                <em>Easily schedule and join Zoom meetings with your team.</em>
+              </span>
+              <i class="svc-chevron" aria-hidden="true"></i>
+            </button>
+            <div class="svc-body" id="svc-2" role="region" aria-label="Zoom Meeting">
+              <div class="svc-body-inner">
+                <div class="svc-detail">
+                  <div class="svc-info">
+                    <ul class="svc-points">
+                      <li>Send meeting requests instantly</li>
+                      <li>Meeting details are saved automatically</li>
+                      <li>Join or manage meetings in one place</li>
+                    </ul>
+                    <ul class="svc-chips">
+                      <li>Zoom</li>
+                      <li>Schedule</li>
+                    </ul>
+                    <a href="../../OMAR/EmployeeMeetings/EmployeeMeetings.html" class="btn">
+                      Open Zoom Meeting Request <span aria-hidden="true">&rarr;</span>
+                    </a>
+                  </div>
+                  <div class="svc-preview" aria-hidden="true">
+                    <div class="pv-top"><i></i><i></i><i></i><span>zoom meetings</span></div>
+                    <div class="pv-body">
+                      <div class="pv-input">Enter meeting title</div>
+                      <div class="pv-line is-hot"><i class="pv-avatar"></i><b class="pv-bar w60"></b><em class="pv-tag">HR</em></div>
+                      <div class="pv-line"><i class="pv-avatar"></i><b class="pv-bar w70"></b><em class="pv-tag">IT</em></div>
+                      <div class="pv-line"><i class="pv-avatar"></i><b class="pv-bar w50"></b><em class="pv-tag">Ops</em></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
 
           <li class="svc-item">
             <button type="button" class="svc-toggle" aria-expanded="false" aria-controls="svc-3"><b>03</b><span><small>Governance</small><strong>Company Policies</strong><em>Workspace policy directory loaded dynamically from JSON.</em></span><i class="svc-chevron" aria-hidden="true"></i></button>
             <div class="svc-body" id="svc-3" role="region" aria-label="Company Policies details"><div class="svc-body-inner"><div class="svc-detail"><div class="svc-info"><ul class="svc-points"><li>Browse the full workspace policy directory</li><li>Policies are loaded dynamically from JSON</li><li>Update the JSON and the page follows</li></ul><ul class="svc-chips"><li>JSON data</li><li>Directory</li></ul><a href="../../YAQEEN/companyPolicies/companyPolicies.html" class="btn">Open Company Policies <span aria-hidden="true">&rarr;</span></a></div><div class="svc-preview" aria-hidden="true"><div class="pv-top"><i></i><i></i><i></i><span>policies</span></div><div class="pv-body"><div class="pv-line"><i class="pv-doc"></i><b class="pv-bar w70"></b><span></span></div><div class="pv-line is-hot"><i class="pv-doc"></i><b class="pv-bar w50"></b><span></span></div><div class="pv-line"><i class="pv-doc"></i><b class="pv-bar w80"></b><span></span></div><div class="pv-line"><i class="pv-doc"></i><b class="pv-bar w60"></b><span></span></div></div></div></div></div></div>
           </li>
+
           <li class="svc-item">
             <button type="button" class="svc-toggle" aria-expanded="false" aria-controls="svc-4"><b>04</b><span><small>Workflow</small><strong>Task Management</strong><em>Task creation, assignment, and status updates stored in local storage.</em></span><i class="svc-chevron" aria-hidden="true"></i></button>
             <div class="svc-body" id="svc-4" role="region" aria-label="Task Management details"><div class="svc-body-inner"><div class="svc-detail"><div class="svc-info"><ul class="svc-points"><li>Create new tasks in seconds</li><li>Assign each task to a team member</li><li>Update status as work moves along</li></ul><ul class="svc-chips"><li>Local storage</li><li>Status tracking</li></ul><a href="../../TAREQ/EMP%20TASK/EMP_TASK.html" class="btn">Open Task Management <span aria-hidden="true">&rarr;</span></a></div><div class="svc-preview" aria-hidden="true"><div class="pv-top"><i></i><i></i><i></i><span>tasks</span></div><div class="pv-body"><div class="pv-cols"><div><small>To do</small><b class="pv-card"></b><b class="pv-card"></b></div><div><small>Doing</small><b class="pv-card hot"></b></div><div><small>Done</small><b class="pv-card done"></b><b class="pv-card done"></b></div></div><div class="pv-pill">New task</div></div></div></div></div></div>
           </li>
+
           <li class="svc-item">
             <button type="button" class="svc-toggle" aria-expanded="false" aria-controls="svc-5"><b>05</b><span><small>Communication</small><strong>Feedback System</strong><em>Direct feedback submission form saved into local storage.</em></span><i class="svc-chevron" aria-hidden="true"></i></button>
             <div class="svc-body" id="svc-5" role="region" aria-label="Feedback System details"><div class="svc-body-inner"><div class="svc-detail"><div class="svc-info"><ul class="svc-points"><li>Write and send feedback in one short form</li><li>Submissions are saved into local storage</li></ul><ul class="svc-chips"><li>Local storage</li><li>Form</li></ul><a href="../../YAQEEN/feedBackEmployee/feedBackEmployee.html" class="btn">Open Feedback System <span aria-hidden="true">&rarr;</span></a></div><div class="svc-preview" aria-hidden="true"><div class="pv-top"><i></i><i></i><i></i><span>feedback</span></div><div class="pv-body"><div class="pv-bubble"><b class="pv-bar w90"></b><b class="pv-bar w60"></b></div><div class="pv-stars">&#9733;&#9733;&#9733;&#9733;<span>&#9733;</span></div><div class="pv-pill">Send feedback</div></div></div></div></div></div>
@@ -205,16 +206,14 @@
         <div class="foot-grid">
           <div>
             <a href="#stop-0" data-jump="0" aria-label="Masar — back to start">
-            <img src="MASAR.png" alt="Masar" class="foot-logo">
+              <img src="MASAR.png" alt="Masar" class="foot-logo">
             </a>
-
             <p>Empowering people and simplifying HR for modern teams.</p>
             <div class="socials">
-  <a href="https://www.facebook.com/login" target="_blank">Facebook</a>
-  <a href="https://www.instagram.com/accounts/login/" target="_blank">Instagram</a>
-  <a href="https://x.com/i/flow/login" target="_blank">X</a>
-</div>
-
+              <a href="https://www.facebook.com/login" target="_blank">Facebook</a>
+              <a href="https://www.instagram.com/accounts/login/" target="_blank">Instagram</a>
+              <a href="https://x.com/i/flow/login" target="_blank">X</a>
+            </div>
           </div>
           <div>
             <h3>Quick Links</h3>
