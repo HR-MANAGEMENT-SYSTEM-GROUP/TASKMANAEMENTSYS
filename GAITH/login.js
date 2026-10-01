@@ -1204,6 +1204,7 @@
         localStorage.setItem('currentUser', JSON.stringify(sessionUser));
         localStorage.setItem('userRole', sessionUser.role);
         localStorage.setItem('bridgeway_current_role', sessionUser.role);
+        localStorage.setItem('masar_current_role', sessionUser.role);
 
         // Account found in Users.json - switch tab according to role if available
         if (sessionUser.role === 'hr' && typeof window.switchToHR === 'function') {

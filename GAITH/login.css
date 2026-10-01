@@ -87,6 +87,24 @@
   color: #ffffff;
 }
 
+.login-page .lb-brand-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+}
+
+.login-page .lb-brand-link:hover {
+  transform: translateY(-1px);
+  opacity: 0.94;
+}
+
+.login-page .lb-brand-logo {
+  height: 38px;
+  width: auto;
+  display: block;
+}
+
 .login-page .lb-brand-icon {
   width: 36px;
   height: 36px;
@@ -584,6 +602,15 @@
   font-weight: 800;
   color: var(--lb-text);
   letter-spacing: -0.01em;
+  min-height: 22px;
+}
+
+.login-page .lb-badge-brand-logo {
+  height: 19px;
+  max-width: 125px;
+  width: auto;
+  display: block;
+  object-fit: contain;
 }
 
 .login-page .lb-card-brand i {
@@ -840,6 +867,22 @@
   max-width: 440px;
   width: 100%;
   margin-inline: auto;
+}
+
+.login-page .lb-mobile-brand {
+  margin-bottom: 1.25rem;
+}
+
+.login-page .lb-mobile-brand-logo {
+  height: 32px;
+  width: auto;
+  display: inline-block;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.login-page .lb-mobile-brand-logo:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
 }
 
 .login-page .lb-header-tag {
