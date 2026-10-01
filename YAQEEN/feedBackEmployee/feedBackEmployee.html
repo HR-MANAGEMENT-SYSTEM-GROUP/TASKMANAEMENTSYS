@@ -1,84 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-     <link rel="styleSheet" href="feedBackEmployee.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Feedback</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="feedBackEmployee.css">
 </head>
+<body>
 
-
-
- <header class="page-header text-white p-4 p-md-5 mb-5">
+  <!-- Header -->
+  <header class="page-header">
     <div class="container">
-      <h2 class="fw-bold mb-1">Submit Feedback</h2>
-      <p class="text-white-50 m-0">Your voice helps us improve</p>
+      <p class="page-eyebrow">Employee Portal</p>
+      <h1 class="page-title">Submit Feedback</h1>
+      <p class="page-subtitle">Your voice helps us improve</p>
+      <i class="bi bi-chat-heart page-header-icon" aria-hidden="true"></i>
     </div>
   </header>
-  <main class="container my-5">
-    <div class="row align-items-center justify-content-between g-4">
-      
-      <!-- النص والكبسة على اليسار -->
-      <div class="col-lg-6 text-center text-lg-start">
-        <h1 class="display-5 fw-bold mb-3">Employee feedback tracker</h1>
-        <p class="lead text-muted mb-4">
-          We would love to hear your feedback, and don't worry, all feedback remains anonymous.
-        </p>
-        <button type="button" class="btn btn-primary btn-lg custom-btn rounded-3 px-4 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#feedbackModal">
-          Submit feedback
-        </button>
-      </div>
 
-      <!-- الصورة على اليمين -->
-      <div class="col-lg-5 text-center">
-        <!-- غيري المسار src إلى مكان الصورة في مجلدك -->
-        <!-- <img src="path/to/your/video.mp4  " alt="Employee Feedback" class="img-fluid hero-img"> -->
-      </div>
+  <main class="container page-main">
+    <section class="hero-card" aria-labelledby="heroTitle">
+      <div class="row align-items-center g-4 g-lg-5">
 
-    </div>
+        <!-- Text + button (left) -->
+        <div class="col-lg-6 text-center text-lg-start">
+          <span class="listening-pill"><span class="pulse-dot" aria-hidden="true"></span>We're listening</span>
+          <h2 class="hero-title" id="heroTitle">Employee <span class="text-gradient">feedback</span> tracker</h2>
+          <p class="hero-lead">
+            We would love to hear your feedback, and don't worry, all feedback remains anonymous.
+          </p>
+          <button type="button" class="btn btn-lb btn-cta" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+            <i class="bi bi-send-fill" aria-hidden="true"></i>
+            Submit feedback
+          </button>
+          <ul class="hero-chips" aria-label="Feedback categories">
+            <li class="hero-chip chip-suggestion"><i class="bi bi-lightbulb-fill" aria-hidden="true"></i>Suggestion</li>
+            <li class="hero-chip chip-complaint"><i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>Complaint</li>
+            <li class="hero-chip chip-praise"><i class="bi bi-hand-thumbs-up-fill" aria-hidden="true"></i>Praise</li>
+          </ul>
+        </div>
+
+        <!-- Animated preview (right) - clicking it opens the form too -->
+        <div class="col-lg-6">
+            <span class="fb-stage-inner">
+              <span class="fb-scene">
+                <span class="fb-blob fb-blob-1"></span>
+                <span class="fb-blob fb-blob-2"></span>
+
+                <span class="fb-card-wrap">
+                  <!-- Floating decorations -->
+                  <span class="fb-float fb-float-thumb"><span class="bi bi-hand-thumbs-up-fill"></span></span>
+                  <span class="fb-float fb-float-typing"><span></span><span></span><span></span></span>
+                  <span class="fb-float fb-float-heart"><span class="bi bi-heart-fill"></span></span>
+                  <span class="fb-float fb-float-bulb"><span class="bi bi-lightbulb-fill"></span></span>
+                  <span class="fb-sparkle fb-sparkle-1"></span>
+                  <span class="fb-sparkle fb-sparkle-2"></span>
+                  <span class="fb-sparkle fb-sparkle-3"></span>
+
+                  <!-- Mock feedback form -->
+                  <span class="fb-card">
+                    <span class="fb-sent"><span class="bi bi-check-circle-fill"></span>Feedback sent!</span>
+
+                    <span class="fb-card-head">
+                      <span class="fb-card-icon"><span class="bi bi-chat-heart-fill"></span></span>
+                      <span class="fb-card-heading">
+                        <span class="fb-card-title">New feedback</span>
+                        <span class="fb-card-to">To: HR team</span>
+                      </span>
+                      <span class="fb-card-dots"><span></span><span></span><span></span></span>
+                    </span>
+
+                    <span class="fb-chips">
+                      <span class="fb-chip">Suggestion</span>
+                      <span class="fb-chip">Complaint</span>
+                      <span class="fb-chip fb-chip-praise"><span class="bi bi-hand-thumbs-up-fill"></span>Praise</span>
+                    </span>
+
+                    <span class="fb-label">Title</span>
+                    <span class="fb-field fb-field-title">
+                      <span class="fb-line">
+                        <span class="fb-text fb-text-title">More office snacks!</span>
+                        <span class="fb-caret-track fb-caret-title"><span class="fb-caret"></span></span>
+                      </span>
+                    </span>
+
+                    <span class="fb-label">Message</span>
+                    <span class="fb-field fb-field-msg">
+                      <span class="fb-line">
+                        <span class="fb-text fb-text-l1">Fresh fruit &amp; healthy snacks</span>
+                        <span class="fb-caret-track fb-caret-l1"><span class="fb-caret"></span></span>
+                      </span>
+                      <span class="fb-line">
+                        <span class="fb-text fb-text-l2">would make our breaks better!</span>
+                        <span class="fb-caret-track fb-caret-l2"><span class="fb-caret"></span></span>
+                      </span>
+                    </span>
+
+                    <span class="fb-card-foot">
+                      <span class="fb-send-wrap">
+                        <span class="fb-send">
+                          <span class="fb-ripple"></span>
+                          <span class="bi bi-send-fill fb-send-icon"></span>
+                          <span>Send</span>
+                        </span>
+                        <span class="bi bi-send-fill fb-plane"></span>
+                        <span class="bi bi-hand-index-thumb-fill fb-cursor"></span>
+                      </span>
+                    </span>
+                  </span>
+                </span>
+
+              </span>
+            </span>
+        </div>
+
+      </div>
+    </section>
   </main>
-  <!-- 3. Bootstrap Modal (Pop-up Form) -->
+
+  <!-- Feedback form (Bootstrap modal) -->
   <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content rounded-4 border-0 p-3 shadow-lg">
-        
-        <div class="modal-header border-0 pb-0">
-          <h5 class="modal-title fw-bold text-center w-100 fs-4" id="feedbackModalLabel">Employee feedback form</h5>
+      <div class="modal-content fb-modal">
+
+        <div class="modal-header">
+          <span class="modal-icon" aria-hidden="true"><i class="bi bi-chat-heart-fill"></i></span>
+          <div class="modal-heading">
+            <h2 class="modal-title" id="feedbackModalLabel">Employee feedback form</h2>
+            <p class="modal-subtitle">Please share anything you like. We're listening.</p>
+          </div>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div class="modal-body">
-          <p class="text-center text-muted small mb-4">Please share anything you like. We're listening.</p>
-          
           <form id="feedbackForm">
-            
+
             <!-- Category -->
             <div class="mb-3">
-              <label for="categorySelect" class="form-label fw-semibold small">Category *</label>
-              <select id="categorySelect" class="form-select rounded-3 py-2">
-                <option value="" selected disabled>Select category</option>
-                <option value="Suggestion">Suggestion</option>
-                <option value="Complaint">Complaint</option>
-                <option value="Praise">Praise</option>
-              </select>
+              <label for="categorySelect" class="form-label">Category <span class="req" aria-hidden="true">*</span></label>
+              <div class="field">
+                <i class="bi bi-tag" aria-hidden="true"></i>
+                <select id="categorySelect" class="form-select" required>
+                  <option value="" selected disabled>Select category</option>
+                  <option value="Suggestion">Suggestion</option>
+                  <option value="Complaint">Complaint</option>
+                  <option value="Praise">Praise</option>
+                </select>
+              </div>
             </div>
 
-            <!-- Feedback Title / Subject -->
+            <!-- Feedback title / subject -->
             <div class="mb-3">
-              <label for="subjectInput" class="form-label fw-semibold small">Feedback title *</label>
-              <input type="text" id="subjectInput" class="form-control rounded-3 py-2" placeholder='E.g "More office snacks!"'>
+              <label for="subjectInput" class="form-label">Feedback title <span class="req" aria-hidden="true">*</span></label>
+              <div class="field">
+                <i class="bi bi-type" aria-hidden="true"></i>
+                <input type="text" id="subjectInput" class="form-control" placeholder='E.g "More office snacks!"' required>
+              </div>
             </div>
 
-            <!-- Feedback Message -->
+            <!-- Feedback message -->
             <div class="mb-4">
-              <label for="messageTextarea" class="form-label fw-semibold small">Feedback *</label>
-              <textarea id="messageTextarea" class="form-control rounded-3" rows="4" placeholder="Tell us more"></textarea>
+              <label for="messageTextarea" class="form-label">Feedback <span class="req" aria-hidden="true">*</span></label>
+              <div class="field field-textarea">
+                <i class="bi bi-chat-left-text" aria-hidden="true"></i>
+                <textarea id="messageTextarea" class="form-control" rows="4" placeholder="Tell us more" required></textarea>
+              </div>
             </div>
 
-            <!-- Submit Button -->
-            <button type="button" id="btn" class="btn btn-primary w-100 rounded-3 py-2 custom-btn">
+            <!-- Submit (type="submit" so Enter in the title field no longer reloads the page) -->
+            <button type="submit" id="btn" class="btn btn-lb btn-submit">
+              <i class="bi bi-send-fill" aria-hidden="true"></i>
               Submit
             </button>
           </form>
@@ -87,31 +184,33 @@
       </div>
     </div>
   </div>
-  <!-- Toast Container -->
-<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
-  
- 
-  <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="d-flex">
-      <div class="toast-body">
-        Feedback submitted successfully!
+
+  <!-- Toasts -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+    <div id="successToast" class="toast fb-toast fb-toast-success align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex align-items-center">
+        <span class="fb-toast-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span>
+        <div class="toast-body">
+          Feedback submitted successfully!
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
+
+    <div id="errorToast" class="toast fb-toast fb-toast-error align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex align-items-center">
+        <span class="fb-toast-icon" aria-hidden="true"><i class="bi bi-exclamation-circle-fill"></i></span>
+        <div class="toast-body">
+          Please fill in all required fields!
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+
   </div>
 
- 
-  <div id="errorToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="d-flex">
-      <div class="toast-body">
-        Please fill in all required fields!
-      </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-  </div>
-
-</div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-<script src="feedBackEmployee.js"></script>
+  <script src="feedBackEmployee.js"></script>
 </body>
 </html>
