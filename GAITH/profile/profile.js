@@ -785,11 +785,20 @@
     });
   }
 
+  // Authentication hook for system / team integration
+  function doLogout() {
+    if (typeof window.doLogout === 'function' && window.doLogout !== doLogout) {
+      window.doLogout();
+    }
+  }
+  window.doLogout = window.doLogout || doLogout;
+
   // ============================================================================
   // 10. LOGOUT HANDLER & LIFECYCLE
   // ============================================================================
   if (navLogoutBtn) {
     navLogoutBtn.addEventListener('click', () => {
+      doLogout();
       sessionStorage.setItem('logged_out', 'true');
       localStorage.removeItem('currentUser');
       window.location.href = '../login.html';

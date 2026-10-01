@@ -1097,6 +1097,14 @@
     });
   }
 
+  // Authentication hook for system / team integration
+  function doLogin() {
+    if (typeof window.doLogin === 'function' && window.doLogin !== doLogin) {
+      window.doLogin();
+    }
+  }
+  window.doLogin = window.doLogin || doLogin;
+
   // Handle form submission with Users.json credential verification
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
@@ -1217,6 +1225,9 @@
           loginToastMsg.textContent = `Welcome back, ${sessionUser.name}! (${(sessionUser.role || 'employee').toUpperCase()}). Redirecting...`;
           loginToast.style.display = 'flex';
         }
+
+        // Call doLogin hook upon successful authentication
+        doLogin();
 
         // Target dashboard / profile destination
         const destination = (matchedUser.role === 'hr')
