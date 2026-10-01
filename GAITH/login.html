@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Registration & Sign In — Bridgeway HR Management System</title>
+  <title>Registration & Sign In — Masar HR Management System</title>
   <meta name="description"
-    content="Secure role-based portal login and registration for Bridgeway HR Management System." />
+    content="Secure role-based portal login and registration for Masar HR Management System." />
+  <link rel="icon" type="image/svg+xml" href="../assets/masar-mark.svg" />
 
   <!-- Google Fonts: Plus Jakarta Sans & Inter (Project Standard) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -44,13 +45,8 @@
 
         <!-- Header Brand -->
         <header class="lb-panel-brand">
-          <a href="login.html" class="d-flex align-items-center gap-2 text-decoration-none">
-            <div class="lb-brand-icon" aria-hidden="true">
-              <i class="bi bi-diagram-3-fill"></i>
-            </div>
-            <div class="lb-brand-title">
-              Bridgeway<span class="lb-brand-accent">.hr</span>
-            </div>
+          <a href="../NADA/home/home.html" class="lb-brand-link" aria-label="Masar — Home">
+            <img src="../assets/masar-logo-dark.svg" alt="Masar" class="lb-brand-logo" height="38" />
           </a>
         </header>
 
@@ -155,8 +151,7 @@
                     <div class="lb-badge-slot"></div>
 
                     <div class="lb-card-brand lb-stagger-item lb-stagger-1">
-                      <i class="bi bi-diagram-3-fill"></i>
-                      <span>Bridgeway<span class="text-primary">.hr</span></span>
+                      <img src="../assets/masar-logo.svg" alt="Masar" class="lb-badge-brand-logo" height="19" />
                     </div>
 
                     <div class="lb-avatar-wrap lb-stagger-item lb-stagger-2">
@@ -264,6 +259,13 @@
            ==================================================================== -->
       <section class="lb-form-panel" aria-label="Portal Form Panel">
         <div class="lb-form-container">
+          <!-- Mobile Brand Logo Header (Visible on viewport < 1024px) -->
+          <div class="lb-mobile-brand d-lg-none text-center">
+            <a href="../NADA/home/home.html" class="d-inline-block text-decoration-none" aria-label="Masar — Home">
+              <img src="../assets/masar-logo.svg" alt="Masar" class="lb-mobile-brand-logo" height="32" />
+            </a>
+          </div>
+
           <h1 class="lb-title">Sign In to Your Workspace</h1>
           <p class="lb-subtitle">Select your role and enter your official credentials to access the portal.</p>
 

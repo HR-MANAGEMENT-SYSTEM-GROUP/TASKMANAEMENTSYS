@@ -6,52 +6,52 @@
   var $ = function (s) { return document.querySelector(s); };
   var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
 
-  
-let currentUser = null;
 
-function loadCurrentUser() {
-  const savedUser = localStorage.getItem("currentUser");
+  let currentUser = null;
 
-  if (!savedUser) {
-    currentUser = null;
-    return;
+  function loadCurrentUser() {
+    const savedUser = localStorage.getItem("currentUser");
+
+    if (!savedUser) {
+      currentUser = null;
+      return;
+    }
+
+    try {
+      currentUser = JSON.parse(savedUser);
+    } catch (error) {
+      console.error("Invalid currentUser:", error);
+      localStorage.removeItem("currentUser");
+      currentUser = null;
+    }
   }
 
-  try {
-    currentUser = JSON.parse(savedUser);
-  } catch (error) {
-    console.error("Invalid currentUser:", error);
+  function renderNavbar() {
+    const navAuth = document.getElementById("navAuth");
+    const navUser = document.getElementById("navUser");
+    const userName = document.getElementById("userName");
+
+    if (!navAuth || !navUser) return;
+
+    const loggedIn = currentUser && currentUser.role === "employee";
+
+    navAuth.classList.toggle("hidden", !!loggedIn);
+    navUser.classList.toggle("hidden", !loggedIn);
+
+    if (loggedIn && userName) {
+      userName.textContent = currentUser.name || "Employee";
+    }
+  }
+
+  window.logout = function () {
     localStorage.removeItem("currentUser");
-    currentUser = null;
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("bridgeway_current_role");
+    window.location.href = "../../GAITH/login.html";
   }
-}
 
-function renderNavbar() {
-  const navAuth = document.getElementById("navAuth");
-  const navUser = document.getElementById("navUser");
-  const userName = document.getElementById("userName");
-
-  if (!navAuth || !navUser) return;
-
-  const loggedIn = currentUser && currentUser.role === "employee";
-
-  navAuth.classList.toggle("hidden", !!loggedIn);
-  navUser.classList.toggle("hidden", !loggedIn);
-
-  if (loggedIn && userName) {
-    userName.textContent = currentUser.name || "Employee";
-  }
-}
-
-function logout() {
-  localStorage.removeItem("currentUser");
-  localStorage.removeItem("userRole");
-  localStorage.removeItem("bridgeway_current_role");
-  window.location.href = "../../GAITH/login.html";
-}
-
-loadCurrentUser();
-renderNavbar();
+  loadCurrentUser();
+  renderNavbar();
 
   var path = $('#roadPath'), world = $('#world'), trav = $('#traveler'), spacer = $('#spacer');
   var panels = $$('.stop-panel'), N = panels.length, I = N - 1;
@@ -316,7 +316,7 @@ renderNavbar();
       var dark = root.getAttribute('data-theme') !== 'dark';
       if (!reduce) { root.classList.add('theme-anim'); setTimeout(function () { root.classList.remove('theme-anim'); }, 450); }
       if (dark) root.setAttribute('data-theme', 'dark'); else root.removeAttribute('data-theme');
-      try { localStorage.setItem('journey-theme', dark ? 'dark' : 'light'); } catch (e) {}
+      try { localStorage.setItem('journey-theme', dark ? 'dark' : 'light'); } catch (e) { }
       paint();
     });
     paint();
