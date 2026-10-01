@@ -1,33 +1,44 @@
 <header class="hr-shared-header">
 
     <div class="hr-header-title">
-        <h3 id="hrPageTitle">HR Portal</h3>
-        <small>Human Resources Management</small>
+        <div class="header-brand-line">
+            <span class="header-platform-tag">MASAR PLATFORM</span>
+            <h3 id="hrPageTitle">HR Portal</h3>
+        </div>
+        <small>Workforce &amp; Organization Management</small>
     </div>
 
     <div class="hr-profile-menu">
 
-        <button type="button" class="hr-profile-box" id="hrProfileToggle">
+        <button type="button" class="hr-profile-box" id="hrProfileToggle" aria-haspopup="true" aria-expanded="false">
             <div class="profile-icon">
-                <i class="bi bi-person"></i>
+                <i class="bi bi-person-fill"></i>
             </div>
 
             <div class="hr-profile-info">
-                <b id="hrUserName">HR User</b>
-                <small id="hrUserRole">HR</small>
+                <b id="hrUserName">Hana Al-Mansour</b>
+                <small id="hrUserRole">HR Administrator</small>
             </div>
 
             <i class="bi bi-chevron-down profile-arrow"></i>
         </button>
 
         <div class="hr-profile-dropdown" id="hrProfileDropdown">
-          <a href="/GAITH/profile/profile.html">
-    <i class="bi bi-person-circle"></i>
-    <span>Profile</span>
-</a>
-            <button type="button" id="hrHeaderLogoutBtn">
+            <div class="dropdown-header-info">
+                <span>Signed in as HR Administrator</span>
+            </div>
+            <a href="/GAITH/profile/profile.html" class="dropdown-item-link">
+                <i class="bi bi-person-badge"></i>
+                <span>My Profile</span>
+            </a>
+            <a href="/NADA/hrpolicy/hrpolicy.html" class="dropdown-item-link">
+                <i class="bi bi-shield-check"></i>
+                <span>HR Policies</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <button type="button" id="hrHeaderLogoutBtn" class="dropdown-logout-btn">
                 <i class="bi bi-box-arrow-right"></i>
-                <span>Logout</span>
+                <span>Log Out</span>
             </button>
         </div>
 
