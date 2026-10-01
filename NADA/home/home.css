@@ -325,4 +325,838 @@ html.theme-anim *{transition:background-color .35s,color .35s,border-color .35s,
 .road-node:last-child .node-ring{fill:var(--accent);stroke:var(--accent)}
 .road-node:last-child .node-core,.road-node:last-child.active .node-core,.road-node:last-child.completed .node-core{fill:#fff}
 
+/* ==========================================================================
+   MASAR HR — "INSIDE THE TEAM" MEETING ROOM JOURNEY (team.html)
+   Clean, simple, executive design system fully integrated with home tokens
+   ========================================================================== */
+
+.team-body {
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.team-journey {
+  position: relative;
+  width: 100%;
+}
+
+/* 1. Generous Scroll Track for Cinematic Flight */
+.team-scroll-spacer {
+  height: 800vh;
+  width: 100%;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* 2. Full-Viewport Stage */
+.team-stage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* 3. High-Performance Canvas Meeting Room */
+.team-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  display: block;
+}
+
+/* 4. Directional Soft Contrast Scrim */
+.team-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 0.45s ease, background 0.45s ease;
+  background: radial-gradient(circle at 50% 50%, rgba(var(--bg-rgb) / 0.4) 0%, rgba(var(--bg-rgb) / 0.88) 100%);
+}
+
+.team-scrim.scrim-left {
+  background: linear-gradient(90deg, rgba(var(--bg-rgb) / 0.96) 0%, rgba(var(--bg-rgb) / 0.86) 38%, rgba(var(--bg-rgb) / 0.25) 65%, transparent 100%);
+}
+
+.team-scrim.scrim-right {
+  background: linear-gradient(270deg, rgba(var(--bg-rgb) / 0.96) 0%, rgba(var(--bg-rgb) / 0.86) 38%, rgba(var(--bg-rgb) / 0.25) 65%, transparent 100%);
+}
+
+.team-scrim.scrim-center {
+  background: radial-gradient(circle at 50% 50%, rgba(var(--bg-rgb) / 0.94) 0%, rgba(var(--bg-rgb) / 0.75) 50%, rgba(var(--bg-rgb) / 0.35) 100%);
+}
+
+@media (max-width: 768px) {
+  .team-scrim {
+    background: linear-gradient(180deg, transparent 0%, rgba(var(--bg-rgb) / 0.3) 25%, rgba(var(--bg-rgb) / 0.96) 55%, var(--bg) 100%) !important;
+  }
+}
+
+/* 5. HUD Viewport Container */
+.team-hud-container {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* 6. Individual Scene Cards */
+.team-scene {
+  position: absolute;
+  width: 100%;
+  max-width: 560px;
+  max-height: calc(100vh - 84px);
+  max-height: calc(100dvh - 84px);
+  overflow-y: auto;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s ease;
+}
+
+.team-scene::-webkit-scrollbar {
+  width: 5px;
+}
+.team-scene::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 4px;
+}
+
+/* Desktop Anchors */
+@media (min-width: 769px) {
+  .team-scene[data-anchor="left"] {
+    left: clamp(24px, 5.5vw, 84px);
+    top: calc(50% + 10px);
+    transform: translateY(-50%) translateY(20px);
+  }
+
+  .team-scene[data-anchor="right"] {
+    right: clamp(24px, 5.5vw, 84px);
+    left: auto;
+    top: calc(50% + 10px);
+    transform: translateY(-50%) translateY(20px);
+  }
+
+  .team-scene[data-anchor="center"] {
+    left: 50%;
+    top: calc(50% + 10px);
+    transform: translate(-50%, -50%) translateY(20px);
+    max-width: 730px;
+  }
+}
+
+/* Mobile Anchors (Docked Bottom Sheet) */
+@media (max-width: 768px) {
+  .team-scene {
+    left: 14px !important;
+    right: 14px !important;
+    bottom: 14px !important;
+    top: auto !important;
+    max-width: none !important;
+    max-height: 54dvh !important;
+    transform: translateY(24px);
+  }
+}
+
+/* Active Interactive State */
+.team-scene.is-active {
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (min-width: 769px) {
+  .team-scene[data-anchor="left"].is-active {
+    transform: translateY(-50%);
+  }
+  .team-scene[data-anchor="right"].is-active {
+    transform: translateY(-50%);
+  }
+  .team-scene[data-anchor="center"].is-active {
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* 7. Meeting HUD Card Surface */
+.team-card {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-line);
+  border-radius: 20px;
+  padding: 16px 24px 18px;
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  transition: border-color 0.3s ease;
+}
+
+:root[data-theme="dark"] .team-card {
+  background: rgba(14, 22, 38, 0.92);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+  .team-card {
+    padding: 14px 16px;
+    border-radius: 16px;
+  }
+}
+
+/* Meta Pill Header */
+.team-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.team-kicker {
+  font: 700 11px var(--head);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--on-bg);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.team-kicker-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--on-bg);
+  display: inline-block;
+  box-shadow: 0 0 10px rgba(var(--on-bg-rgb), 0.7);
+}
+
+.team-level-badge {
+  font: 700 11px var(--head);
+  letter-spacing: 0.04em;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background: var(--tint);
+  color: var(--accent-d);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
+}
+
+:root[data-theme="dark"] .team-level-badge {
+  background: rgba(59, 158, 255, 0.12);
+  color: #93c5fd;
+  border-color: rgba(59, 158, 255, 0.25);
+}
+
+/* Person Identity Chip */
+.team-person-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--tint);
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  padding: 4px 12px 4px 5px;
+  margin-bottom: 8px;
+}
+
+:root[data-theme="dark"] .team-person-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.team-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font: 700 11.5px var(--head);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.team-avatar.po { background: #1e3a8a; }
+.team-avatar.sm { background: #0079F1; }
+.team-avatar.leave { background: #059669; }
+.team-avatar.policy { background: #d97706; }
+.team-avatar.meetings { background: #0284c7; }
+.team-avatar.feedback { background: #4f46e5; }
+.team-avatar.org { background: var(--accent); }
+
+.team-person-name {
+  font: 700 13.5px var(--head);
+  color: var(--hdr-ink);
+  line-height: 1.1;
+}
+
+.team-person-role {
+  font-size: 11.5px;
+  color: var(--body);
+  font-weight: 500;
+}
+
+/* Typography Hierarchy */
+.team-title {
+  font: 700 clamp(1.22rem, 1.8vw, 1.48rem)/1.2 var(--head);
+  letter-spacing: -0.02em;
+  color: var(--hdr-ink);
+  margin-bottom: 6px;
+}
+
+.team-support {
+  font-size: 13.5px;
+  color: var(--body);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+/* Feature Points List */
+.team-points-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 11px;
+}
+
+.team-point-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .team-point-item {
+  color: #e2e8f0;
+}
+
+.team-point-item i {
+  color: var(--on-bg);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* 2x2 Feature Bento Mini Grid */
+.team-grid-2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.team-item-pill {
+  background: rgba(var(--bg-rgb) / 0.6);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 7px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+:root[data-theme="dark"] .team-item-pill {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.team-item-pill:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.team-item-pill .item-label {
+  font: 700 10.5px var(--head);
+  text-transform: uppercase;
+  color: var(--body);
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.team-item-pill .item-value {
+  font: 700 12.5px var(--head);
+  color: var(--hdr-ink);
+}
+
+/* Interactive Steppers */
+.team-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(var(--bg-rgb) / 0.6);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 6px 12px;
+  margin-bottom: 12px;
+  gap: 6px;
+}
+
+:root[data-theme="dark"] .team-stepper {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.team-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+
+.team-step-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--line);
+  color: var(--body);
+  font: 700 10px var(--head);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+:root[data-theme="dark"] .team-step-dot {
+  background: rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+}
+
+.team-step.is-active .team-step-dot {
+  background: var(--on-bg);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(var(--on-bg-rgb), 0.6);
+  transform: scale(1.12);
+}
+
+.team-step.is-completed .team-step-dot {
+  background: #059669;
+  color: #fff;
+}
+
+.team-step-label {
+  font: 600 10px var(--head);
+  color: var(--body);
+  white-space: nowrap;
+}
+
+.team-step.is-active .team-step-label {
+  color: var(--hdr-ink);
+  font-weight: 700;
+}
+
+/* CTA Buttons */
+.team-btn-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.team-btn-primary {
+  background: var(--accent);
+  color: #fff !important;
+  font: 600 13.5px var(--head);
+  letter-spacing: 0.02em;
+  padding: 8px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--accent);
+  box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.35);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.team-btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(var(--accent-rgb), 0.45);
+}
+
+.team-btn-secondary {
+  background: var(--hbtn-bg);
+  color: var(--hbtn-color);
+  font: 600 13.5px var(--head);
+  letter-spacing: 0.02em;
+  padding: 7px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--hbtn-border);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.team-btn-secondary:hover {
+  background: var(--hbtn-hbg);
+  color: var(--hbtn-hcolor);
+  border-color: var(--hbtn-hbg);
+}
+
+/* Minimap Schematic Widget — Smart Docking (Bottom Right / Left to NEVER overlap with cards) */
+.team-minimap-card {
+  position: absolute;
+  bottom: 24px;
+  right: 28px;
+  top: auto;
+  left: auto;
+  z-index: 25;
+  background: var(--glass);
+  border: 1px solid var(--glass-line);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 18px;
+  padding: 10px 14px 8px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  pointer-events: auto;
+  transition: right 0.45s cubic-bezier(0.16, 1, 0.3, 1), left 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s ease, opacity 0.3s ease;
+}
+
+.team-minimap-card.dock-left {
+  right: auto;
+  left: 28px;
+}
+
+:root[data-theme="dark"] .team-minimap-card {
+  background: rgba(14, 22, 38, 0.88);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+@media (max-width: 900px) {
+  .team-minimap-card {
+    display: none;
+  }
+}
+
+.team-minimap-header {
+  font: 700 9.5px var(--head);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--body);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.team-minimap-svg {
+  width: 140px;
+  height: 85px;
+  display: block;
+}
+
+.mm-room {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1.2;
+}
+
+.mm-table {
+  fill: rgba(var(--accent-rgb), 0.08);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+
+.mm-chair {
+  fill: var(--line);
+  stroke: var(--body);
+  stroke-width: 1;
+  cursor: pointer;
+  transition: fill 0.2s, stroke 0.2s, transform 0.2s;
+}
+
+.mm-chair:hover {
+  fill: var(--accent);
+  stroke: #fff;
+}
+
+.mm-chair.is-active {
+  fill: var(--on-bg);
+  stroke: #fff;
+  filter: drop-shadow(0 0 5px var(--on-bg));
+}
+
+.mm-cam {
+  fill: #ef4444;
+  stroke: #fff;
+  stroke-width: 2;
+  transition: cx 0.35s ease, cy 0.35s ease;
+  filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.8));
+}
+
+/* Mobile Bottom Progress Stepper */
+.team-mobile-progress {
+  display: none;
+  position: absolute;
+  top: 76px;
+  left: 14px;
+  right: 14px;
+  z-index: 25;
+  background: var(--glass);
+  border: 1px solid var(--glass-line);
+  backdrop-filter: blur(10px);
+  padding: 8px 14px;
+  border-radius: 16px;
+  pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+  .team-mobile-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+}
+
+.team-mobile-counter {
+  font: 700 11px var(--head);
+  color: var(--on-bg);
+  white-space: nowrap;
+}
+
+.team-mobile-segments {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.team-mobile-seg {
+  height: 4px;
+  flex: 1;
+  background: var(--line);
+  border-radius: 2px;
+  transition: background 0.3s;
+}
+
+.team-mobile-seg.is-active {
+  background: var(--on-bg);
+}
+.team-mobile-seg.is-done {
+  background: #059669;
+}
+
+/* Scroll Hint Pill */
+.team-scroll-hint {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  font: 700 11px var(--head);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--body);
+  background: var(--glass);
+  border: 1px solid var(--glass-line);
+  backdrop-filter: blur(10px);
+  padding: 8px 18px;
+  border-radius: 20px;
+  pointer-events: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow);
+  transition: opacity 0.3s ease;
+}
+
+.team-scroll-hint i {
+  font-size: 13px;
+  color: var(--on-bg);
+  animation: hintBob 1.6s infinite ease-in-out;
+}
+
+@keyframes hintBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+/* ==========================================================================
+   CREATIVE HERO / ABOUT MASAR SECTION STYLES (SCENE 0) — PERFECTLY BALANCED
+   ========================================================================== */
+.team-scene-hero {
+  max-width: 730px !important;
+  top: calc(50% + 10px) !important;
+}
+
+.team-scene-hero .team-card {
+  padding: 22px 28px 20px;
+  border-radius: 22px;
+}
+
+.team-hero-badge {
+  font: 700 11px var(--head);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 13px;
+  border-radius: 9999px;
+  background: var(--tint);
+  color: var(--accent-d);
+  border: 1px solid rgba(var(--accent-rgb), 0.25);
+  margin-bottom: 10px;
+}
+
+:root[data-theme="dark"] .team-hero-badge {
+  background: rgba(59, 158, 255, 0.12);
+  color: #93c5fd;
+  border-color: rgba(59, 158, 255, 0.3);
+}
+
+.team-hero-title {
+  font: 700 clamp(1.52rem, 2.3vw, 1.95rem)/1.2 var(--head);
+  letter-spacing: -0.025em;
+  color: var(--hdr-ink);
+  margin-bottom: 8px;
+}
+
+.team-hero-title .accent-text {
+  color: var(--on-bg);
+  background: linear-gradient(135deg, var(--on-bg), #00C6FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.team-hero-desc {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--body);
+  max-width: 620px;
+  margin: 0 auto 16px;
+}
+
+/* 3-Pillar Creative Bento — Perfectly Sized */
+.team-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+@media (max-width: 680px) {
+  .team-pillars-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+.team-pillar-card {
+  background: rgba(var(--bg-rgb) / 0.65);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+:root[data-theme="dark"] .team-pillar-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.team-pillar-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(var(--accent-rgb), 0.15);
+}
+
+.team-pillar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.team-pillar-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--tint);
+  color: var(--on-bg);
+  font-size: 13.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:root[data-theme="dark"] .team-pillar-icon {
+  background: rgba(59, 158, 255, 0.15);
+}
+
+.team-pillar-tag {
+  font: 700 9.5px var(--head);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--body);
+}
+
+.team-pillar-stat {
+  font: 700 15px/1.1 var(--head);
+  color: var(--on-bg);
+  font-variant-numeric: tabular-nums;
+  margin-top: 1px;
+}
+
+.team-pillar-name {
+  font: 700 13px var(--head);
+  color: var(--hdr-ink);
+  line-height: 1.2;
+}
+
+.team-pillar-text {
+  font-size: 11.5px;
+  color: var(--body);
+  line-height: 1.35;
+}
+
+.team-scene-hero .team-btn-group {
+  gap: 12px;
+}
+
+.team-scene-hero .team-btn-primary,
+.team-scene-hero .team-btn-secondary {
+  padding: 9px 22px;
+  font-size: 14px;
+  border-radius: 11px;
+}
+
+
+
 
