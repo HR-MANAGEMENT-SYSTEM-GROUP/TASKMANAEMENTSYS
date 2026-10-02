@@ -3,55 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Management</title>
-    <link rel="stylesheet" href="ManageEmployeesPage.css">
+    <title>Masar — Manage Employees</title>
+    <link rel="stylesheet" href="../../Shared/HR-shared.css">
     <link rel="stylesheet" href="../../Shared/HR-sidebar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="ManageEmployeesPage.css">
 </head>
-<body>
+<body class="employee-management">
 
 <div class="hr-sidebar-page">
     <div id="hrSidebar"></div>
     <div class="hr-with-sidebar-content">
+    <div id="hrHeader"></div>
 
 
-<div class="page">
+<main class="page">
     <!-- Header -->
-    <div class="page-header">
-        <div>
-            <h1>Employees</h1>
-            <p>Manage employee accounts, departments, positions and status.</p>
+    <header class="page-header">
+        <div class="hero-copy">
+            <span class="page-eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> HR Portal &middot; Masar Platform</span>
+            <h1>Manage <span>Employees</span></h1>
+            <p>Your people, in one place. Manage employee accounts, departments, positions and status.</p>
         </div>
-        <button class="add-button" onclick="showForm()">+ Add Employee</button>
-    </div>
+        <div class="hero-meta"><i class="bi bi-people" aria-hidden="true"></i> Employee Management</div>
+    </header>
 
     <!-- Summary -->
     <div class="summary-cards">
         <div class="summary-card">
-            <span>Employees</span>
+            <div class="summary-top"><span class="summary-icon"><i class="bi bi-people-fill" aria-hidden="true"></i></span><span class="summary-pill">Workforce</span></div>
             <h2 id="totalEmployees">0</h2>
+            <span class="summary-label">Total Employees</span>
+            <p class="summary-note">Your complete employee directory</p>
         </div>
         <div class="summary-card">
-            <span>Active</span>
+            <div class="summary-top"><span class="summary-icon"><i class="bi bi-person-check" aria-hidden="true"></i></span><span class="summary-pill">Active</span></div>
             <h2 id="activeEmployees">0</h2>
+            <span class="summary-label">Active Employees</span>
+            <p class="summary-note">Currently active team members</p>
         </div>
         <div class="summary-card">
-            <span>Blocked</span>
+            <div class="summary-top"><span class="summary-icon"><i class="bi bi-shield-lock" aria-hidden="true"></i></span><span class="summary-pill">Restricted</span></div>
             <h2 id="blockedEmployees">0</h2>
+            <span class="summary-label">Blocked Employees</span>
+            <p class="summary-note">Accounts with restricted access</p>
         </div>
         <div class="summary-card">
-            <span>Departments</span>
+            <div class="summary-top"><span class="summary-icon"><i class="bi bi-building" aria-hidden="true"></i></span><span class="summary-pill">Organization</span></div>
             <h2 id="totalDepartments">0</h2>
+            <span class="summary-label">Departments</span>
+            <p class="summary-note">Teams across your organization</p>
         </div>
     </div>
 
-    <!-- Employee List -->
-    <section class="employee-section">
-        <div class="tools">
-            <div class="search-filter">
-                <input type="text" id="search" placeholder="Search by name or email...">
-
-                <select id="departmentFilter">
+    <!-- Keep the existing search, filter and add actions connected to their handlers. -->
+    <div class="tools" role="search" aria-label="Search employee directory">
+        <div class="search-filter">
+            <div class="search-box">
+                <i class="bi bi-search" aria-hidden="true"></i>
+                <input type="search" id="search" placeholder="Search by name or email..." aria-label="Search employees by name or email">
+            </div>
+            <div class="department-select">
+                <i class="bi bi-sliders2" aria-hidden="true"></i>
+                <select id="departmentFilter" aria-label="Filter by department">
                     <option value="">All Departments</option>
                     <option value="IT">IT</option>
                     <option value="Marketing">Marketing</option>
@@ -62,34 +76,51 @@
                 </select>
             </div>
         </div>
+        <button type="button" class="add-button" onclick="showForm()"><i class="bi bi-plus-lg" aria-hidden="true"></i> Add Employee</button>
+    </div>
 
-        <div class="table-box">
+    <!-- Employee List -->
+    <section class="employee-section" aria-labelledby="directoryTitle">
+        <div class="directory-header">
+            <div class="directory-title">
+                <span class="summary-icon"><i class="bi bi-person-vcard" aria-hidden="true"></i></span>
+                <div>
+                    <h2 id="directoryTitle">Employee Directory</h2>
+                    <p>Keep your team information organized and up to date.</p>
+                </div>
+            </div>
+            <span class="directory-tag"><i class="bi bi-grid" aria-hidden="true"></i> People &amp; Teams</span>
+        </div>
+
+        <div class="table-box" tabindex="0" role="region" aria-label="Employee directory table, scroll horizontally on small screens">
             <table>
                 <thead>
                     <tr>
-                        <th>Employee</th>
-                        <th>Email</th>
-                        <th>Department</th>
-                        <th>Position</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th scope="col">Employee</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Department</th>
+                        <th scope="col">Position</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="container"></tbody>
             </table>
         </div>
+        <p class="directory-empty">No employees to display. Try a different name or department.</p>
     </section>
-</div>
+</main>
 
 <!-- Add / Edit Employee -->
-<div id="employeeForm" class="modal" hidden>
+<div id="employeeForm" class="modal" role="dialog" aria-modal="true" aria-labelledby="formTitle" hidden>
     <div class="modal-box">
         <div class="modal-header">
             <div>
+                <span class="modal-eyebrow">MASAR &middot; EMPLOYEE RECORD</span>
                 <h2 id="formTitle">New Employee</h2>
                 <p>Add or update employee information.</p>
             </div>
-            <button type="button" class="close-button" onclick="hideForm()">×</button>
+            <button type="button" class="close-button" onclick="hideForm()" aria-label="Close employee form">×</button>
         </div>
 
         <form id="form">
@@ -152,14 +183,15 @@
 </div>
 
 <!-- View Employee -->
-<div id="viewEmployeeModal" class="modal" hidden>
+<div id="viewEmployeeModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="viewEmployeeName" hidden>
     <div class="modal-box view-modal">
         <div class="modal-header">
             <div>
+                <span class="modal-eyebrow">MASAR &middot; EMPLOYEE PROFILE</span>
                 <h2 id="viewEmployeeName">Employee</h2>
                 <p>Employee account and employment details.</p>
             </div>
-            <button type="button" class="close-button" onclick="closeEmployeeView()">×</button>
+            <button type="button" class="close-button" onclick="closeEmployeeView()" aria-label="Close employee profile">×</button>
         </div>
 
         <div class="employee-view-grid">
