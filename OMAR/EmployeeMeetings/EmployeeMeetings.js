@@ -1,31 +1,71 @@
 let Meetings = [];
 let Employees = [];
+let meetingHR = null;
+const meetingHREmail = "maya.nasser@company.com";
 
-// Temporary until the login system is connected.
-let currentEmployeeId = 9;
+// Use the signed-in employee for requests, invitations and responses.
+function getSignedInEmployeeId() {
+    try {
+        const user = JSON.parse(localStorage.getItem("currentUser"));
+        const id = Number(user?.id);
+        return user?.role === "employee" && Number.isInteger(id) && id > 0 ? id : null;
+    } catch (_) {
+        return null;
+    }
+}
+
+const currentEmployeeId = getSignedInEmployeeId();
+
+function ensureEmployeeSession() {
+    const signedInId = getSignedInEmployeeId();
+    if (signedInId === null) {
+        window.location.href = "../../GAITH/login.html";
+        return false;
+    }
+    if (signedInId !== currentEmployeeId) {
+        window.location.reload();
+        return false;
+    }
+    return true;
+}
 
 function loadEmployees() {
-    let saved = localStorage.getItem("Employees");
-
-    if (saved) {
-        Employees = JSON.parse(saved);
-        startPage();
-        return;
+    const submitButton = document.querySelector("#requestMeetingForm button[type='submit']");
+    submitButton.disabled = true;
+    try {
+        const saved = JSON.parse(localStorage.getItem("Employees"));
+        Employees = Array.isArray(saved) ? saved : [];
+    } catch (_) {
+        Employees = [];
     }
 
-    fetch("Users.json")
-        .then(response => response.json())
-        .then(data => {
-            Employees = data;
-            localStorage.setItem("Employees", JSON.stringify(data));
-            startPage();
+    // Resolve the fixed HR recipient from the full directory, even when the
+    // employee cache contains employee accounts only.
+    return fetch("../../jsonFiles/Users.json")
+        .then(response => {
+            if (!response.ok) throw new Error("Users.json could not be loaded");
+            return response.json();
         })
-        .catch(error => console.log("Error loading employees:", error));
+        .then(data => {
+            if (!Array.isArray(data)) throw new Error("Invalid user directory");
+            meetingHR = data.find(user =>
+                user.role === "hr" &&
+                (user.email || "").toLowerCase() === meetingHREmail
+            ) || null;
+            if (Employees.length === 0) {
+                Employees = data;
+                localStorage.setItem("Employees", JSON.stringify(data));
+            }
+        })
+        .catch(error => console.log("Error loading meeting directory:", error))
+        .finally(() => {
+            submitButton.disabled = false;
+            if (ensureEmployeeSession()) startPage();
+        });
 }
 
 function startPage() {
     Meetings = JSON.parse(localStorage.getItem("Meetings")) || [];
-    setHRManager();
     displayInvitations();
     displayUpcomingMeetings();
     displayMyRequests();
@@ -36,19 +76,13 @@ function saveMeetings() {
 }
 
 function getHRManager() {
-    return Employees.find(employee => employee.position === "HR Manager");
-}
-
-function setHRManager() {
-    let manager = getHRManager();
-    document.getElementById("hrManager").value =
-        manager ? manager.name : "HR Manager not found";
+    return meetingHR;
 }
 
 // Request meeting modal.
 function showRequestForm() {
+    if (!ensureEmployeeSession()) return;
     document.getElementById("requestMeetingForm").reset();
-    setHRManager();
     document.getElementById("requestFormContainer").hidden = false;
 }
 
@@ -59,10 +93,11 @@ function hideRequestForm() {
 // Send a meeting request to HR.
 document.getElementById("requestMeetingForm").addEventListener("submit", function (event) {
     event.preventDefault();
+    if (!ensureEmployeeSession()) return;
 
     let manager = getHRManager();
     if (!manager) {
-        alert("HR Manager was not found.");
+        alert("Unable to load the HR recipient. Please reload the page and try again.");
         return;
     }
 
@@ -165,6 +200,7 @@ function displayInvitations() {
 }
 
 function respondToMeeting(id, status) {
+    if (!ensureEmployeeSession()) return;
     let meeting = Meetings.find(item => item.id === id);
     if (!meeting) return;
 
@@ -262,6 +298,7 @@ function displayMyRequests() {
 }
 
 function joinMeeting(id) {
+    if (!ensureEmployeeSession()) return;
     let meeting = Meetings.find(item => item.id === id);
     if (!meeting) return;
 
@@ -270,8 +307,9 @@ function joinMeeting(id) {
         saveMeetings();
     }
 
-    window.location.href =
-        "meetingzoom.html?room=" + encodeURIComponent(meeting.roomName);
+       window.location.href =
+        "../meetingzoom/meetingzoom.html?room=" +
+        encodeURIComponent(meeting.roomName);
 }
 
 function formatDate(date) {
@@ -289,4 +327,78 @@ function formatTime(time) {
     return (hour % 12 || 12) + ":" + parts[1] + " " + period;
 }
 
-loadEmployees();
+if (ensureEmployeeSession()) loadEmployees();
+
+/* Home navbar, theme and footer behavior for this employee meetings page. */
+(function () {
+    'use strict';
+
+    const root = document.documentElement;
+    const themeButton = document.getElementById('themeToggle');
+    const themeLabel = document.getElementById('themeLabel');
+
+    try {
+        if (localStorage.getItem('journey-theme') === 'dark') {
+            root.setAttribute('data-theme', 'dark');
+        }
+    } catch (_) {
+        // Keep the default theme if browser storage is unavailable.
+    }
+
+    function renderTheme() {
+        const dark = root.getAttribute('data-theme') === 'dark';
+        const label = dark ? 'Switch to light theme' : 'Switch to dark theme';
+        themeButton.setAttribute('aria-label', label);
+        themeButton.title = label;
+        themeLabel.textContent = dark ? 'Light' : 'Dark';
+    }
+
+    themeButton.addEventListener('click', function () {
+        const dark = root.getAttribute('data-theme') !== 'dark';
+        if (dark) root.setAttribute('data-theme', 'dark');
+        else root.removeAttribute('data-theme');
+        try {
+            localStorage.setItem('journey-theme', dark ? 'dark' : 'light');
+        } catch (_) {
+            // The theme still works for this visit when storage is unavailable.
+        }
+        renderTheme();
+    });
+
+    function renderUser() {
+        let user = null;
+        try {
+            user = JSON.parse(localStorage.getItem('currentUser'));
+        } catch (_) {
+            // Keep the login link visible when there is no readable session.
+        }
+        document.getElementById('navAuth').classList.toggle('hidden', !!user);
+        document.getElementById('navUser').classList.toggle('hidden', !user);
+        document.getElementById('userName').textContent = user?.name || 'Employee';
+    }
+
+    // Use the same session cleanup as the existing Home navbar.
+    window.logout = function () {
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('bridgeway_current_role');
+        localStorage.setItem('loggedIn', 'false');
+        window.location.reload();
+    };
+
+    window.addEventListener('storage', function (event) {
+        if (event.key === 'currentUser' || event.key === null) {
+            if (!ensureEmployeeSession()) return;
+            renderUser();
+        }
+        if (event.key === 'journey-theme' || event.key === null) {
+            if (event.newValue === 'dark') root.setAttribute('data-theme', 'dark');
+            else root.removeAttribute('data-theme');
+            renderTheme();
+        }
+    });
+
+    document.getElementById('yr').textContent = new Date().getFullYear();
+    renderTheme();
+    renderUser();
+})();
