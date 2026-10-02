@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>HR System - All Screens</title>
+
+    <style>
+    :root {
+        --primary: #0179F1;
+        --primary-dark: #005BB5;
+        --primary-light: #4DA3FF;
+
+        --ink: #172033;
+        --body: #475569;
+
+        --surface: rgba(255, 255, 255, 0.82);
+        --line: rgba(203, 213, 225, 0.75);
+
+        --tint: #E8F3FF;
+        --tint-border: #BAE6FD;
+
+        --success: #16A34A;
+        --warning: #F59E0B;
+        --purple: #7C3AED;
+        --danger: #DC2626;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        min-height: 100vh;
+        margin: 0;
+
+        font-family: "Inter", "Segoe UI", Arial, sans-serif;
+
+        color: var(--ink);
+
+        background:
+            radial-gradient(circle at 10% 10%, rgba(1, 121, 241, 0.22), transparent 30%),
+            radial-gradient(circle at 90% 20%, rgba(124, 58, 237, 0.16), transparent 28%),
+            radial-gradient(circle at 50% 100%, rgba(77, 163, 255, 0.20), transparent 35%),
+            linear-gradient(135deg, #E2E8F0 0%, #CDDEEE 100%);
+
+        background-attachment: fixed;
+
+        padding: 55px 24px;
+
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+
+        background-image:
+            linear-gradient(rgba(255,255,255,0.22) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.22) 1px, transparent 1px);
+
+        background-size: 42px 42px;
+
+        mask-image: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent 75%);
+
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .container {
+        width: min(1180px, 100%);
+
+        margin: auto;
+
+        position: relative;
+
+        padding: 44px;
+
+        background:
+            linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.74));
+
+        border: 1px solid rgba(255,255,255,0.8);
+        border-bottom: 8px solid var(--primary);
+
+        border-radius: 32px;
+
+        box-shadow:
+            0 40px 90px rgba(15, 23, 42, 0.16),
+            0 12px 30px rgba(1, 121, 241, 0.12),
+            inset 0 1px 0 rgba(255,255,255,0.9);
+
+        backdrop-filter: blur(18px);
+
+        overflow: hidden;
+
+        animation: pageEnter 0.8s ease both;
+    }
+
+    .container::before {
+        content: "";
+        position: absolute;
+
+        width: 520px;
+        height: 520px;
+
+        right: -230px;
+        top: -230px;
+
+        background:
+            radial-gradient(circle, rgba(1, 121, 241, 0.22), transparent 65%);
+
+        border-radius: 50%;
+
+        animation: floatGlow 7s ease-in-out infinite;
+
+        pointer-events: none;
+    }
+
+    .container::after {
+        content: "";
+        position: absolute;
+
+        inset: 0;
+
+        background:
+            linear-gradient(
+                120deg,
+                transparent 0%,
+                rgba(255,255,255,0.55) 45%,
+                transparent 70%
+            );
+
+        transform: translateX(-120%);
+
+        animation: shine 6s ease-in-out infinite;
+
+        pointer-events: none;
+    }
+
+    h1,
+    h2,
+    p,
+    ul {
+        position: relative;
+        z-index: 2;
+    }
+
+    h1 {
+        margin: 0 0 14px;
+
+        font-size: clamp(42px, 6vw, 76px);
+        line-height: 1.02;
+
+        letter-spacing: -2.2px;
+
+        color: var(--ink);
+
+        font-weight: 950;
+    }
+
+    h1::after {
+        content: "";
+        display: block;
+
+        width: 170px;
+        height: 8px;
+
+        margin-top: 22px;
+
+        border-radius: 999px;
+
+        background:
+            linear-gradient(
+                90deg,
+                var(--primary),
+                var(--primary-light),
+                transparent
+            );
+
+        animation: linePulse 2.4s ease-in-out infinite;
+    }
+
+    p {
+        max-width: 780px;
+
+        margin: 0 0 34px;
+
+        color: var(--body);
+
+        font-size: 18px;
+        line-height: 1.8;
+        font-weight: 600;
+    }
+
+    h2 {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        margin: 34px 0 18px;
+
+        color: var(--ink);
+
+        font-size: clamp(24px, 3vw, 34px);
+        font-weight: 900;
+
+        letter-spacing: -0.7px;
+    }
+
+    h2::before {
+        content: "";
+
+        width: 14px;
+        height: 14px;
+
+        display: inline-block;
+
+        border-radius: 50%;
+
+        background: var(--primary);
+
+        box-shadow:
+            0 0 0 7px rgba(1, 121, 241, 0.13),
+            0 0 22px rgba(1, 121, 241, 0.38);
+
+        animation: dotPulse 1.8s ease-in-out infinite;
+    }
+
+    ul {
+        list-style: none;
+
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 14px;
+
+        padding: 0;
+        margin: 0 0 28px;
+    }
+
+    li {
+        margin: 0;
+    }
+
+    a {
+        min-height: 64px;
+
+        display: flex;
+        align-items: center;
+
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+
+        padding: 16px 18px;
+
+        background:
+            linear-gradient(180deg, #ffffff, #f8fbff);
+
+        border: 1px solid var(--line);
+        border-left: 7px solid var(--primary);
+
+        border-radius: 18px;
+
+        color: var(--ink);
+
+        text-decoration: none;
+
+        font-size: 15px;
+        font-weight: 850;
+
+        box-shadow:
+            0 10px 24px rgba(15, 23, 42, 0.06),
+            0 3px 8px rgba(1, 121, 241, 0.06);
+
+        transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            border-color 0.25s ease,
+            color 0.25s ease;
+    }
+
+    a::before {
+        content: "";
+        position: absolute;
+
+        inset: -2px;
+
+        background:
+            conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                transparent 60deg,
+                rgba(1, 121, 241, 0.95) 110deg,
+                rgba(77, 163, 255, 0.95) 145deg,
+                transparent 205deg,
+                transparent 360deg
+            );
+
+        opacity: 0;
+        z-index: -2;
+
+        animation: borderSpin 2.5s linear infinite;
+    }
+
+    a::after {
+        content: "";
+        position: absolute;
+
+        inset: 1px;
+
+        background:
+            linear-gradient(180deg, #ffffff, #f8fbff);
+
+        border-radius: inherit;
+
+        z-index: -1;
+    }
+
+    a:hover {
+        transform: translateY(-6px) scale(1.015);
+
+        color: var(--primary);
+
+        border-left-color: var(--primary-dark);
+
+        box-shadow:
+            0 20px 44px rgba(1, 121, 241, 0.20),
+            0 8px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    a:hover::before {
+        opacity: 1;
+    }
+
+    a:active {
+        transform: translateY(-2px) scale(0.99);
+    }
+
+    /* Section colors */
+    h2:nth-of-type(1)::before {
+        background: var(--primary);
+    }
+
+    h2:nth-of-type(2)::before {
+        background: var(--purple);
+        box-shadow:
+            0 0 0 7px rgba(124, 58, 237, 0.13),
+            0 0 22px rgba(124, 58, 237, 0.34);
+    }
+
+    h2:nth-of-type(2) + ul a {
+        border-left-color: var(--purple);
+    }
+
+    h2:nth-of-type(2) + ul a:hover {
+        color: var(--purple);
+        box-shadow:
+            0 20px 44px rgba(124, 58, 237, 0.18),
+            0 8px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    h2:nth-of-type(3)::before {
+        background: var(--success);
+        box-shadow:
+            0 0 0 7px rgba(22, 163, 74, 0.13),
+            0 0 22px rgba(22, 163, 74, 0.34);
+    }
+
+    h2:nth-of-type(3) + ul a {
+        border-left-color: var(--success);
+    }
+
+    h2:nth-of-type(3) + ul a:hover {
+        color: var(--success);
+        box-shadow:
+            0 20px 44px rgba(22, 163, 74, 0.18),
+            0 8px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    /* Cool numbering badge */
+    a {
+        counter-increment: screenCounter;
+    }
+
+    a::selection {
+        background: var(--primary);
+        color: white;
+    }
+
+    @keyframes pageEnter {
+        from {
+            opacity: 0;
+            transform: translateY(26px) scale(0.98);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @keyframes floatGlow {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(28px);
+        }
+    }
+
+    @keyframes shine {
+        0% {
+            transform: translateX(-120%);
+        }
+
+        40% {
+            transform: translateX(120%);
+        }
+
+        100% {
+            transform: translateX(120%);
+        }
+    }
+
+    @keyframes borderSpin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes dotPulse {
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.18);
+        }
+    }
+
+    @keyframes linePulse {
+        0%,
+        100% {
+            width: 130px;
+            opacity: 0.8;
+        }
+
+        50% {
+            width: 220px;
+            opacity: 1;
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        body {
+            padding: 28px 16px;
+        }
+
+        .container {
+            padding: 30px 24px;
+            border-radius: 26px;
+        }
+
+        ul {
+            grid-template-columns: 1fr;
+        }
+
+        a {
+            min-height: 58px;
+        }
+    }
+
+    @media (max-width: 520px) {
+        body {
+            padding: 18px 10px;
+        }
+
+        .container {
+            padding: 24px 18px;
+            border-radius: 22px;
+        }
+
+        h1 {
+            font-size: 34px;
+        }
+
+        p {
+            font-size: 15px;
+        }
+
+        h2 {
+            font-size: 22px;
+        }
+
+        a {
+            font-size: 14px;
+            padding: 14px 15px;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>HR System — all screens</h1>
+
+        <p>
+            Home page for the team: click any screen to open it.
+        </p>
+
+
+        <h2>Shared and public screens</h2>
+
+        <ul>
+            <li><a href="GAITH/login.html">1. Login</a></li>
+            <li><a href="NADA/home/home.html">2. Home and Services</a></li>
+            <li><a href="GAITH/profile/profile.html">3. User Profile</a></li>
+            <li><a href="NADA/home/team.html">6. Our Team</a></li>
+            <li><a href="YAQEEN/feedBackEmployee/feedBackEmployee.html">7. Contact Us and Submit Feedback</a></li>
+        </ul>
+
+
+        <h2>HR screens</h2>
+
+        <ul>
+            <li><a href="NADA/hrdashboard/hrdashboard.html">HR Dashboard</a></li>
+            <li><a href="NADA/hrpolicy/hrpolicy.html">HR Policy</a></li>
+            <li><a href="YAQEEN/companyPolicies/companyPolicies.html">5. Company Policies</a></li>
+            <li><a href="OMAR/ManageEmployeesPage/ManageEmployeesPage.html">8. Employee Management</a></li>
+            <li><a href="TAREQ/HR%20TASK/HR_TASK.html">11. Task Management</a></li>
+            <li><a href="TAREQ/HR%20TASK/HR_TASK.html">12. Create or Edit and Assign Task</a></li>
+            <li><a href="TAREQ/HR%20TASK/HR_TASK.html">13. Task Submission Review</a></li>
+            <li><a href="Amneh/HR/leaves-hr.html">14. Leave and Early-Departure Requests</a></li>
+            <li><a href="YAQEEN/feedBackHr/feedBackHr.html">15. Employee Feedback Inbox</a></li>
+            <li><a href="OMAR/HRMeetings/HRMeetings.html">HR Meetings</a></li>
+        </ul>
+
+
+        <h2>Employee screens</h2>
+
+        <ul>
+            <li><a href="NADA/home/home.html">My Workspace</a></li>
+            <li><a href="YAQEEN/companyPolicies/companyPolicies.html">5. Company Policies</a></li>
+            <li><a href="TAREQ/EMP%20TASK/EMP_TASK.html">16. My Tasks</a></li>
+            <li><a href="TAREQ/EMP%20TASK/EMP_TASK.html">17. Task Details and Submit Solution</a></li>
+            <li><a href="Amneh/EMP/leaves-emp.html">18. Submit Leave or Early-Departure Request</a></li>
+            <li><a href="Amneh/EMP/leaves-emp.html">19. My Leave and Early-Departure Requests</a></li>
+            <li><a href="OMAR/EmployeeMeetings/EmployeeMeetings.html">Employee Meetings</a></li>
+        </ul>
+
+    </div>
+
+</body>
+
+</html>
