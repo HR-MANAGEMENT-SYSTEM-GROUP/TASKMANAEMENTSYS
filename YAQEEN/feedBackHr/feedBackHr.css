@@ -45,6 +45,7 @@
   color: #fff;
   background: linear-gradient(135deg, var(--lb-primary-dark), var(--lb-primary));
   box-shadow: 0 20px 40px -24px rgba(29, 78, 216, 0.6);
+  margin-top: 2%;
 }
 .page-header::before,
 .page-header::after {
@@ -148,8 +149,8 @@
 }
 
 /* Count chip: a CSS counter over the cards in #parent */
-#parent { counter-reset: feedback; }
-#parent > * { counter-increment: feedback; }
+/* #parent { counter-reset: feedback; }
+#parent > * { counter-increment: feedback; }*/
 .count-chip {
   grid-row: 1;
   grid-column: 2;
@@ -163,9 +164,9 @@
   font-weight: 600;
   white-space: nowrap;
 }
-.count-chip::after { content: counter(feedback) " submissions"; }
-#parent:has(> :only-child) ~ .count-chip::after { content: counter(feedback) " submission"; }
-
+/* .count-chip::after { content: counter(feedback) " submissions"; } */
+/* #parent:has(> :only-child) ~ .count-chip::after { content: counter(feedback) " submission"; } */
+/*  */
 #parent {
   grid-row: 2;
   grid-column: 1 / -1;
