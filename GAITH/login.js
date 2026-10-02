@@ -36,7 +36,7 @@ passInput.oninput = () => passErr.style.display = "none";
 document.getElementById("hrLoginForm").onsubmit = (e) => {
   e.preventDefault();
   let email = emailInput.value.trim().toLowerCase();
-  let user = users.find(u => u.email.toLowerCase() === email);
+  let user = (JSON.parse(localStorage.getItem("Employees")) || []).find(u => u.email.toLowerCase() === email) || users.find(u => u.email.toLowerCase() === email);
   let savedPass = (JSON.parse(localStorage.getItem("user_passwords")) || {})[email];
 
   if (!email.includes("@")) {
@@ -45,8 +45,8 @@ document.getElementById("hrLoginForm").onsubmit = (e) => {
     return;
   }
 
-  if (!user || user.role !== role || passInput.value !== (savedPass || user.password)) {
-    passErr.textContent = "Invalid credentials or role.";
+  if (!user || user.role !== role || user.status === "Blocked" || passInput.value !== (savedPass || user.password)) {
+    passErr.textContent = user?.status === "Blocked" ? "Account is blocked." : "Invalid credentials or role.";
     passErr.style.display = "block";
     return;
   }
