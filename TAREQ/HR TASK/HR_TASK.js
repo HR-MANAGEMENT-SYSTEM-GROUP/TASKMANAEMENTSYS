@@ -150,12 +150,27 @@ function loadEmployees() {
 
     fetch(USERS_JSON_PATH)
         .then(function (response) {
+
+            if (!response.ok) {
+                throw new Error("Users.json not found: " + USERS_JSON_PATH);
+            }
+
             return response.json();
+
         })
         .then(function (users) {
 
+            /*
+                يدعم لو الملف Array مباشرة
+                أو لو كان object وفيه users
+            */
+            const usersList =
+                Array.isArray(users)
+                    ? users
+                    : users.users || [];
+
             employees =
-                users.filter(function (user) {
+                usersList.filter(function (user) {
 
                     const role =
                         String(user.role || "")
@@ -163,7 +178,7 @@ function loadEmployees() {
                             .toLowerCase();
 
                     const status =
-                        String(user.status || "")
+                        String(user.status || "active")
                             .trim()
                             .toLowerCase();
 
@@ -173,6 +188,8 @@ function loadEmployees() {
                     );
 
                 });
+
+            console.log("Loaded Employees:", employees);
 
             renderEmployeeMultiSelect(
                 "employeeList",
@@ -187,11 +204,24 @@ function loadEmployees() {
 
         })
         .catch(function (error) {
-            console.log("Users.json Error", error);
+
+            console.error("Users.json Error:", error);
+
+            employees = [];
+
+            renderEmployeeMultiSelect(
+                "employeeList",
+                [],
+                "createEmp"
+            );
+
+            loadFilters();
+            displayTasks();
+            updateDashboard();
+
         });
 
 }
-
 
 function getEmployeeById(employeeId) {
 
@@ -216,6 +246,10 @@ function getEmployeeNameById(employeeId) {
    MULTI SELECT EMPLOYEES WITH CHECKBOXES
 ========================================================= */
 
+/* =========================================================
+   SELECT-LIKE MULTI EMPLOYEE DROPDOWN
+========================================================= */
+
 function renderEmployeeMultiSelect(containerId, selectedIds = [], prefix = "emp") {
 
     const container =
@@ -232,35 +266,31 @@ function renderEmployeeMultiSelect(containerId, selectedIds = [], prefix = "emp"
             })
         );
 
-    const allChecked =
-        employees.length > 0 &&
-        employees.every(function (employee) {
-            return selectedSet.has(Number(employee.id));
-        });
-
     container.innerHTML = `
-        <div class="employee-multi-select">
+        <div class="employee-select-wrapper">
 
             <button
                 type="button"
-                class="employee-select-btn"
-                onclick="toggleEmployeeDropdown('${containerId}')">
+                class="employee-select-control"
+                onclick="toggleEmployeeDropdown('${containerId}', event)">
 
                 <span id="${containerId}_summary">
                     ${getSelectedSummary(selectedSet)}
                 </span>
 
-                <span>▾</span>
+                <span class="employee-select-arrow">
+                    ▾
+                </span>
 
             </button>
 
-            <div class="employee-select-menu" id="${containerId}_menu">
+            <div class="employee-select-dropdown" id="${containerId}_menu">
 
-                <label class="employee-check-row select-all-row">
+                <label class="employee-option select-all-option">
 
                     <input
                         type="checkbox"
-                        ${allChecked ? "checked" : ""}
+                        ${employees.length > 0 && selectedSet.size === employees.length ? "checked" : ""}
                         onchange="toggleAllEmployees('${containerId}', this.checked)">
 
                     <span>
@@ -269,7 +299,7 @@ function renderEmployeeMultiSelect(containerId, selectedIds = [], prefix = "emp"
 
                 </label>
 
-                <div class="employee-check-list">
+                <div class="employee-options-list">
 
                     ${
                         employees.map(function (employee) {
@@ -278,7 +308,7 @@ function renderEmployeeMultiSelect(containerId, selectedIds = [], prefix = "emp"
                                 selectedSet.has(Number(employee.id));
 
                             return `
-                                <label class="employee-check-row">
+                                <label class="employee-option">
 
                                     <input
                                         type="checkbox"
@@ -307,7 +337,21 @@ function renderEmployeeMultiSelect(containerId, selectedIds = [], prefix = "emp"
 }
 
 
-function toggleEmployeeDropdown(containerId) {
+function toggleEmployeeDropdown(containerId, event) {
+
+    if (event) {
+        event.stopPropagation();
+    }
+
+    document
+        .querySelectorAll(".employee-select-dropdown")
+        .forEach(function (menu) {
+
+            if (menu.id !== `${containerId}_menu`) {
+                menu.classList.remove("show");
+            }
+
+        });
 
     const menu =
         document.getElementById(`${containerId}_menu`);
@@ -350,43 +394,31 @@ function updateEmployeeSelectSummary(containerId) {
         return;
     }
 
-   function openEdit(id) {
+    const selectedIds =
+        getSelectedEmployees(containerId);
 
-    selectedTaskId = Number(id);
+    if (selectedIds.length === 0) {
 
-    const task =
-        getTaskById(selectedTaskId);
+        summary.textContent = "Select Employees";
 
-    if (!task) {
-        return;
+    } else if (selectedIds.length === employees.length) {
+
+        summary.textContent = "All Employees";
+
+    } else if (selectedIds.length === 1) {
+
+        const employee =
+            getEmployeeById(selectedIds[0]);
+
+        summary.textContent =
+            employee ? employee.name : "1 Employee";
+
+    } else {
+
+        summary.textContent =
+            `${selectedIds.length} Employees Selected`;
+
     }
-
-    setValue("editTitle", task.title);
-    setValue("editDescription", task.description);
-    setValue("editPriority", task.priority);
-    setValue("editDeadline", toDateTimeLocal(task.deadline));
-
-    /*
-        مهم:
-        هون ما بنجيب كل موظفين نفس الـ group.
-        بنجيب فقط الموظف الموجود على هذا الكارد.
-    */
-    const selectedIds = [
-        Number(task.employeeId)
-    ];
-
-    renderEmployeeMultiSelect(
-        "editEmployeeList",
-        selectedIds,
-        "editEmp"
-    );
-
-    const modal =
-        bootstrap.Modal.getOrCreateInstance(
-            document.getElementById("editModal")
-        );
-
-    modal.show();
 
 }
 
@@ -398,10 +430,22 @@ function getSelectedSummary(selectedSet) {
     }
 
     if (selectedSet.size === employees.length) {
-        return "All Employees Selected";
+        return "All Employees";
     }
 
-    return `${selectedSet.size} Employee(s) Selected`;
+    if (selectedSet.size === 1) {
+
+        const employeeId =
+            Array.from(selectedSet)[0];
+
+        const employee =
+            getEmployeeById(employeeId);
+
+        return employee ? employee.name : "1 Employee";
+
+    }
+
+    return `${selectedSet.size} Employees Selected`;
 
 }
 
@@ -424,42 +468,112 @@ function getSelectedEmployees(containerId) {
 }
 
 
-/* =========================================================
-   TASK MODEL HELPERS
-========================================================= */
+/* Close dropdown when clicking outside */
+document.addEventListener("click", function () {
 
-function generateTaskId(employeeId, index = 0) {
+    document
+        .querySelectorAll(".employee-select-dropdown")
+        .forEach(function (menu) {
+            menu.classList.remove("show");
+        });
 
-    return Date.now() * 1000 + Number(employeeId) + index;
+});
+
+
+function setupDarkModeFromStorage() {
+
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+    }
 
 }
 
 
-function generateTaskGroupId() {
+function setupFiltersEvents() {
 
-    return Date.now();
+    const employeeFilter =
+        document.getElementById("employeeFilter");
+
+    const taskFilter =
+        document.getElementById("taskFilter");
+
+    if (employeeFilter) {
+
+        employeeFilter.addEventListener("change", function () {
+            loadFilters();
+            displayTasks();
+        });
+
+    }
+
+    if (taskFilter) {
+
+        taskFilter.addEventListener("change", function () {
+            displayTasks();
+        });
+
+    }
+
+}
+
+
+function applyTimeoutStatus() {
+
+    let changed = false;
+
+    tasks.forEach(function (task) {
+
+        const status =
+            normalizeStatus(task.status);
+
+        if (
+            status === "Completed" ||
+            status === "Blocked" ||
+            status === "Submitted" ||
+            status === "Time Out"
+        ) {
+            return;
+        }
+
+        if (!task.deadline) {
+            return;
+        }
+
+        const deadlineDate =
+            new Date(task.deadline);
+
+        if (
+            !Number.isNaN(deadlineDate.getTime()) &&
+            new Date() > deadlineDate
+        ) {
+
+            task.status = "Time Out";
+            task.updatedAt = new Date().toISOString();
+            task.notification = "Task became Time Out";
+
+            changed = true;
+
+        }
+
+    });
+
+    if (changed) {
+        saveTasks();
+    }
 
 }
 
 
 function normalizeStatus(status) {
 
-    if (!status) {
-        return "New";
-    }
-
-    return String(status).trim();
+    return String(status || "New").trim();
 
 }
 
 
 function normalizePriority(priority) {
 
-    if (!priority) {
-        return "Medium";
-    }
-
-    return String(priority).trim();
+    return String(priority || "Medium").trim();
 
 }
 
@@ -489,21 +603,52 @@ function getStatusClass(status) {
 }
 
 
-function getTaskDeadlineValue(task) {
+function getTaskById(taskId) {
 
-    if (task.deadline) {
-        return task.deadline;
-    }
+    return tasks.find(function (task) {
+        return Number(task.id) === Number(taskId);
+    });
 
-    if (task.deadlineDate && task.deadlineTime) {
-        return `${task.deadlineDate}T${task.deadlineTime}`;
-    }
+}
 
-    if (task.deadlineDate) {
-        return task.deadlineDate;
-    }
 
-    return "";
+function generateTaskId(employeeId, index = 0) {
+
+    return Date.now() * 1000 + Number(employeeId) + index;
+
+}
+
+
+function generateTaskGroupId() {
+
+    return Date.now();
+
+}
+
+
+function getHRTasks() {
+
+    return tasks.filter(function (task) {
+
+        return (
+            Number(task.createdByHRId) === Number(currentHRId) ||
+            Number(task.createdBy) === Number(currentHRId)
+        );
+
+    });
+
+}
+
+
+function getHRName() {
+
+    return (
+        currentHR.name ||
+        currentHR.fullName ||
+        currentHR.username ||
+        currentHR.email ||
+        "HR User"
+    );
 
 }
 
@@ -526,202 +671,80 @@ function formatDateTime(value) {
 }
 
 
-function formatDeadline(task) {
+function setValue(id, value) {
 
-    return formatDateTime(getTaskDeadlineValue(task));
+    const element =
+        document.getElementById(id);
 
-}
-
-
-function isTaskForCurrentHR(task) {
-
-    if (!task) {
-        return false;
+    if (element) {
+        element.value = value || "";
     }
 
-    if (
-        task.createdByHRId &&
-        Number(task.createdByHRId) === Number(currentHRId)
-    ) {
-        return true;
+}
+
+
+function getValue(id) {
+
+    const element =
+        document.getElementById(id);
+
+    return element ? element.value : "";
+
+}
+
+
+function setHTML(id, value) {
+
+    const element =
+        document.getElementById(id);
+
+    if (element) {
+        element.innerHTML = value;
     }
 
-    if (
-        task.createdBy &&
-        Number(task.createdBy) === Number(currentHRId)
-    ) {
-        return true;
+}
+
+
+function toDateTimeLocal(value) {
+
+    if (!value) {
+        return "";
     }
 
-    return false;
+    const date =
+        new Date(value);
 
-}
-
-
-function getMyHRTasks() {
-
-    return tasks.filter(function (task) {
-        return isTaskForCurrentHR(task);
-    });
-
-}
-
-
-function getTaskById(taskId) {
-
-    return tasks.find(function (task) {
-        return Number(task.id) === Number(taskId);
-    });
-
-}
-
-
-function getTaskGroupId(task) {
-
-    return task.taskGroupId || task.groupId || task.id;
-
-}
-
-
-function getTaskGroupTasks(task) {
-
-    const groupId =
-        getTaskGroupId(task);
-
-    return tasks.filter(function (item) {
-
-        return (
-            isTaskForCurrentHR(item) &&
-            getTaskGroupId(item) === groupId
-        );
-
-    });
-
-}
-
-
-function ensureTaskGroup(task) {
-
-    const groupId =
-        getTaskGroupId(task);
-
-    const groupTasks =
-        getTaskGroupTasks(task);
-
-    groupTasks.forEach(function (item) {
-        item.taskGroupId = groupId;
-        item.groupId = groupId;
-    });
-
-    return groupId;
-
-}
-
-
-function hasValidSubmission(task) {
-
-    if (!task || !task.submission) {
-        return false;
+    if (Number.isNaN(date.getTime())) {
+        return "";
     }
 
-    const solution =
-        String(task.submission.solution || "").trim();
+    const offset =
+        date.getTimezoneOffset();
 
-    const file =
-        String(task.submission.file || "").trim();
+    const localDate =
+        new Date(date.getTime() - offset * 60000);
 
-    const image =
-        String(task.submission.image || "").trim();
-
-    return solution !== "" || file !== "" || image !== "";
-
-}
-
-
-function pushTaskHistory(task, message) {
-
-    if (!Array.isArray(task.history)) {
-        task.history = [];
-    }
-
-    task.history.push({
-        message: message,
-        hrId: currentHRId,
-        hrName: getHRName(),
-        date: new Date().toISOString()
-    });
+    return localDate
+        .toISOString()
+        .slice(0, 16);
 
 }
 
 
-/* =========================================================
-   TIME OUT LOGIC
-========================================================= */
+function hideModal(modalId) {
 
-function isDeadlinePassed(task) {
+    const modalElement =
+        document.getElementById(modalId);
 
-    const status =
-        normalizeStatus(task.status);
-
-    const ignoredStatuses = [
-        "Submitted",
-        "Completed",
-        "Blocked",
-        "Time Out"
-    ];
-
-    if (ignoredStatuses.includes(status)) {
-        return false;
+    if (!modalElement || !window.bootstrap) {
+        return;
     }
 
-    const deadlineValue =
-        getTaskDeadlineValue(task);
+    const modal =
+        bootstrap.Modal.getInstance(modalElement);
 
-    if (!deadlineValue) {
-        return false;
-    }
-
-    const deadlineDate =
-        new Date(deadlineValue);
-
-    if (Number.isNaN(deadlineDate.getTime())) {
-        return false;
-    }
-
-    return new Date() > deadlineDate;
-
-}
-
-
-function applyTimeoutStatus() {
-
-    let changed = false;
-
-    tasks.forEach(function (task) {
-
-        if (!isTaskForCurrentHR(task)) {
-            return;
-        }
-
-        if (isDeadlinePassed(task)) {
-
-            task.status = "Time Out";
-            task.updatedAt = new Date().toISOString();
-            task.notification = "Task reached deadline and became Time Out";
-
-            pushTaskHistory(
-                task,
-                "System changed task status to Time Out because the deadline passed."
-            );
-
-            changed = true;
-
-        }
-
-    });
-
-    if (changed) {
-        saveTasks();
+    if (modal) {
+        modal.hide();
     }
 
 }
@@ -733,20 +756,23 @@ function applyTimeoutStatus() {
 
 function createTask() {
 
-    const titleInput =
-        document.getElementById("taskTitleInput");
+    const selectedEmployees =
+        getSelectedEmployees("employeeList");
 
-    const descriptionInput =
-        document.getElementById("taskDescriptionInput");
+    const title =
+        document.getElementById("taskTitleInput")?.value.trim() || "";
 
-    const priorityInput =
-        document.getElementById("taskPriorityInput");
+    const description =
+        document.getElementById("taskDescriptionInput")?.value.trim() || "";
 
-    const deadlineDateInput =
-        document.getElementById("deadlineDate");
+    const priority =
+        document.getElementById("taskPriorityInput")?.value || "Medium";
 
-    const deadlineTimeInput =
-        document.getElementById("deadlineTime");
+    const deadlineDate =
+        document.getElementById("deadlineDate")?.value || "";
+
+    const deadlineTime =
+        document.getElementById("deadlineTime")?.value || "";
 
     const taskFileInput =
         document.getElementById("taskFile");
@@ -754,43 +780,22 @@ function createTask() {
     const taskImageInput =
         document.getElementById("taskImage");
 
-    const selectedEmployees =
-        getSelectedEmployees("employeeList");
-
-    if (
-        !titleInput ||
-        !descriptionInput ||
-        !priorityInput ||
-        !deadlineDateInput ||
-        !deadlineTimeInput
-    ) {
-        alert("Create task inputs not found.");
-        return;
-    }
-
-    const title =
-        titleInput.value.trim();
-
-    const description =
-        descriptionInput.value.trim();
-
-    const priority =
-        priorityInput.value;
-
     if (
         title === "" ||
         description === "" ||
-        selectedEmployees.length === 0
+        selectedEmployees.length === 0 ||
+        deadlineDate === "" ||
+        deadlineTime === ""
     ) {
-        alert("Please complete task data and select employees.");
+        alert("Please complete task data.");
         return;
     }
 
     const deadline =
-        new Date(`${deadlineDateInput.value}T${deadlineTimeInput.value}`);
+        new Date(`${deadlineDate}T${deadlineTime}`);
 
     if (Number.isNaN(deadline.getTime())) {
-        alert("Please select deadline date and time.");
+        alert("Please select valid deadline.");
         return;
     }
 
@@ -827,13 +832,13 @@ function createTask() {
             priority: priority,
             deadline: deadline.toISOString(),
 
+            employeeId: Number(employeeId),
+            employeeName: employee ? employee.name : "Unknown",
+
             assignedEmployees: [Number(employeeId)],
             assignedEmployeeNames: [
                 employee ? employee.name : "Unknown"
             ],
-
-            employeeId: Number(employeeId),
-            employeeName: employee ? employee.name : "Unknown",
 
             createdBy: Number(currentHRId),
             createdByHRId: Number(currentHRId),
@@ -851,6 +856,7 @@ function createTask() {
             submission: null,
             hrFeedback: "",
             notification: "New task assigned by HR",
+
             history: [
                 {
                     message: "Task created by HR.",
@@ -866,6 +872,7 @@ function createTask() {
     });
 
     saveTasks();
+
     clearCreateForm();
     refreshPageData();
 
@@ -876,16 +883,14 @@ function createTask() {
 
 function clearCreateForm() {
 
-    const ids = [
+    [
         "taskTitleInput",
         "taskDescriptionInput",
         "deadlineDate",
         "deadlineTime",
         "taskFile",
         "taskImage"
-    ];
-
-    ids.forEach(function (id) {
+    ].forEach(function (id) {
 
         const input =
             document.getElementById(id);
@@ -896,11 +901,7 @@ function clearCreateForm() {
 
     });
 
-    renderEmployeeMultiSelect(
-        "employeeList",
-        [],
-        "createEmp"
-    );
+    renderEmployeeMultiSelect("employeeList", []);
 
 }
 
@@ -908,34 +909,6 @@ function clearCreateForm() {
 /* =========================================================
    FILTERS
 ========================================================= */
-
-function setupFiltersEvents() {
-
-    const employeeFilter =
-        document.getElementById("employeeFilter");
-
-    const taskFilter =
-        document.getElementById("taskFilter");
-
-    if (employeeFilter) {
-
-        employeeFilter.addEventListener("change", function () {
-            loadFilters();
-            displayTasks();
-        });
-
-    }
-
-    if (taskFilter) {
-
-        taskFilter.addEventListener("change", function () {
-            displayTasks();
-        });
-
-    }
-
-}
-
 
 function loadFilters() {
 
@@ -945,8 +918,8 @@ function loadFilters() {
     const taskFilter =
         document.getElementById("taskFilter");
 
-    const myTasks =
-        getMyHRTasks();
+    const hrTasks =
+        getHRTasks();
 
     const selectedEmployee =
         employeeFilter ? employeeFilter.value : "";
@@ -956,10 +929,10 @@ function loadFilters() {
 
     if (employeeFilter) {
 
-        const employeeIdsWithTasks =
+        const employeeIds =
             [
                 ...new Set(
-                    myTasks
+                    hrTasks
                         .map(function (task) {
                             return Number(task.employeeId);
                         })
@@ -967,11 +940,10 @@ function loadFilters() {
                 )
             ];
 
-        employeeFilter.innerHTML = `
-            <option value="">All Employees</option>
-        `;
+        employeeFilter.innerHTML =
+            `<option value="">All Employees</option>`;
 
-        employeeIdsWithTasks.forEach(function (employeeId) {
+        employeeIds.forEach(function (employeeId) {
 
             employeeFilter.innerHTML += `
                 <option value="${employeeId}">
@@ -994,17 +966,17 @@ function loadFilters() {
 
     if (taskFilter) {
 
-        const tasksForOptions =
+        const filteredForEmployee =
             selectedEmployee
-                ? myTasks.filter(function (task) {
+                ? hrTasks.filter(function (task) {
                     return Number(task.employeeId) === Number(selectedEmployee);
                 })
-                : myTasks;
+                : hrTasks;
 
-        const uniqueTaskTitles =
+        const titles =
             [
                 ...new Set(
-                    tasksForOptions
+                    filteredForEmployee
                         .map(function (task) {
                             return task.title;
                         })
@@ -1012,11 +984,10 @@ function loadFilters() {
                 )
             ];
 
-        taskFilter.innerHTML = `
-            <option value="">All Tasks</option>
-        `;
+        taskFilter.innerHTML =
+            `<option value="">All Tasks</option>`;
 
-        uniqueTaskTitles.forEach(function (title) {
+        titles.forEach(function (title) {
 
             taskFilter.innerHTML += `
                 <option value="${escapeHTML(title)}">
@@ -1042,8 +1013,8 @@ function loadFilters() {
 
 function getFilteredTasks() {
 
-    let filteredTasks =
-        getMyHRTasks();
+    let result =
+        getHRTasks();
 
     const employeeFilter =
         document.getElementById("employeeFilter")?.value || "";
@@ -1053,8 +1024,8 @@ function getFilteredTasks() {
 
     if (employeeFilter) {
 
-        filteredTasks =
-            filteredTasks.filter(function (task) {
+        result =
+            result.filter(function (task) {
                 return Number(task.employeeId) === Number(employeeFilter);
             });
 
@@ -1062,26 +1033,23 @@ function getFilteredTasks() {
 
     if (taskFilter) {
 
-        filteredTasks =
-            filteredTasks.filter(function (task) {
+        result =
+            result.filter(function (task) {
                 return task.title === taskFilter;
             });
 
     }
 
-    return filteredTasks.sort(sortHRTasks);
+    return result.sort(sortHRTasks);
 
 }
 
 
 /* =========================================================
-   SORTING
+   SORT
 ========================================================= */
 
 function getStatusWeight(status) {
-
-    const value =
-        normalizeStatus(status);
 
     const weights = {
         "Submitted": 1,
@@ -1094,7 +1062,7 @@ function getStatusWeight(status) {
         "Blocked": 7
     };
 
-    return weights[value] || 99;
+    return weights[normalizeStatus(status)] || 99;
 
 }
 
@@ -1124,61 +1092,35 @@ function getPriorityWeight(priority) {
 
 function getDeadlineTime(task) {
 
-    const deadlineValue =
-        getTaskDeadlineValue(task);
+    const deadline =
+        new Date(task.deadline);
 
-    if (!deadlineValue) {
+    if (Number.isNaN(deadline.getTime())) {
         return Number.MAX_SAFE_INTEGER;
     }
 
-    const deadlineDate =
-        new Date(deadlineValue);
-
-    if (Number.isNaN(deadlineDate.getTime())) {
-        return Number.MAX_SAFE_INTEGER;
-    }
-
-    return deadlineDate.getTime();
+    return deadline.getTime();
 
 }
 
 
-function sortHRTasks(firstTask, secondTask) {
+function sortHRTasks(a, b) {
 
-    const firstStatus =
-        getStatusWeight(firstTask.status);
+    const statusDiff =
+        getStatusWeight(a.status) - getStatusWeight(b.status);
 
-    const secondStatus =
-        getStatusWeight(secondTask.status);
-
-    if (firstStatus !== secondStatus) {
-        return firstStatus - secondStatus;
+    if (statusDiff !== 0) {
+        return statusDiff;
     }
 
-    const firstPriority =
-        getPriorityWeight(firstTask.priority);
+    const priorityDiff =
+        getPriorityWeight(a.priority) - getPriorityWeight(b.priority);
 
-    const secondPriority =
-        getPriorityWeight(secondTask.priority);
-
-    if (firstPriority !== secondPriority) {
-        return firstPriority - secondPriority;
+    if (priorityDiff !== 0) {
+        return priorityDiff;
     }
 
-    const firstDeadline =
-        getDeadlineTime(firstTask);
-
-    const secondDeadline =
-        getDeadlineTime(secondTask);
-
-    if (firstDeadline !== secondDeadline) {
-        return firstDeadline - secondDeadline;
-    }
-
-    return (
-        new Date(secondTask.createdAt || 0) -
-        new Date(firstTask.createdAt || 0)
-    );
+    return getDeadlineTime(a) - getDeadlineTime(b);
 
 }
 
@@ -1219,9 +1161,6 @@ function displayTasks() {
             const status =
                 normalizeStatus(task.status);
 
-            const statusClass =
-                getStatusClass(status);
-
             const employeeName =
                 task.employeeName ||
                 getEmployeeNameById(task.employeeId);
@@ -1244,11 +1183,11 @@ function displayTasks() {
                     </td>
 
                     <td>
-                        ${formatDeadline(task)}
+                        ${formatDateTime(task.deadline)}
                     </td>
 
                     <td>
-                        <span class="status-badge ${statusClass}">
+                        <span class="status-badge ${getStatusClass(status)}">
                             ${escapeHTML(status)}
                         </span>
                     </td>
@@ -1312,7 +1251,7 @@ function buildTaskActions(task) {
 
 
 /* =========================================================
-   VIEW / REVIEW TASK
+   VIEW / REVIEW
 ========================================================= */
 
 function viewTask(id) {
@@ -1326,16 +1265,12 @@ function viewTask(id) {
         return;
     }
 
-    const employeeName =
-        task.employeeName ||
-        getEmployeeNameById(task.employeeId);
-
     setHTML("viewTaskTitle", escapeHTML(task.title));
     setHTML("viewTaskDescription", escapeHTML(task.description));
 
     setHTML(
         "viewTaskEmployees",
-        `<b>Employee:</b> ${escapeHTML(employeeName)}`
+        `<b>Employee:</b> ${escapeHTML(task.employeeName || "Unknown")}`
     );
 
     setHTML(
@@ -1359,28 +1294,17 @@ function viewTask(id) {
             : "No Solution"
     );
 
-    setHTML(
-        "taskCreatedDate",
-        formatDateTime(task.createdAt)
-    );
-
-    setHTML(
-        "taskUpdatedDate",
-        formatDateTime(task.updatedAt)
-    );
+    setHTML("taskCreatedDate", formatDateTime(task.createdAt));
+    setHTML("taskUpdatedDate", formatDateTime(task.updatedAt));
 
     setHTML(
         "submittedFile",
-        task.submission?.file
-            ? escapeHTML(task.submission.file)
-            : "No File"
+        task.submission?.file || "No File"
     );
 
     setHTML(
         "submittedImage",
-        task.submission?.image
-            ? escapeHTML(task.submission.image)
-            : "No Image"
+        task.submission?.image || "No Image"
     );
 
     const feedbackInput =
@@ -1396,6 +1320,21 @@ function viewTask(id) {
         );
 
     modal.show();
+
+}
+
+
+function hasValidSubmission(task) {
+
+    if (!task || !task.submission) {
+        return false;
+    }
+
+    return (
+        String(task.submission.solution || "").trim() !== "" ||
+        String(task.submission.file || "").trim() !== "" ||
+        String(task.submission.image || "").trim() !== ""
+    );
 
 }
 
@@ -1421,11 +1360,6 @@ function approveTask() {
     task.approvedAt = new Date().toISOString();
     task.updatedAt = new Date().toISOString();
 
-    pushTaskHistory(
-        task,
-        "HR approved the task and marked it as Completed."
-    );
-
     saveTasks();
     refreshPageData();
 
@@ -1443,11 +1377,6 @@ function requestChanges() {
         return;
     }
 
-    if (!hasValidSubmission(task)) {
-        alert("This task has no submission to review.");
-        return;
-    }
-
     const feedbackInput =
         document.getElementById("hrFeedback");
 
@@ -1462,15 +1391,7 @@ function requestChanges() {
     task.status = "Not Complete";
     task.hrFeedback = feedback;
     task.notification = "HR requested changes";
-    task.reviewedByHRId = currentHRId;
-    task.reviewedByHRName = getHRName();
-    task.reviewedAt = new Date().toISOString();
     task.updatedAt = new Date().toISOString();
-
-    pushTaskHistory(
-        task,
-        "HR requested changes from the employee."
-    );
 
     saveTasks();
     refreshPageData();
@@ -1481,7 +1402,7 @@ function requestChanges() {
 
 
 /* =========================================================
-   EDIT TASK
+   EDIT TASK - SINGLE CARD ONLY
 ========================================================= */
 
 function openEdit(id) {
@@ -1492,23 +1413,18 @@ function openEdit(id) {
         getTaskById(selectedTaskId);
 
     if (!task) {
+        alert("Task not found");
         return;
     }
-
-    ensureTaskGroup(task);
-
-    const groupTasks =
-        getTaskGroupTasks(task);
-
-    const selectedIds =
-        groupTasks.map(function (item) {
-            return Number(item.employeeId);
-        });
 
     setValue("editTitle", task.title);
     setValue("editDescription", task.description);
     setValue("editPriority", task.priority);
     setValue("editDeadline", toDateTimeLocal(task.deadline));
+
+    const selectedIds = [
+        Number(task.employeeId)
+    ];
 
     renderEmployeeMultiSelect(
         "editEmployeeList",
@@ -1559,13 +1475,8 @@ function saveEditTask() {
         return;
     }
 
-    /*
-        مهم:
-        Edit للكارد الواحد لازم يكون لموظف واحد فقط.
-        Create هو اللي بسمح لأكثر من موظف.
-    */
     if (selectedEmployees.length > 1) {
-        alert("In edit mode, please select one employee only for this card.");
+        alert("In edit mode, select one employee only.");
         return;
     }
 
@@ -1576,43 +1487,25 @@ function saveEditTask() {
         new Date(deadlineValue);
 
     if (Number.isNaN(deadline.getTime())) {
-        alert("Please select a valid deadline.");
+        alert("Please select valid deadline.");
         return;
     }
-
-    const editFileInput =
-        document.getElementById("editTaskFile");
-
-    const editImageInput =
-        document.getElementById("editTaskImage");
-
-    const newTaskFile =
-        editFileInput && editFileInput.files.length > 0
-            ? editFileInput.files[0].name
-            : "";
-
-    const newTaskImage =
-        editImageInput && editImageInput.files.length > 0
-            ? editImageInput.files[0].name
-            : "";
 
     const oldEmployeeId =
         Number(task.employeeId);
 
     const groupId =
-        getTaskGroupId(task);
+        task.taskGroupId || task.groupId || task.id;
 
-    /*
-        منع التكرار:
-        لو نفس الـ task group عنده كارد ثاني لنفس الموظف الجديد
-        لا نسمح يصير duplicate.
-    */
     const duplicateTask =
         tasks.find(function (item) {
 
+            const itemGroupId =
+                item.taskGroupId || item.groupId || item.id;
+
             return (
                 Number(item.id) !== Number(task.id) &&
-                getTaskGroupId(item) === groupId &&
+                Number(itemGroupId) === Number(groupId) &&
                 Number(item.employeeId) === selectedEmployeeId
             );
 
@@ -1623,25 +1516,26 @@ function saveEditTask() {
         return;
     }
 
-    updateTaskCommonFields(
-        task,
-        title,
-        description,
-        priority,
-        deadline.toISOString(),
-        newTaskFile,
-        newTaskImage
-    );
+    const employee =
+        getEmployeeById(selectedEmployeeId);
 
-    assignTaskToEmployee(
-        task,
-        selectedEmployeeId
-    );
+    task.title = title;
+    task.description = description;
+    task.priority = priority;
+    task.deadline = deadline.toISOString();
 
-    /*
-        إذا غيّرت الموظف:
-        لازم نمسح submission القديم لأنه كان تابع للموظف القديم.
-    */
+    task.employeeId = selectedEmployeeId;
+    task.employeeName = employee ? employee.name : "Unknown";
+    task.assignedEmployees = [selectedEmployeeId];
+    task.assignedEmployeeNames = [
+        employee ? employee.name : "Unknown"
+    ];
+
+    task.updatedAt = new Date().toISOString();
+    task.updatedByHRId = currentHRId;
+    task.updatedByHRName = getHRName();
+    task.notification = "Task updated by HR";
+
     if (oldEmployeeId !== selectedEmployeeId) {
 
         task.status = "New";
@@ -1650,132 +1544,12 @@ function saveEditTask() {
         task.previousStatus = "";
         task.notification = "Task reassigned by HR";
 
-        pushTaskHistory(
-            task,
-            "HR reassigned this card to another employee."
-        );
-
-    } else {
-
-        pushTaskHistory(
-            task,
-            "HR edited this task card."
-        );
-
     }
 
     saveTasks();
     refreshPageData();
 
     hideModal("editModal");
-
-}
-
-function updateTaskCommonFields(
-    task,
-    title,
-    description,
-    priority,
-    deadline,
-    taskFile,
-    taskImage
-) {
-
-    task.title = title;
-    task.description = description;
-    task.priority = priority;
-    task.deadline = deadline;
-
-    if (taskFile) {
-        task.taskFile = taskFile;
-    }
-
-    if (taskImage) {
-        task.taskImage = taskImage;
-    }
-
-    task.updatedAt = new Date().toISOString();
-    task.updatedByHRId = currentHRId;
-    task.updatedByHRName = getHRName();
-    task.notification = "Task updated by HR";
-
-}
-
-
-function assignTaskToEmployee(task, employeeId) {
-
-    const employee =
-        getEmployeeById(employeeId);
-
-    task.employeeId = Number(employeeId);
-    task.employeeName = employee ? employee.name : "Unknown";
-    task.assignedEmployees = [Number(employeeId)];
-    task.assignedEmployeeNames = [
-        employee ? employee.name : "Unknown"
-    ];
-
-}
-
-
-function createClonedTaskForEmployee(
-    baseTask,
-    employeeId,
-    groupId,
-    index,
-    title,
-    description,
-    priority,
-    deadline,
-    taskFile,
-    taskImage
-) {
-
-    const employee =
-        getEmployeeById(employeeId);
-
-    return {
-        id: generateTaskId(employeeId, index + 50),
-        taskGroupId: groupId,
-        groupId: groupId,
-
-        title: title,
-        description: description,
-        priority: priority,
-        deadline: deadline,
-
-        assignedEmployees: [Number(employeeId)],
-        assignedEmployeeNames: [
-            employee ? employee.name : "Unknown"
-        ],
-
-        employeeId: Number(employeeId),
-        employeeName: employee ? employee.name : "Unknown",
-
-        createdBy: Number(currentHRId),
-        createdByHRId: Number(currentHRId),
-        createdByHRName: getHRName(),
-        createdByHREmail: currentHR.email || "",
-
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-
-        status: "New",
-
-        taskFile: taskFile || baseTask.taskFile || "",
-        taskImage: taskImage || baseTask.taskImage || "",
-
-        submission: null,
-        hrFeedback: "",
-        notification: "New task assigned by HR",
-        history: [
-            {
-                message: "Task created by HR from edit assignment.",
-                hrId: currentHRId,
-                hrName: getHRName(),
-                date: new Date().toISOString()
-            }
-        ]
-    };
 
 }
 
@@ -1800,15 +1574,8 @@ function blockTask(id) {
     task.previousStatus = task.status;
     task.status = "Blocked";
     task.notification = "Blocked by HR";
-    task.blockedByHRId = currentHRId;
-    task.blockedByHRName = getHRName();
     task.blockedAt = new Date().toISOString();
     task.updatedAt = new Date().toISOString();
-
-    pushTaskHistory(
-        task,
-        "HR blocked the task."
-    );
 
     saveTasks();
     refreshPageData();
@@ -1825,21 +1592,9 @@ function unblockTask(id) {
         return;
     }
 
-    if (!confirm("Are you sure you want to unblock this task?")) {
-        return;
-    }
-
     task.status = task.previousStatus || "New";
     task.notification = "Task unblocked by HR";
-    task.unblockedByHRId = currentHRId;
-    task.unblockedByHRName = getHRName();
-    task.unblockedAt = new Date().toISOString();
     task.updatedAt = new Date().toISOString();
-
-    pushTaskHistory(
-        task,
-        "HR unblocked the task."
-    );
 
     saveTasks();
     refreshPageData();
@@ -1853,14 +1608,14 @@ function unblockTask(id) {
 
 function updateDashboard() {
 
-    const myTasks =
-        getMyHRTasks();
+    const hrTasks =
+        getHRTasks();
 
     const total =
-        myTasks.length;
+        hrTasks.length;
 
     const newCount =
-        myTasks.filter(function (task) {
+        hrTasks.filter(function (task) {
 
             const status =
                 normalizeStatus(task.status);
@@ -1874,17 +1629,17 @@ function updateDashboard() {
         }).length;
 
     const submittedCount =
-        myTasks.filter(function (task) {
+        hrTasks.filter(function (task) {
             return normalizeStatus(task.status) === "Submitted";
         }).length;
 
     const completedCount =
-        myTasks.filter(function (task) {
+        hrTasks.filter(function (task) {
             return normalizeStatus(task.status) === "Completed";
         }).length;
 
     const overdueCount =
-        myTasks.filter(function (task) {
+        hrTasks.filter(function (task) {
             return normalizeStatus(task.status) === "Time Out";
         }).length;
 
@@ -1902,11 +1657,9 @@ function setCounter(id, value) {
     const element =
         document.getElementById(id);
 
-    if (!element) {
-        return;
+    if (element) {
+        element.textContent = value;
     }
-
-    element.textContent = value;
 
 }
 
@@ -1916,15 +1669,6 @@ function setCounter(id, value) {
 ========================================================= */
 
 function setupStorageSync() {
-
-    window.addEventListener("storage", function (event) {
-
-        if (event.key === "tasks") {
-            loadTasks();
-            refreshPageData();
-        }
-
-    });
 
     setInterval(function () {
 
@@ -1944,103 +1688,7 @@ function setupStorageSync() {
 
 
 /* =========================================================
-   DARK MODE
-========================================================= */
-
-function setupDarkModeFromStorage() {
-
-    if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark-mode");
-    }
-
-}
-
-
-/* =========================================================
-   UTILITIES
-========================================================= */
-
-function setHTML(id, value) {
-
-    const element =
-        document.getElementById(id);
-
-    if (element) {
-        element.innerHTML = value;
-    }
-
-}
-
-
-function setValue(id, value) {
-
-    const element =
-        document.getElementById(id);
-
-    if (element) {
-        element.value = value || "";
-    }
-
-}
-
-
-function getValue(id) {
-
-    const element =
-        document.getElementById(id);
-
-    return element ? element.value : "";
-
-}
-
-
-function toDateTimeLocal(value) {
-
-    if (!value) {
-        return "";
-    }
-
-    const date =
-        new Date(value);
-
-    if (Number.isNaN(date.getTime())) {
-        return "";
-    }
-
-    const offset =
-        date.getTimezoneOffset();
-
-    const localDate =
-        new Date(date.getTime() - offset * 60000);
-
-    return localDate
-        .toISOString()
-        .slice(0, 16);
-
-}
-
-
-function hideModal(modalId) {
-
-    const modalElement =
-        document.getElementById(modalId);
-
-    if (!modalElement || !window.bootstrap) {
-        return;
-    }
-
-    const modal =
-        bootstrap.Modal.getInstance(modalElement);
-
-    if (modal) {
-        modal.hide();
-    }
-
-}
-
-
-/* =========================================================
-   GLOBAL FUNCTIONS FOR HTML ONCLICK
+   GLOBAL FUNCTIONS
 ========================================================= */
 
 window.createTask = createTask;
@@ -2054,4 +1702,3 @@ window.unblockTask = unblockTask;
 window.toggleEmployeeDropdown = toggleEmployeeDropdown;
 window.toggleAllEmployees = toggleAllEmployees;
 window.updateEmployeeSelectSummary = updateEmployeeSelectSummary;
-}
