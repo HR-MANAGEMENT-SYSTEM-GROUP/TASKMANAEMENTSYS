@@ -23,7 +23,7 @@
     <div class="hr-page-content">
 
       <!-- Shared header (loaded by HR-shared.js) -->
-      <div id="hrHeader"></div>
+      
 
       <main class="fb-hr">
 
@@ -41,12 +41,12 @@
              The count chip comes after #parent so its CSS counter can count the cards;
              CSS grid shows it on the toolbar row. -->
         <section class="fb-board" aria-labelledby="boardTitle">
-          <h2 class="fb-board-title" id="boardTitle"><span class="fb-board-icon" aria-hidden="true"><i class="bi bi-inbox-fill"></i></span>All submissions</h2>
-
+          <h2 class="fb-board-title" id="boardTitle"><span class="fb-board-icon" aria-hidden="true"><i class="bi bi-inbox-fill"></i></span>All submissions </h2>
+          
           <!-- Filled by feedBackHr.js (keep it empty so :empty can show the empty state) -->
           <div class="row g-4" id="parent"></div>
 
-          <span class="count-chip"></span>
+          <span class="count-chip"><span id="count"></span> submissions</span>
 
           <div class="feedback-empty">
             <span class="empty-icon" aria-hidden="true"><i class="bi bi-chat-square-text"></i></span>

@@ -1,7 +1,7 @@
 let output=document.getElementById("parent");
-
+let count=document.getElementById("count");
 let feedbacks=JSON.parse(localStorage.getItem("feedbacks")) || [];
-
+count.textContent=feedbacks.length;
 for(let i=0;i<feedbacks.length;i++){
     
     output.innerHTML+=`
