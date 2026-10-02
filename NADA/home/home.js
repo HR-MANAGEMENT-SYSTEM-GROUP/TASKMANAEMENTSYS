@@ -7,7 +7,7 @@
   var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
 
   // ========================================================
-  // 1. نظام المستخدم وحالة تسجيل الدخول
+  // 1. نظام المستخدم وحالة تسجيل الدخول (دون أي تعديل)
   // ========================================================
   let currentUser = null;
 
@@ -36,7 +36,7 @@
 
     if (!navAuth || !navUser) return;
 
-    const loggedIn = !!currentUser; // صحيح إذا كان المستخدم مسجل دخول
+    const loggedIn = !!currentUser;
 
     navAuth.classList.toggle("hidden", loggedIn);
     navUser.classList.toggle("hidden", !loggedIn);
@@ -50,17 +50,14 @@
   // 2. التحكم في أزرار قسم الخدمات (قبل وبعد تسجيل الدخول)
   // ========================================================
   function setupServiceButtons() {
-    // جلب جميع أزرار الخدمات داخل قسم Services
     const serviceButtons = document.querySelectorAll("#stop-2 .svc-detail a");
 
     serviceButtons.forEach(function (btn) {
       btn.addEventListener("click", function (e) {
-        // إذا لم يكن مسجل دخول، امنع فتح الرابط وحوّله لصفحة تسجيل الدخول
         if (!currentUser) {
           e.preventDefault();
           window.location.href = "../../GAITH/login.html";
         }
-        // إذا كان مسجل دخول، سيعمل الرابط بشكل طبيعي ويأخذه لصفحة الخدمة
       });
     });
   }
@@ -71,7 +68,7 @@
     localStorage.removeItem("userRole");
     localStorage.removeItem("bridgeway_current_role");
     localStorage.setItem("loggedIn", "false");
-    window.location.reload(); // تحديث الصفحة ليعود الناف بار للوضع الأولي
+    window.location.reload();
   };
 
   // تهيئة تسجيل الدخول والخدمات
@@ -284,6 +281,10 @@
 
   function layoutAssembly() {
     if (!saRoot) return;
+    if (window.innerWidth <= 768) {
+      saRoot.classList.add('is-off');
+      return;
+    }
     var W = window.innerWidth, H = window.innerHeight, hero = panels[0];
     var sn = $('#sideNav'), snW = sn && sn.offsetWidth ? 108 + Math.min(32, Math.max(14, W * 0.02)) : 24;
     var left = Math.max(hero.offsetLeft + hero.offsetWidth + 16, W / 2 + 70), right = W - snW - 16;
@@ -319,6 +320,48 @@
     window.scrollTo({ top: Math.max(0, Math.min(I, i)) / I * max, behavior: reduce ? 'auto' : 'smooth' });
   }
 
+  // ========================================================
+  // 4. تفعيل زر وقائمة الهامبرغر للموبايل والتابلت
+  // ========================================================
+  function initMobileMenu() {
+    var btn = $('#hamburgerBtn');
+    var menu = $('.journey-nav-menu');
+    if (!btn || !menu) return;
+
+    function toggle(open) {
+      var isOpen = open !== undefined ? open : !btn.classList.contains('is-active');
+      btn.classList.toggle('is-active', isOpen);
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      menu.classList.toggle('is-open', isOpen);
+    }
+
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      toggle();
+    });
+
+    // إغلاق القائمة عند النقر على أي رابط
+    menu.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        toggle(false);
+      });
+    });
+
+    // إغلاق القائمة عند النقر خارجها
+    document.addEventListener('click', function (e) {
+      if (menu.classList.contains('is-open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+        toggle(false);
+      }
+    });
+
+    // إغلاق القائمة عند الضغط على Escape
+    window.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && menu.classList.contains('is-open')) {
+        toggle(false);
+      }
+    });
+  }
+
   function initTheme() {
     var root = document.documentElement, btn = $('#themeToggle'), lab = $('#themeLabel');
     if (!btn) return;
@@ -339,14 +382,17 @@
 
   function init() {
     initTheme();
+    initMobileMenu();
     build();
     initServices();
     initAssembly();
     layoutAssembly();
     playAssembly();
+
     $$('[data-jump]').forEach(function (el) {
       el.addEventListener('click', function (e) { e.preventDefault(); goTo(+el.dataset.jump); });
     });
+
     window.addEventListener('keydown', function (e) {
       var t = document.activeElement && document.activeElement.tagName;
       if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
