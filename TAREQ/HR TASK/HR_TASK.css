@@ -60,7 +60,7 @@ body {
 .hr-page-content {
     min-height: 100vh;
     transition: all 0.3s ease;
-    padding-top: 21px !important;
+    padding: 16px 28px 60px !important;
 }
 
 
@@ -76,7 +76,6 @@ body {
    ANIMATED BORDER BASE
 ========================================================= */
 
-.hero,
 .stat-card,
 .table-card,
 .modal-content {
@@ -1783,4 +1782,45 @@ label {
         scroll-behavior: auto !important;
     }
 
+}
+
+/* ================= DARK THEME OVERRIDES ================= */
+:root[data-theme="dark"] .stat-card,
+:root[data-theme="dark"] .table-card {
+    background: #131E35 !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .stat-card h2,
+:root[data-theme="dark"] .stat-card h6 {
+    color: #FFFFFF !important;
+}
+
+:root[data-theme="dark"] .table {
+    --bs-table-bg: transparent !important;
+    --bs-table-color: #F8FAFC !important;
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .table th {
+    background: #0F172A !important;
+    color: #94A3B8 !important;
+    border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .table td {
+    border-color: #1E293B !important;
+    color: #E2E8F0 !important;
+}
+
+:root[data-theme="dark"] .table tbody tr:hover td {
+    background: #1A2846 !important;
+}
+
+:root[data-theme="dark"] .filter-card,
+:root[data-theme="dark"] .search-box input {
+    background: #0F172A !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
 }

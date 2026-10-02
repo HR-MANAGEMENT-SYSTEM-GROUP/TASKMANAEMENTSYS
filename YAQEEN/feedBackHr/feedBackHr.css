@@ -58,7 +58,7 @@ body {
 .page-header {
   position: relative;
   overflow: hidden;
-  margin: 10px 0 26px;
+  margin: 30px 0 26px;
   padding: 34px 38px;
   background: linear-gradient(135deg, #F0F5FA 0%, #DFECF9 55%, #CFE2F6 100%);
   border: 1px solid #B0CBE8;
@@ -352,3 +352,38 @@ body {
 @media (prefers-reduced-motion: reduce) {
   #parent .card { transition: none; }
 }
+
+/* ================= DARK THEME OVERRIDES ================= */
+:root[data-theme="dark"] .card {
+  background: #131E35 !important;
+  border-color: #334155 !important;
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .card:hover {
+  border-color: #0179F1 !important;
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.5) !important;
+}
+
+:root[data-theme="dark"] .card-title,
+:root[data-theme="dark"] .author-name {
+  color: #FFFFFF !important;
+}
+
+:root[data-theme="dark"] .author-role,
+:root[data-theme="dark"] .card-text {
+  color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .reply-box {
+  background: #0F172A !important;
+  border-color: #334155 !important;
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .reply-box textarea {
+  background: #131E35 !important;
+  border-color: #334155 !important;
+  color: #F8FAFC !important;
+}
+

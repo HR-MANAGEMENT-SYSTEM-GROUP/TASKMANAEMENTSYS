@@ -111,15 +111,11 @@ h1, h2, h3, h4, h5, h6 {
    HERO BANNER (MATCHING HR DASHBOARD HERO)
    Light luminous card with curved blue bottom border
    ========================================================= */
-.container-fluid {
-  padding-top: 30px !important;
-}
-
 .page-header {
   position: relative;
   overflow: hidden;
-  margin: 0 0 24px !important;
-  padding: 32px 36px;
+  margin: 30px 0 26px !important;
+  padding: 34px 38px !important;
   background: linear-gradient(135deg, #F0F5FA 0%, #DFECF9 55%, #CFE2F6 100%);
   border: 1px solid #B0CBE8;
   border-bottom: 5px solid var(--primary);
@@ -669,3 +665,29 @@ small.text-danger {
     padding: 16px;
   }
 }
+
+/* ================= DARK THEME OVERRIDES ================= */
+:root[data-theme="dark"] .toolbar-card,
+:root[data-theme="dark"] .card-section {
+  background: #131E35 !important;
+  border-color: #334155 !important;
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] #hrRequestsTable td[colspan="7"] {
+  background: #131E35 !important;
+  color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .filter-select,
+:root[data-theme="dark"] .search-input {
+  background: #0F172A !important;
+  border-color: #334155 !important;
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .leave-detail-modal {
+  background: #131E35 !important;
+  border-color: #334155 !important;
+  color: #F8FAFC !important;
+}
