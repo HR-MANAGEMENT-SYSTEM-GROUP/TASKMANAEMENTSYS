@@ -2,8 +2,6 @@ const user = JSON.parse(localStorage.getItem('currentUser'));
 let userName=document.getElementById("feedbackSender");
 let userOption=document.getElementById("userOption");
 let currentUserName=user.name;
-userOption.value=currentUserName;
-userOption.textContent=currentUserName;
 let category=document.getElementById("categorySelect");
 let subject=document.getElementById("subjectInput");
 let massage=document.getElementById("messageTextarea");
@@ -15,9 +13,11 @@ const feedBackdate=new Date().toLocaleDateString('en-US',{
 });
 const successToast = new bootstrap.Toast(document.getElementById('successToast'));
 const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+userOption.value=currentUserName;
+userOption.textContent=currentUserName;
 btn.addEventListener('click',(event)=>{
  event.preventDefault();
- if((category.value.trim()!="")&&(subject.value.trim()!="")&&(massage.value.trim()!="")&&(user.role=="employee")&&(userName.value!="")){
+ if((user.role=="employee")&&(userName.value!="")&&(category.value.trim()!="")&&(subject.value.trim()!="")&&(massage.value.trim()!="")){
    let feedBack={
     "userName":userName.value,
     "category":category.value.trim(),

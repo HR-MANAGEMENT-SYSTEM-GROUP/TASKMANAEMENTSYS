@@ -1,357 +1,339 @@
+/* Colors, fonts and card style follow NADA/hrpolicy/hrpolicy.css
+   so this page matches the Company Policies page. */
 :root {
-  --lb-bg: #f8fafc;
-  --lb-surface: #ffffff;
-  --lb-surface-muted: #f1f5f9;
-  --lb-border: #e2e8f0;
-  --lb-border-subtle: rgba(15, 23, 42, 0.08);
-  --lb-text: #0f172a;
-  --lb-text-secondary: #475569;
-  --lb-text-muted: #94a3b8;
-  --lb-primary: #2563eb;
-  --lb-primary-dark: #1d4ed8;
-  --lb-primary-light: #eff6ff;
-  --lb-primary-border: #bfdbfe;
-  --lb-navy-deep: #0b1f3a;
-  --lb-navy-card: #0f172a;
-  --lb-gold: #f59e0b;
-  --lb-gold-light: #fef3c7;
-  --lb-danger: #dc2626;
-  --lb-danger-light: #fef2f2;
-  --lb-success: #059669;
-  --lb-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --lb-font: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --primary: #0179F1;
+  --primary-dark: #005BB5;
+
+  --ink: #172033;
+  --body: #475569;
+  --body-muted: #64748B;
+
+  --surface: #FFFFFF;
+  --line: #CBD5E1;
+  --line-light: #E2E8F0;
+
+  --tint: #E8F3FF;
+  --tint-border: #BAE6FD;
+
+  --head: 'Quicksand', system-ui, -apple-system, sans-serif;
+  --text: 'Inter', system-ui, -apple-system, sans-serif;
+
+  --shadow:
+    0 2px 5px rgba(23, 32, 51, 0.06),
+    0 10px 28px -4px rgba(1, 121, 241, 0.15),
+    0 3px 8px rgba(23, 32, 51, 0.05);
 }
 
-/* ---------- Page wrapper ----------
-   Font and colors are set here, not on body, so the shared
-   sidebar/header keep the look from Shared/HR-shared.css. */
-.fb-hr {
-  padding-bottom: 56px;
-  font-family: var(--lb-font);
-  color: var(--lb-text);
+body {
+  font-family: var(--text);
+  color: var(--ink);
+  background: linear-gradient(135deg, #E2E8F0 0%, #CDDEEE 100%);
+  background-attachment: fixed;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
-/* ---------- Banner ---------- */
+/* ---------- Page wrapper ----------
+   Same spacing as .hr-with-sidebar-content on the policy page. */
+.fb-hr {
+  padding: 16px 0 60px 28px;
+}
+
+.fb-hr h1,
+.fb-hr h2,
+.fb-hr h3,
+.fb-hr h4,
+.fb-hr h5,
+.fb-hr h6 {
+  font-family: var(--head);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.accent {
+  color: var(--primary) !important;
+}
+
+/* ---------- Header ---------- */
 .page-header {
   position: relative;
   overflow: hidden;
+  margin: 10px 0 26px;
+  padding: 34px 38px;
+  background: linear-gradient(135deg, #F0F5FA 0%, #DFECF9 55%, #CFE2F6 100%);
+  border: 1px solid #B0CBE8;
+  border-bottom: 5px solid var(--primary);
+  border-radius: 22px;
+  box-shadow:
+    0 12px 32px -4px rgba(1, 121, 241, 0.15),
+    0 3px 8px rgba(23, 32, 51, 0.05);
+  color: var(--ink);
+}
+
+.header-inner {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  padding: clamp(28px, 4vw, 44px) clamp(24px, 4vw, 48px) calc(52px + clamp(26px, 3vw, 36px));
-  border-radius: 24px;
-  color: #fff;
-  background: linear-gradient(135deg, var(--lb-primary-dark), var(--lb-primary));
-  box-shadow: 0 20px 40px -24px rgba(29, 78, 216, 0.6);
-  margin-top: 2%;
+  flex-wrap: wrap;
+  gap: 22px;
 }
-.page-header::before,
-.page-header::after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.07);
-  pointer-events: none;
-}
-.page-header::before { width: 340px; height: 340px; top: -150px; right: -80px; }
-.page-header::after  { width: 200px; height: 200px; bottom: -110px; left: 8%; }
-.page-header-text { position: relative; z-index: 1; min-width: 0; }
 
 .page-eyebrow {
-  margin: 0 0 8px;
-  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 5px 14px;
+  background: #FFFFFF;
+  border: 1px solid var(--tint-border);
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(1, 121, 241, 0.12);
+  font-family: var(--head);
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--lb-primary-border);
+  color: var(--primary);
 }
+
+.eyebrow-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
 .page-title {
-  margin: 0 0 10px;
-  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  font-size: clamp(26px, 2.6vw, 36px);
 }
+
 .page-subtitle {
   margin: 0;
-  max-width: 520px;
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 1.02rem;
+  font-size: 15px;
+  color: var(--body);
 }
 
-/* Glass icon tile */
-.page-header-icon {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 108px; height: 108px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 20px 36px -18px rgba(11, 31, 58, 0.65);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  color: #fff;
-  font-size: 2.9rem;
-  transform: rotate(-6deg);
-  animation: glassFloat 6s ease-in-out infinite;
-}
-
-/* ---------- Toolbar + cards ----------
-   Grid: row 1 = toolbar (title + count chip), row 2 = cards, row 3 = empty state.
-   ::before paints the white toolbar behind row 1. */
-.fb-board {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  margin: -52px clamp(12px, 2.5vw, 28px) 0;
-}
-.fb-board::before {
-  content: "";
-  grid-row: 1;
-  grid-column: 1 / -1;
-  align-self: stretch;
-  background: var(--lb-surface);
-  border: 1px solid var(--lb-border);
-  border-radius: 16px;
-  box-shadow: 0 1px 2px var(--lb-border-subtle), 0 12px 28px -14px rgba(15, 23, 42, 0.18);
-}
-.fb-board-title {
-  grid-row: 1;
-  grid-column: 1;
+.header-widgets {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-width: 0;
-  margin: 0;
-  padding: 14px 18px;
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  color: var(--lb-text);
-}
-.fb-board-icon {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 38px; height: 38px;
-  border: 1px solid var(--lb-primary-border);
-  border-radius: 12px;
-  background: var(--lb-primary-light);
-  color: var(--lb-primary);
-  font-size: 1.05rem;
 }
 
-/* Count chip: a CSS counter over the cards in #parent */
-/* #parent { counter-reset: feedback; }
-#parent > * { counter-increment: feedback; }*/
-.count-chip {
-  grid-row: 1;
-  grid-column: 2;
-  margin-right: 16px;
-  padding: 6px 12px;
+.header-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #FFFFFF;
+  border: 1px solid var(--tint-border);
   border-radius: 999px;
-  background: var(--lb-primary-light);
-  border: 1px solid var(--lb-primary-border);
-  color: var(--lb-primary-dark);
-  font-size: 0.82rem;
+  box-shadow: 0 2px 6px rgba(1, 121, 241, 0.06);
+  font-size: 13px;
   font-weight: 600;
-  white-space: nowrap;
+  color: var(--ink);
 }
-/* .count-chip::after { content: counter(feedback) " submissions"; } */
-/* #parent:has(> :only-child) ~ .count-chip::after { content: counter(feedback) " submission"; } */
-/*  */
-#parent {
-  grid-row: 2;
-  grid-column: 1 / -1;
-  margin-top: 4px; /* + the row's 24px gutter = 28px under the toolbar */
+
+.meta-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22C55E;
+}
+
+/* ---------- Toolbar ---------- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+  padding: 12px 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.toolbar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  background: var(--tint);
+  border: 1px solid var(--tint-border);
+  border-radius: 12px;
+  color: var(--primary);
+  font-size: 18px;
+}
+
+.toolbar-title {
+  margin: 0;
+  font-size: 16px;
 }
 
 /* ---------- Feedback cards (markup comes from feedBackHr.js) ----------
+   Styled like .policy-card on the policy page.
    !important only where a Bootstrap utility on that markup would win. */
-#parent > * { animation: cardIn .55s var(--lb-ease) backwards; }
-#parent > :nth-child(2) { animation-delay: .06s; }
-#parent > :nth-child(3) { animation-delay: .12s; }
-#parent > :nth-child(4) { animation-delay: .18s; }
-#parent > :nth-child(5) { animation-delay: .24s; }
-#parent > :nth-child(6) { animation-delay: .3s; }
-#parent > :nth-child(7) { animation-delay: .36s; }
-#parent > :nth-child(8) { animation-delay: .42s; }
-#parent > :nth-child(n+9) { animation-delay: .48s; }
-
 #parent .card {
-  position: relative;
-  overflow: hidden;
-  padding: 22px 22px 20px !important;
-  background: var(--lb-surface);
-  border: 1px solid var(--lb-border) !important;
+  padding: 24px 22px !important;
+  background: var(--surface);
+  border: 1px solid var(--line) !important;
+  border-bottom: 5px solid var(--primary) !important;
   border-radius: 20px;
-  box-shadow: 0 1px 2px var(--lb-border-subtle) !important;
-  transition: transform .3s var(--lb-ease), box-shadow .3s var(--lb-ease), border-color .3s;
+  box-shadow:
+    0 1px 3px rgba(23, 32, 51, 0.05),
+    0 8px 24px -4px rgba(1, 121, 241, 0.12) !important;
+  transition: transform 0.2s ease;
 }
+
 #parent .card:hover {
   transform: translateY(-4px);
-  border-color: var(--lb-primary-border) !important;
-  box-shadow: 0 1px 2px var(--lb-border-subtle), 0 18px 36px -16px rgba(37, 99, 235, 0.3) !important;
+  border-bottom-color: var(--primary-dark) !important;
 }
-/* Gradient accent on top - grows on hover */
-#parent .card::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 22px; right: 22px;
-  z-index: 2;
-  height: 4px;
-  border-radius: 0 0 6px 6px;
-  background: linear-gradient(90deg, var(--lb-primary-dark), var(--lb-primary), #60a5fa);
-  transform: scaleX(0.22);
-  transform-origin: left;
-  transition: transform .45s var(--lb-ease);
-}
-#parent .card:hover::before { transform: scaleX(1); }
-/* Big faint quote mark (bi-quote) */
-#parent .card::after {
-  content: "\f6b0";
-  position: absolute;
-  right: 14px; bottom: -16px;
-  font-family: "bootstrap-icons";
-  font-size: 92px;
-  line-height: 1;
-  color: var(--lb-primary);
-  opacity: 0.06;
-  pointer-events: none;
-  transition: opacity .3s, transform .45s var(--lb-ease);
-}
-#parent .card:hover::after { opacity: 0.1; transform: translateY(-4px) rotate(-6deg); }
 
-#parent .card-body { position: relative; z-index: 1; display: flex; flex-direction: column; }
-#parent .card-body > .d-flex { gap: 12px; margin-bottom: 16px !important; }
+/* Shown in this order: name, subject, then the category as the footer */
+#parent .card-body {
+  display: flex;
+  flex-direction: column;
+}
 
-/* Name + avatar (bi-person-fill) */
+#parent .card-body > .d-flex {
+  margin-bottom: 8px !important;
+}
+
+/* Name, with the icon tile above it (bi-person-fill) */
 #parent .card h6 {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
   min-width: 0;
-  font-size: 1rem;
-  color: var(--lb-text) !important;
+  font-size: 17.5px;
+  color: var(--ink) !important;
   overflow-wrap: anywhere;
 }
+
 #parent .card h6::before {
   content: "\f4da";
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--lb-primary-dark), #60a5fa);
-  box-shadow: 0 6px 14px -6px rgba(37, 99, 235, 0.6);
-  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--tint);
+  border: 1px solid var(--tint-border);
+  border-radius: 12px;
+  color: var(--primary);
   font-family: "bootstrap-icons";
-  font-size: 1.05rem;
+  font-size: 20px;
   font-weight: 400;
   line-height: 1;
 }
 
-/* Date pill (bi-calendar3) */
+/* Date pill, top right next to the icon tile (bi-calendar3).
+   top = card padding (24px) + (44px tile - 26px pill) / 2 */
 #parent .card small {
+  position: absolute;
+  top: 33px;
+  right: 22px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  flex-shrink: 0;
-  padding: 5px 10px;
-  border: 1px solid var(--lb-border);
+  padding: 6px 12px;
+  background: #F8FAFC;
+  border: 1px solid var(--line-light);
   border-radius: 999px;
-  background: var(--lb-surface-muted);
-  color: var(--lb-text-secondary) !important;
-  font-size: 0.76rem;
+  color: var(--body-muted) !important;
+  font-size: 12px;
   font-weight: 600;
+  line-height: 1;
   white-space: nowrap;
 }
+
 #parent .card small::before {
   content: "\f214";
   font-family: "bootstrap-icons";
-  font-size: 0.85em;
-  line-height: 1;
-  color: var(--lb-primary);
+  color: var(--primary);
 }
 
-/* Category badge (bi-tag-fill) */
+/* Subject, like .policy-desc. Its bottom border is the footer divider. */
+#parent .card .card-text {
+  order: 1;
+  flex-grow: 1;
+  margin: 0 !important;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line-light);
+  color: var(--body) !important;
+  font-size: 13.5px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+/* Category in the footer, like .btn-masar-soft (bi-tag-fill) */
 #parent .card .badge {
+  order: 2;
   align-self: flex-start;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 0 !important;
-  padding: 6px 12px !important;
-  border: 1px solid var(--lb-primary-border);
-  background: var(--lb-primary-light);
-  color: var(--lb-primary-dark);
-  font-size: 0.76rem;
-  font-weight: 600 !important;
-  letter-spacing: 0.01em;
+  max-width: 100%;
+  margin: 16px 0 0 !important;
+  padding: 7px 14px !important;
+  background: var(--tint);
+  border: 1px solid var(--tint-border);
+  color: var(--primary);
+  font-family: var(--head);
+  font-size: 12.5px;
+  font-weight: 700 !important;
+  line-height: 1.2;
+  text-align: left;
+  white-space: normal;
 }
+
 #parent .card .badge::before {
   content: "\f5af";
   font-family: "bootstrap-icons";
-  font-size: 0.9em;
   font-weight: 400;
-  line-height: 1;
-}
-
-/* Subject as a quote block */
-#parent .card .card-text {
-  margin: 14px 0 0 !important;
-  padding: 12px 14px 12px 16px;
-  border-left: 3px solid var(--lb-primary);
-  border-radius: 4px 12px 12px 4px;
-  background: linear-gradient(90deg, var(--lb-primary-light), rgba(239, 246, 255, 0.35));
-  color: var(--lb-text) !important;
-  font-size: 0.95rem;
-  font-weight: 600;
-  line-height: 1.55;
-  overflow-wrap: anywhere;
 }
 
 /* ---------- Empty state (shown while #parent has no cards) ---------- */
-.feedback-empty {
-  grid-row: 3;
-  grid-column: 1 / -1;
+.empty-state {
   display: none;
-  margin-top: 28px;
+  margin-top: 20px;
   padding: 56px 20px;
   text-align: center;
-  background: var(--lb-surface);
-  border: 1px dashed var(--lb-primary-border);
+  background: var(--surface);
+  border: 1.5px dashed var(--line);
   border-radius: 20px;
 }
-#parent:empty ~ .feedback-empty { display: block; }
+
+#parent:empty + .empty-state {
+  display: block;
+}
+
 .empty-icon {
   display: grid;
   place-items: center;
-  width: 68px; height: 68px;
-  margin: 0 auto 16px;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 14px;
   border-radius: 50%;
-  background: var(--lb-primary-light);
-  color: var(--lb-primary);
-  font-size: 1.7rem;
+  background: var(--tint);
+  color: var(--primary);
+  font-size: 24px;
 }
-.feedback-empty h3 { margin: 0 0 6px; font-size: 1.15rem; font-weight: 700; color: var(--lb-text); }
-.feedback-empty p { margin: 0; color: var(--lb-text-secondary); }
 
-/* ---------- Keyframes ---------- */
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: none; }
+.empty-state h3 {
+  font-size: 17px;
 }
-@keyframes glassFloat {
-  0%, 100% { transform: rotate(-6deg) translateY(0); }
-  50%      { transform: rotate(-3deg) translateY(-6px); }
+
+.empty-state p {
+  color: var(--body);
+  font-size: 14px;
 }
 
 /* ---------- Responsive ---------- */
@@ -359,21 +341,14 @@
 @media (min-width: 992px) and (max-width: 1199.98px) {
   #parent > .col-lg-4 { width: 50%; }
 }
+
 @media (max-width: 575.98px) {
-  .page-header { border-radius: 20px; }
-  .page-header-icon { display: none; }
-  .fb-board { grid-template-columns: minmax(0, 1fr); }
-  .fb-board::before { grid-row: 1 / 3; }
-  .fb-board-title { padding-bottom: 8px; }
-  .count-chip { grid-row: 2; grid-column: 1; justify-self: start; margin: 0 0 14px 18px; }
-  #parent { grid-row: 3; }
-  .feedback-empty { grid-row: 4; }
+  .fb-hr { padding-left: 0; }
+  .page-header { padding: 26px 22px; }
+  .header-widgets { flex-wrap: wrap; }
+  .header-meta-pill { white-space: nowrap; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #parent > *,
-  .page-header-icon { animation: none; }
-  #parent .card,
-  #parent .card::before,
-  #parent .card::after { transition: none; }
+  #parent .card { transition: none; }
 }
