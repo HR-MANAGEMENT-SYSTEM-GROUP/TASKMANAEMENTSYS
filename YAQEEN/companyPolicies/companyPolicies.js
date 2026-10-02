@@ -16,6 +16,7 @@ fetch("/jsonFiles/companyPolicies.json")
 
 function displayPolicies(arr) {
   output.innerHTML="";
+  document.getElementById("policiesCount").textContent=arr.length;
   for (let i = 0; i < arr.length; i++) {
     output.innerHTML += `
       <div class="col-12 col-md-6 col-lg-4">   
