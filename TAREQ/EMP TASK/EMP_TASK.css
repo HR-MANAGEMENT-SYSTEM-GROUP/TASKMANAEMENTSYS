@@ -156,6 +156,76 @@ body {
 
     transition: 0.22s ease;
 }
+/* ===============================
+   Fix Hidden / White Text
+================================ */
+
+.hero h1,
+.hero p,
+.status-title,
+.status-subtitle,
+.status-card h3,
+.status-card p,
+.status-number,
+.custom-pill,
+.status-badge {
+    position: relative !important;
+    z-index: 5 !important;
+}
+
+.hero h1 {
+    color: var(--ink) !important;
+}
+
+.hero p {
+    color: var(--body) !important;
+}
+
+.status-title {
+    color: var(--ink) !important;
+}
+
+.status-subtitle {
+    color: var(--body) !important;
+}
+
+.status-card h3 {
+    color: var(--ink) !important;
+}
+
+.status-card p {
+    color: var(--body) !important;
+}
+
+.status-number {
+    color: var(--status-color, var(--primary)) !important;
+}
+
+/* icons and badges */
+.custom-pill {
+    color: var(--primary) !important;
+    background: var(--tint) !important;
+    border: 1px solid var(--tint-border) !important;
+}
+
+.status-badge {
+    color: var(--status-color, var(--primary)) !important;
+    background: color-mix(in srgb, var(--status-color, var(--primary)) 10%, white) !important;
+}
+
+/* make sure card content is above any animation layers */
+.status-card > *,
+.hero > * {
+    position: relative !important;
+    z-index: 5 !important;
+}
+
+/* reduce overlay effect if it is hiding text */
+.status-card::after,
+.hero::after {
+    opacity: 0.25 !important;
+    pointer-events: none !important;
+}
 
 .masar-nav-link:hover,
 .masar-nav-link.active {
