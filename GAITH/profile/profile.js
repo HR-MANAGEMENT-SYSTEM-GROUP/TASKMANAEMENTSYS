@@ -119,22 +119,20 @@
   // 1. INITIALIZATION & ROLE-AWARE SESSION LOADING
   // ============================================================================
   async function initProfile() {
-    if (sessionStorage.getItem('logged_out') === 'true') {
-      sessionStorage.removeItem('logged_out');
+    const storedUserStr = localStorage.getItem('currentUser');
+    if (!storedUserStr) {
       window.location.href = '../login.html';
       return;
     }
+    sessionStorage.removeItem('logged_out');
 
     const urlParams = new URLSearchParams(window.location.search);
     const requestedRole = urlParams.get('role'); // e.g. ?role=hr
 
-    const storedUserStr = localStorage.getItem('currentUser');
-    if (storedUserStr) {
-      try {
-        currentUser = JSON.parse(storedUserStr);
-      } catch (err) {
-        console.error('Failed to parse currentUser from localStorage:', err);
-      }
+    try {
+      currentUser = JSON.parse(storedUserStr);
+    } catch (err) {
+      console.error('Failed to parse currentUser from localStorage:', err);
     }
 
     // If a specific role is requested in the URL and doesn't match current user, reset to fetch that role
@@ -787,11 +785,22 @@
 
   // Authentication hook for system / team integration
   function doLogout() {
+    try {
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('loggedIn');
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('username');
+      localStorage.removeItem('bridgeway_current_role');
+      localStorage.removeItem('masar_current_role');
+      sessionStorage.removeItem('isLoggedIn');
+      sessionStorage.setItem('logged_out', 'true');
+    } catch (e) {}
     if (typeof window.doLogout === 'function' && window.doLogout !== doLogout) {
       window.doLogout();
     }
   }
-  window.doLogout = window.doLogout || doLogout;
+  window.doLogout = doLogout;
 
   // ============================================================================
   // 10. LOGOUT HANDLER & LIFECYCLE
@@ -799,8 +808,6 @@
   if (navLogoutBtn) {
     navLogoutBtn.addEventListener('click', () => {
       doLogout();
-      sessionStorage.setItem('logged_out', 'true');
-      localStorage.removeItem('currentUser');
       window.location.href = '../login.html';
     });
   }
