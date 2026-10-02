@@ -9,7 +9,7 @@
   // كود النافبار (تم استبدال كلمة Profile وجعل اسم المستخدم هو الزر الذي يوجه للبروفايل)
   const navbarHTML = `
   <header class="journey-header">
-    <a href="${BASE_PATH}home.html" class="journey-logo" aria-label="Masar — home">
+    <a href="${BASE_PATH}../../NADA/home/home.html" class="journey-logo" aria-label="Masar — home">
       <svg class="masar-lockup" viewBox="0 0 332.6 56" role="img" aria-label="Masar" focusable="false">
         <g transform="scale(0.875)">
           <rect class="ml-tile" width="64" height="64" rx="16"/>
@@ -33,11 +33,11 @@
     </a>
 
     <nav class="journey-nav-menu" aria-label="Main">
-      <a href="${BASE_PATH}home.html" class="nav-menu-link">Home</a>
-      <a href="${BASE_PATH}home.html#stop-1" class="nav-menu-link">About us</a>
-      <a href="${BASE_PATH}home.html#stop-2" class="nav-menu-link">Services</a>
-      <a href="${BASE_PATH}team.html" class="nav-menu-link">Team</a>
-      <a href="${BASE_PATH}home.html#stop-4" class="nav-menu-link">Contact us</a>
+      <a href="${BASE_PATH}../../NADA/home/home.html" class="nav-menu-link">Home</a>
+      <a href="${BASE_PATH}../../NADA/home/home.html" class="nav-menu-link">About us</a>
+      <a href="${BASE_PATH}../../NADA/home/home.html" class="nav-menu-link">Services</a>
+      <a href="${BASE_PATH}../../NADA/home/team.html" class="nav-menu-link">Team</a>
+      <a href="${BASE_PATH}../../NADA/home/home.html" class="nav-menu-link">Contact us</a>
     </nav>
 
     <div class="header-actions">
@@ -75,8 +75,8 @@
   <footer class="journey-footer-container">
     <div class="foot-grid">
       <div>
-        <a href="${BASE_PATH}home.html" aria-label="Masar — back to start">
-          <img src="${BASE_PATH}MASAR.png" alt="Masar" class="foot-logo" onerror="this.style.display='none'">
+        <a href="${BASE_PATH}../../NADA/home/home.html" aria-label="Masar — back to start">
+          <img src="${BASE_PATH}../../Shared/MASAR.png" alt="Masar" class="foot-logo" onerror="this.style.display='none'">
         </a>
         <p>Empowering people and simplifying HR for modern teams.</p>
         <div class="socials">
@@ -88,11 +88,11 @@
       <div>
         <h3>Quick Links</h3>
         <ul class="plain">
-          <li><a href="${BASE_PATH}home.html">Home</a></li>
-          <li><a href="${BASE_PATH}home.html#stop-1">About</a></li>
-          <li><a href="${BASE_PATH}home.html#stop-2">Services</a></li>
+          <li><a href="${BASE_PATH}../../NADA/home/home.html">Home</a></li>
+          <li><a href="${BASE_PATH}../../NADA/home/home.html">About</a></li>
+          <li><a href="${BASE_PATH}../../NADA/home/home.html">Services</a></li>
           <li><a href="${BASE_PATH}../../YAQEEN/companyPolicies/companyPolicies.html">Policies</a></li>
-          <li><a href="${BASE_PATH}team.html" class="accent">Meet the Team &nearr;</a></li>
+          <li><a href="${BASE_PATH}../../NADA/home/team.html" class="accent">Meet the Team &nearr;</a></li>
         </ul>
       </div>
       <div>
