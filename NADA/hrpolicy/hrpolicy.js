@@ -123,7 +123,7 @@ function downloadPolicy(i) {
   document.body.removeChild(link);
 }
 
-// 9. البحث اللحظي (نفس كودك بالتمام)
+// 9. البحث اللحظي
 search.addEventListener("input", () => {
   let text = search.value.toLowerCase();
   let policies = JSON.parse(localStorage.getItem("companyPolicies")) || [];
