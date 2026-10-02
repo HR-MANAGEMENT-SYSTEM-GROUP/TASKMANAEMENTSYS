@@ -36,7 +36,7 @@ passInput.oninput = () => passErr.style.display = "none";
 document.getElementById("hrLoginForm").onsubmit = (e) => {
   e.preventDefault();
   let email = emailInput.value.trim().toLowerCase();
-  let user = (JSON.parse(localStorage.getItem("Employees")) || []).find(u => u.email.toLowerCase() === email) || users.find(u => u.email.toLowerCase() === email);
+  let user = (JSON.parse(localStorage.getItem("Employees")) || []).find(u => (u.email || "").trim().toLowerCase() === email) || users.find(u => (u.email || "").trim().toLowerCase() === email);
   let savedPass = (JSON.parse(localStorage.getItem("user_passwords")) || {})[email];
 
   if (!email.includes("@")) {
@@ -82,7 +82,7 @@ document.getElementById("closeForgotModalBtn").onclick = () => {
 
 document.getElementById("forgotPasswordForm").onsubmit = (e) => {
   e.preventDefault();
-  let found = users.find(u => u.email.toLowerCase() === resetEmail.value.trim().toLowerCase());
+  let found = (JSON.parse(localStorage.getItem("Employees")) || []).find(u => u.email.toLowerCase() === resetEmail.value.trim().toLowerCase()) || users.find(u => u.email.toLowerCase() === resetEmail.value.trim().toLowerCase());
 
   if (newPassSec.classList.contains("d-none")) {
     if (!found) {
