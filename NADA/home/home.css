@@ -597,7 +597,9 @@ html.theme-anim *{transition:background-color .35s,color .35s,border-color .35s,
 .team-avatar.leave { background: #059669; }
 .team-avatar.policy { background: #d97706; }
 .team-avatar.meetings { background: #0284c7; }
+.team-avatar.task { background: #0284c7; }
 .team-avatar.feedback { background: #4f46e5; }
+.team-avatar.auth { background: #4f46e5; }
 .team-avatar.org { background: var(--accent); }
 
 .team-person-name {

@@ -5,11 +5,11 @@
  * The visitor is the camera. The team is the story.
  * - 6 Team members:
  *   1. Nada Alawneh (Scrum Master & Full Stack Developer)
- *   2. Omar Smadi (Product Owner & Agile Lead)
+ *   2. Omar Smadi (Product Owner & Virtual Collaboration)
  *   3. Amneh Hazaimeh (Employee - Leave Management)
- *   4. Yaqeen Malkawi (Employee - Company Policies)
- *   5. Tareq Bataineh (Employee - Video Meetings & Collaboration)
- *   6. Gaith Amourah (Employee - Security & Employee Feedback)
+ *   4. Yaqeen Malkawi (Employee - Policies & Feedback)
+ *   5. Tareq Bataineh (Employee - Task Management & Kanban)
+ *   6. Gaith Amourah (Employee - Authentication & Profile Management)
  * - Pinned 2D Canvas Meeting Room with executive conference interior
  * - Master GSAP ScrollTrigger timeline with smooth camera flight
  * - Clean theme synchronization (Light & Dark)
@@ -72,18 +72,19 @@
   const effects = {
     scrumStepProgress: 0,
     scrumStep: 0,
-    taskStepProgress: 0,
-    taskStep: 0,
-    taskCompleteColor: 0,
+    meetingProgress: 0,
+    meetingStep: 0,
+    meetingLiveColor: 0,
     leaveStepProgress: 0,
     leaveStep: 0,
     leaveDecisionAlpha: 0,
     policiesDocProgress: 0,
     policiesStep: 0,
-    meetingProgress: 0,
-    meetingStep: 0,
-    feedbackTransmitProgress: 0,
-    feedbackStep: 0,
+    taskStepProgress: 0,
+    taskStep: 0,
+    taskCompleteColor: 0,
+    authStepProgress: 0,
+    authStep: 0,
     teamConnectionsProgress: 0
   };
 
@@ -114,8 +115,8 @@
       id: 'omar',
       seatIndex: 1,
       name: 'Omar Smadi',
-      role: 'Product Owner',
-      dept: 'Product & Tasks',
+      role: 'Product Owner & Meetings Lead',
+      dept: 'Product & Video Collaboration',
       badgeId: '#PO-1002',
       x: -100,
       y: -155,
@@ -124,7 +125,7 @@
       hairColor: '#0f172a',
       accentColor: '#2563eb',
       initials: 'OS',
-      laptopScreen: 'tasks_kanban',
+      laptopScreen: 'meetings_zoom',
       sceneIdx: 2
     },
     {
@@ -149,7 +150,7 @@
       seatIndex: 3,
       name: 'Yaqeen Malkawi',
       role: 'Full Stack Developer',
-      dept: 'Company Policies',
+      dept: 'Policies & Feedback',
       badgeId: '#EMP-2042',
       x: 230,
       y: 65,
@@ -157,7 +158,7 @@
       color: '#92400e', // Warm bronze/amber
       hairColor: '#292524',
       accentColor: '#f59e0b',
-      initials: 'YJ',
+      initials: 'YM',
       laptopScreen: 'policies_doc',
       sceneIdx: 4
     },
@@ -166,7 +167,7 @@
       seatIndex: 4,
       name: 'Tareq Bataineh',
       role: 'Full Stack Developer',
-      dept: 'Meetings & Collaboration',
+      dept: 'Task Management & Kanban',
       badgeId: '#EMP-2043',
       x: -230,
       y: 65,
@@ -175,7 +176,7 @@
       hairColor: '#1e293b',
       accentColor: '#0284c7',
       initials: 'TB',
-      laptopScreen: 'meetings_zoom',
+      laptopScreen: 'tasks_kanban',
       sceneIdx: 5
     },
     {
@@ -183,7 +184,7 @@
       seatIndex: 5,
       name: 'Gaith Amourah',
       role: 'Full Stack Developer',
-      dept: 'Security & Feedback',
+      dept: 'Authentication & Profiles',
       badgeId: '#EMP-2044',
       x: -230,
       y: -65,
@@ -192,7 +193,7 @@
       hairColor: '#0f172a',
       accentColor: '#6366f1',
       initials: 'GA',
-      laptopScreen: 'feedback_auth',
+      laptopScreen: 'auth_profile',
       sceneIdx: 6
     }
   ];
@@ -235,7 +236,7 @@
       id: 2,
       label: 'Product Owner',
       kicker: '03 / 08',
-      level: 'Product Leadership',
+      level: 'Product Leadership & Zoom Meetings',
       target: { x: -100, y: -155 },
       viewSize: 420,
       anchorX: 0.32,
@@ -255,9 +256,9 @@
     },
     {
       id: 4,
-      label: 'Company Policies',
+      label: 'Policies & Feedback',
       kicker: '05 / 08',
-      level: 'Workplace Governance',
+      level: 'Workplace Governance & Voice',
       target: { x: 230, y: 65 },
       viewSize: 410,
       anchorX: 0.65,
@@ -266,9 +267,9 @@
     },
     {
       id: 5,
-      label: 'Team Collaboration',
+      label: 'Task Management',
       kicker: '06 / 08',
-      level: 'Video Meetings',
+      level: 'Kanban Task Board',
       target: { x: -230, y: 65 },
       viewSize: 410,
       anchorX: 0.35,
@@ -277,9 +278,9 @@
     },
     {
       id: 6,
-      label: 'Employee Feedback',
+      label: 'Identity & Profiles',
       kicker: '07 / 08',
-      level: 'Identity & Voice',
+      level: 'Authentication & Staff Profiles',
       target: { x: -230, y: -65 },
       viewSize: 410,
       anchorX: 0.35,
@@ -388,19 +389,19 @@
           startTime
         );
       } else if (i === 2) {
-        // Scene 2: Omar Smadi (Product Owner) - Kanban task stepper
+        // Scene 2: Omar Smadi (Product Owner) - Zoom meeting coordination stepper
         masterTimeline.fromTo(
           effects,
-          { taskStepProgress: 0 },
+          { meetingProgress: 0 },
           {
-            taskStepProgress: 3.99,
+            meetingProgress: 3.99,
             duration: dwellDuration,
             ease: 'none',
             onUpdate: function () {
-              const step = Math.min(3, Math.floor(effects.taskStepProgress));
-              effects.taskStep = step;
-              effects.taskCompleteColor = step === 3 ? 1 : 0;
-              updateStepperHUD('taskStepper', step);
+              const step = Math.min(3, Math.floor(effects.meetingProgress));
+              effects.meetingStep = step;
+              effects.meetingLiveColor = step === 3 ? 1 : 0;
+              updateStepperHUD('meetingStepper', step);
             }
           },
           startTime
@@ -424,7 +425,7 @@
           startTime
         );
       } else if (i === 4) {
-        // Scene 4: Yaqeen Malkawi (Policies) - Governance stepper
+        // Scene 4: Yaqeen Malkawi (Policies & Feedback) - Governance & Feedback stepper
         masterTimeline.fromTo(
           effects,
           { policiesDocProgress: 0 },
@@ -441,35 +442,36 @@
           startTime
         );
       } else if (i === 5) {
-        // Scene 5: Tareq Bataineh (Meetings) - Zoom meeting scheduler stepper
+        // Scene 5: Tareq Bataineh (Task Management) - Kanban task stepper
         masterTimeline.fromTo(
           effects,
-          { meetingProgress: 0 },
+          { taskStepProgress: 0 },
           {
-            meetingProgress: 3.99,
+            taskStepProgress: 3.99,
             duration: dwellDuration,
             ease: 'none',
             onUpdate: function () {
-              const step = Math.min(3, Math.floor(effects.meetingProgress));
-              effects.meetingStep = step;
-              updateStepperHUD('meetingStepper', step);
+              const step = Math.min(3, Math.floor(effects.taskStepProgress));
+              effects.taskStep = step;
+              effects.taskCompleteColor = step === 3 ? 1 : 0;
+              updateStepperHUD('taskStepper', step);
             }
           },
           startTime
         );
       } else if (i === 6) {
-        // Scene 6: Gaith Amourah (Feedback) - Confidential feedback stepper
+        // Scene 6: Gaith Amourah (Authentication & Profile) - Identity & Session stepper
         masterTimeline.fromTo(
           effects,
-          { feedbackTransmitProgress: 0 },
+          { authStepProgress: 0 },
           {
-            feedbackTransmitProgress: 3.99,
+            authStepProgress: 3.99,
             duration: dwellDuration,
             ease: 'none',
             onUpdate: function () {
-              const step = Math.min(3, Math.floor(effects.feedbackTransmitProgress));
-              effects.feedbackStep = step;
-              updateStepperHUD('feedbackStepper', step);
+              const step = Math.min(3, Math.floor(effects.authStepProgress));
+              effects.authStep = step;
+              updateStepperHUD('authStepper', step);
             }
           },
           startTime
@@ -946,10 +948,10 @@
       // Illuminated Laptop Screen
       let screenColor = isDark ? '#1e293b' : '#334155';
       if (m.id === 'nada') screenColor = '#0079F1';
-      if (m.id === 'omar') screenColor = effects.taskCompleteColor ? '#059669' : '#2563eb';
+      if (m.id === 'omar') screenColor = effects.meetingLiveColor ? '#0284c7' : '#2563eb';
       if (m.id === 'amneh') screenColor = effects.leaveDecisionAlpha > 0 ? '#059669' : '#10b981';
       if (m.id === 'yaqeen') screenColor = '#d97706';
-      if (m.id === 'tareq') screenColor = '#0284c7';
+      if (m.id === 'tareq') screenColor = effects.taskCompleteColor ? '#059669' : '#0284c7';
       if (m.id === 'gaith') screenColor = '#4f46e5';
 
       ctx.fillStyle = screenColor;
