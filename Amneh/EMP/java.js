@@ -2,7 +2,6 @@ let leaveForm = document.getElementById('leaveForm');
 let leaveType = document.getElementById('leaveType');
 let leaveDates = document.getElementById('leaveDates');
 let departureTime = document.getElementById('departureTime');
-
 let startDate = document.getElementById('startDate');
 let endDate = document.getElementById('endDate');
 let departureDate = document.getElementById('departureDate');
@@ -18,9 +17,14 @@ let removeAttachmentBtn = document.getElementById('removeAttachmentBtn');
 let fileBase64 = null;
 let fileName = null;
 
-// تسجيل دخول افتراضي 
-localStorage.setItem('username', 'Amneh'); 
-let currentUser = localStorage.getItem('username');
+// 1. جلب بيانات الموظف المسجل حالياً من localStorage
+let currentUserObj = {};
+try {
+  currentUserObj = JSON.parse(localStorage.getItem('currentUser')) || {};
+} catch (err) {
+  currentUserObj = {};
+}
+let currentUser = currentUserObj.userName || currentUserObj.name || currentUserObj.username || currentUserObj.fullName || 'Employee';
 
 //////////////////////////////////////////////////////////
 
@@ -111,11 +115,11 @@ if (attachmentInput) {
       return;
     }
 
-    // Validate file size (max 2MB to keep localStorage well within limits)
-    let maxSizeBytes = 2 * 1024 * 1024;
+    // Validate file size (max 500KB to keep localStorage well within limits)
+    let maxSizeBytes = 500 * 1024;
     if (file.size > maxSizeBytes) {
-      let sizeMb = (file.size / (1024 * 1024)).toFixed(1);
-      alert(`The selected PDF is too large (${sizeMb} MB). Maximum allowed size is 2MB.`);
+      let sizeKb = (file.size / 1024).toFixed(1);
+      alert(`The selected PDF is too large (${sizeKb} KB). Maximum allowed size is 500KB.`);
       clearAttachment();
       return;
     }
@@ -196,7 +200,7 @@ if (leaveForm) {
 
     let requestData = {
       id: Date.now(),
-      user: currentUser,
+      userName: currentUser,
       type: selectedType,
       dateTime: dateTimeValue,
       reason: reason.value.trim(),
@@ -206,25 +210,27 @@ if (leaveForm) {
       attachmentName: fileName || null,
     };
 
-    let storageKey = `requests_${currentUser}`;
-    let userRequests = [];
-    try {
-      userRequests = JSON.parse(localStorage.getItem(storageKey)) || [];
-    } catch (err) {
-      userRequests = [];
+    // 1. التحديث في سجل الموظف المحلي
+    if (!Array.isArray(currentUserObj.requests)) {
+      currentUserObj.requests = [];
     }
+    currentUserObj.requests.push(requestData);
 
-    userRequests.push(requestData);
+    // 2. التحديث في السجل العام الموحد لصفحة الـ HR
+    let allRequests = [];
+    try {
+      allRequests = JSON.parse(localStorage.getItem('all_leave_requests')) || [];
+    } catch (err) {
+      allRequests = [];
+    }
+    allRequests.push(requestData);
 
     try {
-      localStorage.setItem(storageKey, JSON.stringify(userRequests));
+      localStorage.setItem('currentUser', JSON.stringify(currentUserObj));
+      localStorage.setItem('all_leave_requests', JSON.stringify(allRequests));
     } catch (storageError) {
       console.error('LocalStorage error:', storageError);
-      if (storageError.name === 'QuotaExceededError' || storageError.code === 22) {
-        alert('Storage quota exceeded! Please attach a smaller PDF or clear old requests.');
-      } else {
-        alert('Failed to save leave request to storage.');
-      }
+      alert('Storage quota exceeded! Please attach a smaller PDF.');
       return;
     }
 
@@ -255,13 +261,14 @@ function displayRequests() {
   let requestsTable = document.getElementById('requestsTable');
   if (!requestsTable) return;
 
-  let storageKey = `requests_${currentUser}`;
-  let userRequests = [];
+  let userObj = {};
   try {
-    userRequests = JSON.parse(localStorage.getItem(storageKey)) || [];
+    userObj = JSON.parse(localStorage.getItem('currentUser')) || {};
   } catch (err) {
-    userRequests = [];
+    userObj = {};
   }
+
+  let userRequests = userObj.requests || [];
 
   requestsTable.innerHTML = '';
 
@@ -337,7 +344,6 @@ function openPdfDocument(base64Data, fileName = 'document.pdf') {
 
     let win = window.open(blobUrl, '_blank');
     if (!win || win.closed || typeof win.closed === 'undefined') {
-      // Pop-up blocker fallback: download directly
       let a = document.createElement('a');
       a.href = blobUrl;
       a.download = fileName;
@@ -353,13 +359,13 @@ function openPdfDocument(base64Data, fileName = 'document.pdf') {
 
 // View attachment for a specific employee request
 window.viewUserAttachment = function(reqId) {
-  let storageKey = `requests_${currentUser}`;
-  let userRequests = [];
+  let userObj = {};
   try {
-    userRequests = JSON.parse(localStorage.getItem(storageKey)) || [];
+    userObj = JSON.parse(localStorage.getItem('currentUser')) || {};
   } catch (err) {
-    userRequests = [];
+    userObj = {};
   }
+  let userRequests = userObj.requests || [];
   let req = userRequests.find(r => r.id === reqId);
   if (!req || !req.attachment) {
     alert('Attachment not found.');
