@@ -25,12 +25,9 @@
 .employee-management button { transition: background .2s, border-color .2s, box-shadow .2s; }
 .employee-management :focus-visible { outline: 3px solid #005BB5; outline-offset: 3px; }
 .employee-management h1, .employee-management h2, .employee-management h3 { font-family: var(--emp-heading); font-weight: 700; letter-spacing: -.02em; }
-.employee-management .hr-with-sidebar-content { padding-top: 0; min-width: 0; transition: margin-left .25s; }
+.employee-management .hr-with-sidebar-content { padding-top: 30px; min-width: 0; transition: margin-left .25s; }
 .employee-management.sidebar-collapsed .hr-with-sidebar-content { margin-left: 105px; }
-.employee-management #hrHeader { position: relative; z-index: 20; }
-.employee-management .hr-header-title small { display: block; margin-top: 2px; }
-.employee-management .hr-shared-header { gap: 16px; }
-.employee-management .page { width: 100%; max-width: 1600px; margin: 34px auto 20px; }
+.employee-management .page { width: 100%; max-width: 1600px; margin: 0 auto 20px; }
 
 /* Hero */
 .employee-management .page-header {
@@ -127,6 +124,9 @@
 .employee-management #form { padding: 26px 28px; }
 .employee-management .form-row { display: flex; gap: 18px; }
 .employee-management .form-group { flex: 1; min-width: 0; margin-bottom: 18px; }
+.employee-management .form-group[hidden] { display: none; }
+.employee-management .form-group input[readonly] { color: var(--primary-dark); background: var(--emp-tint); }
+.employee-management .field-help { display: block; margin-top: 6px; font-size: 11px; color: var(--emp-muted); }
 .employee-management .form-group label { display: block; margin-bottom: 7px; font-size: 12px; font-weight: 600; color: var(--emp-body); }
 .employee-management .form-group input, .employee-management .form-group select { width: 100%; min-height: 44px; padding: 9px 12px; border: 1px solid var(--emp-line); border-radius: 10px; background: #F8FAFC; font-size: 13px; color: var(--emp-ink); }
 .employee-management .form-buttons { display: flex; justify-content: flex-end; gap: 10px; padding-top: 22px; margin-top: 5px; border-top: 1px solid #E2E8F0; }
@@ -164,20 +164,12 @@
     .employee-management .hr-sidebar .sidebar-logo { display: none; }
     .employee-management .hr-sidebar .sidebar-header { justify-content: center; }
     .employee-management .hr-with-sidebar-content { margin-left: 105px; padding-right: 15px; }
-    .employee-management .page { margin-top: 24px; }
     .employee-management .hero-copy { flex-basis: 100%; }
 }
 @media (max-width: 650px) {
     .employee-management .hr-sidebar { left: 8px; width: 64px; padding: 14px 8px; }
     .employee-management .hr-with-sidebar-content, .employee-management.sidebar-collapsed .hr-with-sidebar-content { margin-left: 84px; padding-right: 12px; }
     .employee-management .hr-sidebar.collapsed { width: 64px; }
-    .employee-management .hr-shared-header { margin-top: 10px; padding: 14px; gap: 6px; }
-    .employee-management .header-brand-line { flex-wrap: wrap; gap: 5px; }
-    .employee-management .header-platform-tag { font-size: 8px; }
-    .employee-management .hr-header-title small { font-size: 10px; line-height: 1.5; }
-    .employee-management .hr-profile-box { padding: 0; gap: 4px; }
-    .employee-management .profile-icon { width: 34px; height: 34px; }
-    .employee-management .profile-arrow { display: none; }
     .employee-management .page-header { padding: 23px 18px; gap: 18px; }
     .employee-management .page-eyebrow { font-size: 9px; letter-spacing: .06em; padding: 5px 10px; }
     .employee-management .page-header p { font-size: 13px; }

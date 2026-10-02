@@ -1,80 +1,47 @@
 let Meetings = JSON.parse(localStorage.getItem("Meetings")) || [];
-
 let Employees = [];
-
 let editingMeetingId = null;
 let currentRequestId = null;
 
-
-// ========================================
-// Load Employees from Users.json
-// ========================================
-
-// ========================================
-// Load Employees directly from Users.json
-// ========================================
-
+let meetingForm = document.getElementById("meetingForm");
+let meetingModal = document.getElementById("meetingFormContainer");
+let participantsMenu = document.getElementById("participantsMenu");
+let selectAllEmployees = document.getElementById("selectAllEmployees");
+let meetingFields = { title: "meetingTitle", date: "meetingDate", time: "meetingTime", notes: "meetingNotes" };
+/*اول فنكشن بشتغل عندي بجيب اليوزرز من ال json file */
+// بس بجيب ال employees 
 function loadEmployees() {
-
     fetch("../../jsonFiles/Users.json")
-
         .then(response => {
-
-            if (!response.ok) {
-                throw new Error("Users.json could not be loaded");
-            }
-
+            if (!response.ok) throw new Error("Users.json could not be loaded");
             return response.json();
-
         })
-
         .then(data => {
-
-            // Get employees only
-            Employees = data.filter(
-                user => user.role === "employee"
-            );
-
-            // Start page after JSON is loaded
+            Employees = data.filter(user => user.role === "employee");
             startPage();
-
         })
-
-        .catch(error => {
-
-            console.error(
-                "Error loading Users.json:",
-                error
-            );
-
-        });
+        .catch(error => console.error("Error loading Users.json:", error));
 }
-
+//بجيب ال meeting req والميتنج تاعت ال HR
 function startPage() {
     displayParticipantOptions();
     displayMeetingRequests();
     displayMeetings();
 }
-
+//حفظ ال meetings في ال local storage
 function saveMeetings() {
     localStorage.setItem("Meetings", JSON.stringify(Meetings));
 }
-
-function getEmployees() {
-    return Employees.filter(user => user.role === "employee");
-}
-
-// Build the participant dropdown.
+// هون بجيب كل ال employees وال departments وبحطهم في ال dropdown list
 function displayParticipantOptions() {
     let employeesBox = document.getElementById("employeesCheckboxes");
     let departmentsBox = document.getElementById("departmentsCheckboxes");
-    let employees = getEmployees();
     let departments = [];
 
     employeesBox.innerHTML = "";
     departmentsBox.innerHTML = "";
 
-    employees.forEach(employee => {
+    Employees.forEach(employee => {
         employeesBox.innerHTML += `
             <label class="participant-option">
                 <input type="checkbox" class="employee-option"
@@ -96,24 +63,19 @@ function displayParticipantOptions() {
             </label>`;
     });
 }
-
+//عشان افتح واسكر ال dropdown
 function toggleParticipantsDropdown() {
-    let menu = document.getElementById("participantsMenu");
-    menu.hidden = !menu.hidden;
+    participantsMenu.hidden = !participantsMenu.hidden;
 }
-
-document.getElementById("selectAllEmployees").addEventListener("change", function () {
-    document.querySelectorAll(".employee-option").forEach(box => {
-        box.checked = this.checked;
-    });
-
-    document.querySelectorAll(".department-option").forEach(box => {
+/*لما اكبس على all employee بال dropdown list عشان يصيرو كلهم checked*/ 
+selectAllEmployees.addEventListener("change", function () {
+    document.querySelectorAll(".employee-option, .department-option").forEach(box => {
         box.checked = this.checked;
     });
 
     updateParticipantsText();
 });
-
+//هون لما اكبس على قسم معين بال الليست بعمل تشيك على الموظفين
 function selectDepartment(departmentBox) {
     document.querySelectorAll(".employee-option").forEach(box => {
         let employee = Employees.find(user => user.id == box.value);
@@ -126,16 +88,14 @@ function selectDepartment(departmentBox) {
     updateSelection();
 }
 
-// Keep All Employees and Department checkboxes synchronized.
+// هون في حال اخترت كل الموظفين بال القسم بعمل تيشك على القسم 
 function updateSelection() {
-    let employees = getEmployees();
     let selected = getSelectedEmployees();
 
-    document.getElementById("selectAllEmployees").checked =
-        employees.length > 0 && selected.length === employees.length;
+    selectAllEmployees.checked = Employees.length > 0 && selected.length === Employees.length;
 
     document.querySelectorAll(".department-option").forEach(departmentBox => {
-        let departmentEmployees = employees.filter(
+        let departmentEmployees = Employees.filter(
             employee => employee.department === departmentBox.value
         );
 
@@ -145,7 +105,7 @@ function updateSelection() {
 
     updateParticipantsText();
 }
-
+// بجيب كل الموظفين الي اخترتهم بالليست 
 function getSelectedEmployees() {
     let selected = [];
 
@@ -155,14 +115,14 @@ function getSelectedEmployees() {
 
     return selected;
 }
-
+//هون عشان اعرض الموظفين بال Participants
 function updateParticipantsText() {
     let selected = getSelectedEmployees();
     let text = document.getElementById("participantsText");
 
     if (selected.length === 0) {
         text.textContent = "Select participants";
-    } else if (selected.length === getEmployees().length) {
+    } else if (selected.length === Employees.length) {
         text.textContent = "All Employees";
     } else if (selected.length === 1) {
         let employee = Employees.find(user => user.id === selected[0]);
@@ -171,34 +131,37 @@ function updateParticipantsText() {
         text.textContent = selected.length + " participants selected";
     }
 }
-
+// عشان لما يعمل uncheck
 function clearParticipants() {
     document.querySelectorAll(".employee-option, .department-option").forEach(box => {
         box.checked = false;
     });
 
-    document.getElementById("selectAllEmployees").checked = false;
+    selectAllEmployees.checked = false;
     updateParticipantsText();
 }
 
-// Open and close the Add/Edit form.
+//لما اضغط على schedule meeting بتفتح 
 function showMeetingForm() {
     editingMeetingId = null;
-    document.getElementById("meetingForm").reset();
+    meetingForm.reset();
     clearParticipants();
     document.getElementById("formTitle").textContent = "Schedule Meeting";
     document.getElementById("saveMeetingButton").textContent = "Schedule Meeting";
-    document.getElementById("meetingFormContainer").hidden = false;
+    meetingModal.hidden = false;
 }
-
+//عشان اسكر ال schedule meeting
 function hideMeetingForm() {
-    document.getElementById("meetingFormContainer").hidden = true;
-    document.getElementById("participantsMenu").hidden = true;
+    meetingModal.hidden = true;
+    participantsMenu.hidden = true;
     editingMeetingId = null;
 }
 
-// Add a new meeting or save edits.
-document.getElementById("meetingForm").addEventListener("submit", function (event) {
+// هون بعمل كذا شغله اول اشي في حال ما اختار موظف ببعثله اليرت 
+//ثاني اشي في حال بدي اعمل ابديت على ميتنج معين 
+//اذا لا فا انا هون بكون بعمل ميتنج 
+//واخر اشي بعمل save طبعا 
+function saveMeeting(event) {
     event.preventDefault();
 
     let participants = getSelectedEmployees();
@@ -208,53 +171,37 @@ document.getElementById("meetingForm").addEventListener("submit", function (even
         return;
     }
 
-    let title = document.getElementById("meetingTitle").value.trim();
-    let date = document.getElementById("meetingDate").value;
-    let time = document.getElementById("meetingTime").value;
-    let notes = document.getElementById("meetingNotes").value.trim();
-
-    if (editingMeetingId !== null) {
-        let meeting = Meetings.find(item => item.id === editingMeetingId);
-
-        if (meeting) {
-            meeting.title = title;
-            meeting.date = date;
-            meeting.time = time;
-            meeting.notes = notes;
-            meeting.participants = participants;
-        }
-    } else {
+    let meeting = Meetings.find(item => item.id === editingMeetingId);
+    if (editingMeetingId === null) {
         let id = Date.now();
-
-        Meetings.push({
-            id: id,
-            title: title,
-            date: date,
-            time: time,
-            notes: notes,
-            participants: participants,
-            createdBy: "HR",
-            status: "Scheduled",
-            responses: [],
-            roomName: "HRMeeting_" + id
-        });
+        meeting = { id: id, createdBy: "HR", status: "Scheduled", responses: [], roomName: "HRMeeting_" + id };
+        Meetings.push(meeting);
+    }
+    if (meeting) {
+        for (let field in meetingFields) {
+            let value = document.getElementById(meetingFields[field]).value;
+            meeting[field] = field === "title" || field === "notes" ? value.trim() : value;
+        }
+        meeting.participants = participants;
     }
 
     saveMeetings();
     hideMeetingForm();
     displayMeetings();
-});
+}
 
+meetingForm.addEventListener("submit", saveMeeting);
+
+//وقت ما اعدل على الميتنق ال HR
 function editMeeting(id) {
     let meeting = Meetings.find(item => item.id === id);
 
     if (!meeting || meeting.createdBy !== "HR") return;
 
     editingMeetingId = id;
-    document.getElementById("meetingTitle").value = meeting.title;
-    document.getElementById("meetingDate").value = meeting.date;
-    document.getElementById("meetingTime").value = meeting.time;
-    document.getElementById("meetingNotes").value = meeting.notes || "";
+    for (let field in meetingFields) {
+        document.getElementById(meetingFields[field]).value = field === "notes" ? meeting.notes || "" : meeting[field];
+    }
 
     clearParticipants();
     document.querySelectorAll(".employee-option").forEach(box => {
@@ -264,9 +211,9 @@ function editMeeting(id) {
 
     document.getElementById("formTitle").textContent = "Edit Meeting";
     document.getElementById("saveMeetingButton").textContent = "Save Changes";
-    document.getElementById("meetingFormContainer").hidden = false;
+    meetingModal.hidden = false;
 }
-
+// لما بدي احذف ميتنج
 function deleteMeeting(id) {
     if (!confirm("Are you sure you want to delete this meeting?")) return;
 
@@ -275,7 +222,7 @@ function deleteMeeting(id) {
     displayMeetings();
 }
 
-// Show HR meetings and employee requests accepted by HR.
+// هون بعرض كل الميتنجات الي انا عاملها او الي الموظف قبلها
 function displayMeetings() {
     let container = document.getElementById("meetingsContainer");
     let scheduled = Meetings.filter(meeting =>
@@ -321,30 +268,19 @@ function displayMeetings() {
             </div>`;
     });
 }
-
+// لما اكبس على join meeting بفتح ال zoom meeting
 function joinMeeting(id) {
-
     let meeting = Meetings.find(item => item.id === id);
+    if (!meeting) return;
 
-    if (!meeting) {
-        return;
-    }
-
-    // Create room name if it does not exist
     if (!meeting.roomName) {
-
         meeting.roomName = "HRMeeting_" + meeting.id;
-
         saveMeetings();
     }
-
-    // Open the meeting page and pass the room name
-    window.location.href =
-        "../meetingzoom/meetingzoom.html?room=" +
-        encodeURIComponent(meeting.roomName);
+    window.location.href = "../meetingzoom/meetingzoom.html?room=" + encodeURIComponent(meeting.roomName);
 }
 
-// View meeting details.
+//بجيب الميتنق وبعرض معلوماته
 function viewMeeting(id) {
     let meeting = Meetings.find(item => item.id === id);
     if (!meeting) return;
@@ -358,7 +294,7 @@ function viewMeeting(id) {
     displayViewResponses(meeting);
     document.getElementById("viewMeetingModal").hidden = false;
 }
-
+//لما اكبس على view ميتنق بعرض الموظفين واقسامهم
 function displayViewParticipants(meeting) {
     let container = document.getElementById("viewMeetingParticipants");
     container.innerHTML = "";
@@ -376,20 +312,13 @@ function displayViewParticipants(meeting) {
             </div>`;
     });
 }
-
+//احفظ بيانات الفيو
 function displayViewResponses(meeting) {
     let container = document.getElementById("viewMeetingResponses");
     container.innerHTML = "";
 
     if (meeting.createdBy === "Employee") {
-        container.innerHTML = `
-            <div class="response-item">
-                <div class="response-header">
-                    <strong>HR Response</strong>
-                    <span class="status ${getStatusClass(meeting.status)}">${meeting.status}</span>
-                </div>
-                ${meeting.hrMessage ? `<p class="response-message">${meeting.hrMessage}</p>` : ""}
-            </div>`;
+        container.innerHTML = responseCard("HR Response", meeting.status, meeting.hrMessage);
         return;
     }
 
@@ -400,22 +329,27 @@ function displayViewResponses(meeting) {
         let response = (meeting.responses || []).find(item => item.employeeId === id);
         let status = response ? response.status : "Pending";
 
-        container.innerHTML += `
-            <div class="response-item">
-                <div class="response-header">
-                    <strong>${employee.name}</strong>
-                    <span class="status ${getStatusClass(status)}">${status}</span>
-                </div>
-                ${response && response.message ? `<p class="response-message">${response.message}</p>` : ""}
-            </div>`;
+        container.innerHTML += responseCard(employee.name, status, response ? response.message : "");
     });
+}
+
+//هون لما اعمل للردود دسيبلاي على الشاشه 
+function responseCard(name, status, message) {
+    return `
+        <div class="response-item">
+            <div class="response-header">
+                <strong>${name}</strong>
+                <span class="status ${getStatusClass(status)}">${status}</span>
+            </div>
+            ${message ? `<p class="response-message">${message}</p>` : ""}
+        </div>`;
 }
 
 function closeMeetingView() {
     document.getElementById("viewMeetingModal").hidden = true;
 }
 
-// Employee meeting requests.
+// مراجعة طلب الموظف وقبوله أو رفضه.
 function displayMeetingRequests() {
     let container = document.getElementById("meetingRequests");
     let requests = Meetings.filter(meeting =>
@@ -451,7 +385,7 @@ function displayMeetingRequests() {
             </div>`;
     });
 }
-
+// هون بعرض كل الريكوست وبحفظ ال id 
 function viewRequest(id) {
     let request = Meetings.find(item => item.id === id);
     if (!request) return;
@@ -468,7 +402,7 @@ function viewRequest(id) {
     document.getElementById("requestResponseMessage").value = request.hrMessage || "";
     document.getElementById("viewRequestModal").hidden = false;
 }
-
+// هون بغيرلي الحاله حسب اذا انقبل او نرفض
 function respondToCurrentRequest(status) {
     let request = Meetings.find(item => item.id === currentRequestId);
     if (!request) return;
@@ -485,19 +419,18 @@ function respondToCurrentRequest(status) {
     displayMeetingRequests();
     displayMeetings();
 }
-
+//لما افتح ريكوست
 function closeRequestView() {
     document.getElementById("viewRequestModal").hidden = true;
     currentRequestId = null;
 }
-
-// Small helper functions.
+//css
 function getStatusClass(status) {
     if (status === "Accepted") return "status-accepted";
     if (status === "Rejected") return "status-rejected";
     return "status-pending";
 }
-
+//date
 function formatDate(date) {
     if (!date) return "-";
 
@@ -510,7 +443,7 @@ function formatDate(date) {
         year: "numeric"
     });
 }
-
+//time
 function formatTime(time) {
     if (!time) return "-";
 
@@ -521,13 +454,13 @@ function formatTime(time) {
     hour = hour % 12 || 12;
     return hour + ":" + parts[1] + " " + period;
 }
-
+//لما اكبس اي مكان برا بسكر الدروب ليست
 document.addEventListener("click", function (event) {
     let dropdown = document.querySelector(".participants-dropdown");
 
     if (dropdown && !dropdown.contains(event.target)) {
-        document.getElementById("participantsMenu").hidden = true;
+        participantsMenu.hidden = true;
     }
 });
-
+//init
 loadEmployees();

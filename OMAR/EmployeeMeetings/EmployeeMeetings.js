@@ -2,20 +2,26 @@ let Meetings = [];
 let Employees = [];
 let meetingHR = null;
 const meetingHREmail = "maya.nasser@company.com";
+let requestForm = document.getElementById("requestMeetingForm");
+let requestModal = document.getElementById("requestFormContainer");
 
-// Use the signed-in employee for requests, invitations and responses.
-function getSignedInEmployeeId() {
+//هاي عشان اجيب الموظف الي عامل login
+function getCurrentUser() {
     try {
-        const user = JSON.parse(localStorage.getItem("currentUser"));
-        const id = Number(user?.id);
-        return user?.role === "employee" && Number.isInteger(id) && id > 0 ? id : null;
+        return JSON.parse(localStorage.getItem("currentUser"));
     } catch (_) {
         return null;
     }
 }
+//عشان اجيب ال id 
+function getSignedInEmployeeId() {
+    let user = getCurrentUser();
+    let id = Number(user?.id);
+    return user?.role === "employee" && Number.isInteger(id) && id > 0 ? id : null;
+}
 
 const currentEmployeeId = getSignedInEmployeeId();
-
+// بتاكد انه الموظف لسا عامل لوج ان وبحدث الصفحه
 function ensureEmployeeSession() {
     const signedInId = getSignedInEmployeeId();
     if (signedInId === null) {
@@ -29,6 +35,7 @@ function ensureEmployeeSession() {
     return true;
 }
 
+// تحميل الموظفين من التخزين وبيانات HR من ملف المستخدمين.
 function loadEmployees() {
     const submitButton = document.querySelector("#requestMeetingForm button[type='submit']");
     submitButton.disabled = true;
@@ -39,8 +46,6 @@ function loadEmployees() {
         Employees = [];
     }
 
-    // Resolve the fixed HR recipient from the full directory, even when the
-    // employee cache contains employee accounts only.
     return fetch("../../jsonFiles/Users.json")
         .then(response => {
             if (!response.ok) throw new Error("Users.json could not be loaded");
@@ -63,7 +68,7 @@ function loadEmployees() {
             if (ensureEmployeeSession()) startPage();
         });
 }
-
+//هون بس ابدا بجيب الميتنج من اللوكل وبعرضهم
 function startPage() {
     Meetings = JSON.parse(localStorage.getItem("Meetings")) || [];
     displayInvitations();
@@ -75,27 +80,22 @@ function saveMeetings() {
     localStorage.setItem("Meetings", JSON.stringify(Meetings));
 }
 
-function getHRManager() {
-    return meetingHR;
-}
-
-// Request meeting modal.
+// فتح الطلب وإرساله إلى HR.
 function showRequestForm() {
     if (!ensureEmployeeSession()) return;
-    document.getElementById("requestMeetingForm").reset();
-    document.getElementById("requestFormContainer").hidden = false;
+    requestForm.reset();
+    requestModal.hidden = false;
 }
 
 function hideRequestForm() {
-    document.getElementById("requestFormContainer").hidden = true;
+    requestModal.hidden = true;
 }
-
-// Send a meeting request to HR.
-document.getElementById("requestMeetingForm").addEventListener("submit", function (event) {
+//هون لما بدي ابعث ميتنج
+function sendMeetingRequest(event) {
     event.preventDefault();
     if (!ensureEmployeeSession()) return;
 
-    let manager = getHRManager();
+    let manager = meetingHR;
     if (!manager) {
         alert("Unable to load the HR recipient. Please reload the page and try again.");
         return;
@@ -122,14 +122,18 @@ document.getElementById("requestMeetingForm").addEventListener("submit", functio
     saveMeetings();
     displayMyRequests();
     hideRequestForm();
-});
+}
+
+requestForm.addEventListener("submit", sendMeetingRequest);
 
 function getEmployeeResponse(meeting) {
     if (!meeting.responses) meeting.responses = [];
 
-    return meeting.responses.find(
-        response => response.employeeId === currentEmployeeId
-    );
+    return meeting.responses.find(response => response.employeeId === currentEmployeeId);
+}
+
+function isInvited(meeting) {
+    return meeting.createdBy === "HR" && meeting.participants && meeting.participants.includes(currentEmployeeId);
 }
 
 function getStatusClass(status) {
@@ -138,67 +142,59 @@ function getStatusClass(status) {
     return "status-pending";
 }
 
-// Same information is used in all meeting cards.
-function meetingDetails(meeting) {
+// شكل موحد للبطاقات، مع محتوى مختلف .
+function meetingCard(meeting, status, content, statusClass = getStatusClass(status)) {
     return `
-        <div class="meeting-details">
-            <p class="meeting-info"><strong>Date</strong><span>${formatDate(meeting.date)}</span></p>
-            <p class="meeting-info"><strong>Time</strong><span>${formatTime(meeting.time)}</span></p>
-            ${meeting.notes ? `<div class="notes-preview">${meeting.notes}</div>` : ""}
+        <div class="meeting-card">
+            <div class="meeting-card-header">
+                <h3>${meeting.title}</h3>
+                <span class="status ${statusClass}">${status}</span>
+            </div>
+            <div class="meeting-details">
+                <p class="meeting-info"><strong>Date</strong><span>${formatDate(meeting.date)}</span></p>
+                <p class="meeting-info"><strong>Time</strong><span>${formatTime(meeting.time)}</span></p>
+                ${meeting.notes ? `<div class="notes-preview">${meeting.notes}</div>` : ""}
+            </div>
+            ${content}
         </div>`;
 }
+// عشان اعرض المسج
+function messageCard(label, message) {
+    if (!message) return "";
+    return `<div class="hr-message"><strong>${label}</strong><p>${message}</p></div>`;
+}
 
+// meeting invitations
 function displayInvitations() {
     let container = document.getElementById("invitationsContainer");
 
     let invitations = Meetings.filter(meeting => {
-        if (meeting.createdBy !== "HR") return false;
-        if (!meeting.participants || !meeting.participants.includes(currentEmployeeId)) return false;
+        if (!isInvited(meeting)) return false;
 
         let response = getEmployeeResponse(meeting);
         return !response || response.status !== "Accepted";
     });
 
-    if (invitations.length === 0) {
-        container.innerHTML = `<p class="empty-message">You have no pending meeting invitations.</p>`;
-        return;
-    }
-
-    container.innerHTML = "";
+    container.innerHTML = invitations.length ? "" : `<p class="empty-message">You have no pending meeting invitations.</p>`;
 
     invitations.forEach(meeting => {
         let response = getEmployeeResponse(meeting);
         let status = response ? response.status : "Pending";
 
-        container.innerHTML += `
-            <div class="meeting-card">
-                <div class="meeting-card-header">
-                    <h3>${meeting.title}</h3>
-                    <span class="status ${getStatusClass(status)}">${status}</span>
-                </div>
-
-                ${meetingDetails(meeting)}
-
-                ${response && response.message ? `
-                    <div class="hr-message">
-                        <strong>Your message:</strong>
-                        <p>${response.message}</p>
-                    </div>` : ""}
-
-                <div class="response-area">
-                    <label>Message to HR (optional)</label>
-                    <textarea id="employeeMessage-${meeting.id}"
-                        placeholder="Add a message or explain if the time does not work..."></textarea>
-                </div>
-
-                <div class="card-actions">
-                    <button class="accept-button" onclick="respondToMeeting(${meeting.id}, 'Accepted')">Accept</button>
-                    <button class="reject-button" onclick="respondToMeeting(${meeting.id}, 'Rejected')">Reject</button>
-                </div>
-            </div>`;
+        container.innerHTML += meetingCard(meeting, status, `
+            ${messageCard("Your message:", response ? response.message : "")}
+            <div class="response-area">
+                <label>Message to HR (optional)</label>
+                <textarea id="employeeMessage-${meeting.id}"
+                    placeholder="Add a message or explain if the time does not work..."></textarea>
+            </div>
+            <div class="card-actions">
+                <button class="accept-button" onclick="respondToMeeting(${meeting.id}, 'Accepted')">Accept</button>
+                <button class="reject-button" onclick="respondToMeeting(${meeting.id}, 'Rejected')">Reject</button>
+            </div>`);
     });
 }
-
+//لما اقبل او ارفض اجتماع
 function respondToMeeting(id, status) {
     if (!ensureEmployeeSession()) return;
     let meeting = Meetings.find(item => item.id === id);
@@ -207,29 +203,24 @@ function respondToMeeting(id, status) {
     let message = document.getElementById("employeeMessage-" + id).value.trim();
     let response = getEmployeeResponse(meeting);
 
-    if (response) {
-        response.status = status;
-        response.message = message;
-    } else {
-        meeting.responses.push({
-            employeeId: currentEmployeeId,
-            status: status,
-            message: message
-        });
+    if (!response) {
+        response = { employeeId: currentEmployeeId };
+        meeting.responses.push(response);
     }
+    response.status = status;
+    response.message = message;
 
     saveMeetings();
     displayInvitations();
     displayUpcomingMeetings();
 }
 
+
 function displayUpcomingMeetings() {
     let container = document.getElementById("upcomingMeetingsContainer");
 
     let upcoming = Meetings.filter(meeting => {
-        if (meeting.createdBy === "HR" &&
-            meeting.participants &&
-            meeting.participants.includes(currentEmployeeId)) {
+        if (isInvited(meeting)) {
             let response = getEmployeeResponse(meeting);
             return response && response.status === "Accepted";
         }
@@ -239,29 +230,16 @@ function displayUpcomingMeetings() {
             meeting.status === "Accepted";
     });
 
-    if (upcoming.length === 0) {
-        container.innerHTML = `<p class="empty-message">You have no confirmed upcoming meetings.</p>`;
-        return;
-    }
-
-    container.innerHTML = "";
+    container.innerHTML = upcoming.length ? "" : `<p class="empty-message">You have no confirmed upcoming meetings.</p>`;
 
     upcoming.forEach(meeting => {
-        container.innerHTML += `
-            <div class="meeting-card">
-                <div class="meeting-card-header">
-                    <h3>${meeting.title}</h3>
-                    <span class="status status-accepted">Confirmed</span>
-                </div>
-
-                ${meetingDetails(meeting)}
-
-                <div class="card-actions">
-                    <button class="join-button" onclick="joinMeeting(${meeting.id})">Join Meeting</button>
-                </div>
-            </div>`;
+        container.innerHTML += meetingCard(meeting, "Confirmed", `
+            <div class="card-actions">
+                <button class="join-button" onclick="joinMeeting(${meeting.id})">Join Meeting</button>
+            </div>`, "status-accepted");
     });
 }
+
 
 function displayMyRequests() {
     let container = document.getElementById("myRequestsContainer");
@@ -271,29 +249,10 @@ function displayMyRequests() {
         meeting.requestedBy === currentEmployeeId
     );
 
-    if (requests.length === 0) {
-        container.innerHTML = `<p class="empty-message">You have not requested any meetings.</p>`;
-        return;
-    }
-
-    container.innerHTML = "";
+    container.innerHTML = requests.length ? "" : `<p class="empty-message">You have not requested any meetings.</p>`;
 
     requests.forEach(meeting => {
-        container.innerHTML += `
-            <div class="meeting-card">
-                <div class="meeting-card-header">
-                    <h3>${meeting.title}</h3>
-                    <span class="status ${getStatusClass(meeting.status)}">${meeting.status}</span>
-                </div>
-
-                ${meetingDetails(meeting)}
-
-                ${meeting.hrMessage ? `
-                    <div class="hr-message">
-                        <strong>HR Message:</strong>
-                        <p>${meeting.hrMessage}</p>
-                    </div>` : ""}
-            </div>`;
+        container.innerHTML += meetingCard(meeting, meeting.status, messageCard("HR Message:", meeting.hrMessage));
     });
 }
 
@@ -307,18 +266,16 @@ function joinMeeting(id) {
         saveMeetings();
     }
 
-       window.location.href =
-        "../meetingzoom/meetingzoom.html?room=" +
-        encodeURIComponent(meeting.roomName);
+    window.location.href = "../meetingzoom/meetingzoom.html?room=" + encodeURIComponent(meeting.roomName);
 }
-
+//date
 function formatDate(date) {
     if (!date) return "-";
     let parts = date.split("-");
     let value = new Date(parts[0], parts[1] - 1, parts[2]);
     return value.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
-
+//time
 function formatTime(time) {
     if (!time) return "-";
     let parts = time.split(":");
@@ -329,76 +286,30 @@ function formatTime(time) {
 
 if (ensureEmployeeSession()) loadEmployees();
 
-/* Home navbar, theme and footer behavior for this employee meetings page. */
-(function () {
-    'use strict';
+window.MASAR_BASE_PATH = "../../NADA/home/";
 
-    const root = document.documentElement;
-    const themeButton = document.getElementById('themeToggle');
-    const themeLabel = document.getElementById('themeLabel');
-
+// css
+function syncSharedTheme() {
+    let dark = false;
     try {
-        if (localStorage.getItem('journey-theme') === 'dark') {
-            root.setAttribute('data-theme', 'dark');
-        }
-    } catch (_) {
-        // Keep the default theme if browser storage is unavailable.
+        dark = localStorage.getItem("journey-theme") === "dark";
+    } catch (_) {}
+    let root = document.documentElement;
+    if (dark) root.setAttribute("data-theme", "dark");
+    else root.removeAttribute("data-theme");
+    let button = document.getElementById("themeToggle");
+    let label = document.getElementById("themeLabel");
+    if (button) button.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+    if (label) label.textContent = dark ? "Light" : "Dark";
+}
+
+window.addEventListener("storage", function (event) {
+    if (event.key === "currentUser" || event.key === null) {
+        if (!ensureEmployeeSession()) return;
+        let name = document.getElementById("userName");
+        if (name) name.textContent = getCurrentUser()?.name || "Employee";
     }
+    if (event.key === "journey-theme" || event.key === null) syncSharedTheme();
+});
 
-    function renderTheme() {
-        const dark = root.getAttribute('data-theme') === 'dark';
-        const label = dark ? 'Switch to light theme' : 'Switch to dark theme';
-        themeButton.setAttribute('aria-label', label);
-        themeButton.title = label;
-        themeLabel.textContent = dark ? 'Light' : 'Dark';
-    }
-
-    themeButton.addEventListener('click', function () {
-        const dark = root.getAttribute('data-theme') !== 'dark';
-        if (dark) root.setAttribute('data-theme', 'dark');
-        else root.removeAttribute('data-theme');
-        try {
-            localStorage.setItem('journey-theme', dark ? 'dark' : 'light');
-        } catch (_) {
-            // The theme still works for this visit when storage is unavailable.
-        }
-        renderTheme();
-    });
-
-    function renderUser() {
-        let user = null;
-        try {
-            user = JSON.parse(localStorage.getItem('currentUser'));
-        } catch (_) {
-            // Keep the login link visible when there is no readable session.
-        }
-        document.getElementById('navAuth').classList.toggle('hidden', !!user);
-        document.getElementById('navUser').classList.toggle('hidden', !user);
-        document.getElementById('userName').textContent = user?.name || 'Employee';
-    }
-
-    // Use the same session cleanup as the existing Home navbar.
-    window.logout = function () {
-        localStorage.removeItem('currentUser');
-        localStorage.removeItem('userRole');
-        localStorage.removeItem('bridgeway_current_role');
-        localStorage.setItem('loggedIn', 'false');
-        window.location.reload();
-    };
-
-    window.addEventListener('storage', function (event) {
-        if (event.key === 'currentUser' || event.key === null) {
-            if (!ensureEmployeeSession()) return;
-            renderUser();
-        }
-        if (event.key === 'journey-theme' || event.key === null) {
-            if (event.newValue === 'dark') root.setAttribute('data-theme', 'dark');
-            else root.removeAttribute('data-theme');
-            renderTheme();
-        }
-    });
-
-    document.getElementById('yr').textContent = new Date().getFullYear();
-    renderTheme();
-    renderUser();
-})();
+syncSharedTheme();

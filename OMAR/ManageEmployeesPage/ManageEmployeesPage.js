@@ -1,76 +1,54 @@
-let editingId = null;
 let Employees = [];
+let editingId = null;
+const DEFAULT_EMPLOYEE_PASSWORD = "Abc@12";
 
-const container = document.getElementById("container");
+let container = document.getElementById("container");
+let form = document.getElementById("form");
+let modal = document.getElementById("employeeForm");
+let search = document.getElementById("search");
+let departmentFilter = document.getElementById("departmentFilter");
+let employeeFields = ["name", "email", "phone", "department", "position", "status", "joiningDate"];
 
-
-// =========================================================
-// LOAD EMPLOYEES FROM Users.json
-// =========================================================
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    loadEmployees();
-
-});
-
-
+//بجيب الموظفين من local اذا ما فيه بجيب من الجيسون
 function loadEmployees() {
-
-    fetch("../../jsonFiles/Users.json")
-
-        .then(response => {
-
-            if (!response.ok) {
-                throw new Error("Users.json could not be loaded");
-            }
-
-            return response.json();
-
-        })
-
-        .then(data => {
-
-            // Get employees only
-            Employees = data.filter(employee =>
-                employee.role === "employee"
-            );
-
+    try {
+        let saved = JSON.parse(localStorage.getItem("Employees"));
+        if (Array.isArray(saved)) {
+            Employees = saved.filter(employee => employee.role === "employee");
             displayEmployees(Employees);
             updateSummary();
+            return;
+        }
+    } catch (error) {
+        console.error("Unable to read saved employees:", error);
+    }
 
+    fetch("../../jsonFiles/Users.json")
+        .then(response => {
+            if (!response.ok) throw new Error("Users.json could not be loaded");
+            return response.json();
         })
-
-        .catch(error => {
-
-            console.error(
-                "Users.json Error:",
-                error
-            );
-
-        });
-
+        .then(data => {
+            Employees = data.filter(employee => employee.role === "employee");
+            displayEmployees(Employees);
+            updateSummary();
+        })
+        .catch(error => console.error("Users.json Error:", error));
 }
 
-// Save Employees
+//حفظ التعديلات في localStorage 
 function saveEmployees() {
     localStorage.setItem("Employees", JSON.stringify(Employees));
+    updateSummary();
+    applyFilters();
 }
 
-
-// Display Employees
-function displayEmployees(data) {
+function displayEmployees(list) {
     container.innerHTML = "";
-
-    for (let employee of data) {
+    for (let employee of list) {
         let statusClass = "status-inactive";
-
-        if (employee.status === "Active") {
-            statusClass = "status-active";
-        } else if (employee.status === "Blocked") {
-            statusClass = "status-blocked";
-        }
-
+        if (employee.status === "Active") statusClass = "status-active";
+        if (employee.status === "Blocked") statusClass = "status-blocked";
         let blockText = employee.status === "Blocked" ? "Unblock" : "Block";
 
         container.innerHTML += `
@@ -80,121 +58,78 @@ function displayEmployees(data) {
                 <td>${employee.department}</td>
                 <td>${employee.position}</td>
                 <td><span class="status ${statusClass}">${employee.status}</span></td>
-                <td>
-                    <div class="actions">
-                        <button class="view-button" onclick="viewEmployee(${employee.id})">View</button>
-                        <button class="edit-button" onclick="editEmployee(${employee.id})">Edit</button>
-                        <button class="block-button" onclick="toggleBlock(${employee.id})">${blockText}</button>
-                    </div>
-                </td>
-            </tr>
-        `;
+                <td><div class="actions">
+                    <button class="view-button" onclick="viewEmployee(${employee.id})">View</button>
+                    <button class="edit-button" onclick="editEmployee(${employee.id})">Edit</button>
+                    <button class="block-button" onclick="toggleBlock(${employee.id})">${blockText}</button>
+                </div></td>
+            </tr>`;
     }
 }
-
-
-// Update Summary Cards
+//بتحدث الاحصئيات
 function updateSummary() {
-    let active = Employees.filter(employee => employee.status === "Active").length;
-    let blocked = Employees.filter(employee => employee.status === "Blocked").length;
     let departments = [];
-
     for (let employee of Employees) {
         if (employee.department && !departments.includes(employee.department)) {
             departments.push(employee.department);
         }
     }
-
     document.getElementById("totalEmployees").textContent = Employees.length;
-    document.getElementById("activeEmployees").textContent = active;
-    document.getElementById("blockedEmployees").textContent = blocked;
+    document.getElementById("activeEmployees").textContent = Employees.filter(employee => employee.status === "Active").length;
+    document.getElementById("blockedEmployees").textContent = Employees.filter(employee => employee.status === "Blocked").length;
     document.getElementById("totalDepartments").textContent = departments.length;
 }
 
-
-// Show / Hide Form
+//بس اكبس add emp بتفتح 
 function showForm() {
     editingId = null;
-    document.getElementById("form").reset();
+    form.reset();
+    document.getElementById("newEmployeePasswordGroup").hidden = false;
+    document.getElementById("newEmployeePassword").value = DEFAULT_EMPLOYEE_PASSWORD;
     document.getElementById("formTitle").textContent = "New Employee";
     document.getElementById("saveButton").textContent = "Save Employee";
-    document.getElementById("employeeForm").hidden = false;
+    modal.hidden = false;
 }
 
 function hideForm() {
-    document.getElementById("employeeForm").hidden = true;
-    document.getElementById("form").reset();
+    modal.hidden = true;
+    form.reset();
     editingId = null;
 }
 
-
-// Add / Update Employee
-document.getElementById("form").addEventListener("submit", function (event) {
+//لما بدي اعمل ادد او ابديت
+form.addEventListener("submit", event => {
     event.preventDefault();
-
-    let employeeData = {
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        phone: document.getElementById("phone").value,
-        department: document.getElementById("department").value,
-        position: document.getElementById("position").value,
-        status: document.getElementById("status").value,
-        joiningDate: document.getElementById("joiningDate").value
-    };
-
+    let employee = Employees.find(employee => employee.id === editingId);
     if (editingId === null) {
-        employeeData.id = Date.now();
-        employeeData.role = "employee";
-        employeeData.password = "";
-        employeeData.profilePicture = "";
-        Employees.push(employeeData);
-    } else {
-        let employee = Employees.find(employee => employee.id === editingId);
-
-        if (employee) {
-            employee.name = employeeData.name;
-            employee.email = employeeData.email;
-            employee.phone = employeeData.phone;
-            employee.department = employeeData.department;
-            employee.position = employeeData.position;
-            employee.status = employeeData.status;
-            employee.joiningDate = employeeData.joiningDate;
-        }
+        employee = { id: Date.now(), role: "employee", password: DEFAULT_EMPLOYEE_PASSWORD, profilePicture: "" };
+        Employees.push(employee);
     }
-
+    if (!employee) return;
+    for (let field of employeeFields) {
+        employee[field] = document.getElementById(field).value;
+    }
     saveEmployees();
-    updateSummary();
-    applyFilters();
     hideForm();
 });
-
-
-// Edit Employee
+//بجيب معلومات الموظف وبجهزها للابديت
 function editEmployee(id) {
     let employee = Employees.find(employee => employee.id === id);
     if (!employee) return;
-
     editingId = id;
-
-    document.getElementById("name").value = employee.name;
-    document.getElementById("email").value = employee.email;
-    document.getElementById("phone").value = employee.phone || "";
-    document.getElementById("department").value = employee.department;
-    document.getElementById("position").value = employee.position;
-    document.getElementById("status").value = employee.status;
+    for (let field of employeeFields) {
+        document.getElementById(field).value = employee[field] || "";
+    }
     document.getElementById("joiningDate").value = formatDateForInput(employee.joiningDate);
-
+    document.getElementById("newEmployeePasswordGroup").hidden = true;
     document.getElementById("formTitle").textContent = "Edit Employee";
     document.getElementById("saveButton").textContent = "Update Employee";
-    document.getElementById("employeeForm").hidden = false;
+    modal.hidden = false;
 }
 
-
-// View Employee
 function viewEmployee(id) {
     let employee = Employees.find(employee => employee.id === id);
     if (!employee) return;
-
     document.getElementById("viewEmployeeName").textContent = employee.name;
     document.getElementById("viewEmail").textContent = employee.email || "-";
     document.getElementById("viewPhone").textContent = employee.phone || "-";
@@ -204,7 +139,6 @@ function viewEmployee(id) {
     document.getElementById("viewStatus").textContent = employee.status || "-";
     document.getElementById("viewDepartmentCard").textContent = employee.department || "-";
     document.getElementById("viewPositionCard").textContent = employee.position || "-";
-
     document.getElementById("viewEmployeeModal").hidden = false;
 }
 
@@ -212,57 +146,31 @@ function closeEmployeeView() {
     document.getElementById("viewEmployeeModal").hidden = true;
 }
 
-
-// Block / Unblock Employee
 function toggleBlock(id) {
     let employee = Employees.find(employee => employee.id === id);
     if (!employee) return;
-
     employee.status = employee.status === "Blocked" ? "Active" : "Blocked";
-
     saveEmployees();
-    updateSummary();
-    applyFilters();
 }
-
-
-// Convert Date To YYYY-MM-DD
+//date
 function formatDateForInput(date) {
     if (!date) return "";
     if (date.includes("-")) return date;
-
     let parts = date.split("/");
-
-    if (parts.length === 3) {
-        let month = parts[0].padStart(2, "0");
-        let day = parts[1].padStart(2, "0");
-        return `${parts[2]}-${month}-${day}`;
-    }
-
-    return "";
+    if (parts.length !== 3) return "";
+    return `${parts[2]}-${parts[0].padStart(2, "0")}-${parts[1].padStart(2, "0")}`;
 }
-
-
-// Search + Department Filter
+//search and dep filter
 function applyFilters() {
-    let searchValue = document.getElementById("search").value.toLowerCase().trim();
-    let selectedDepartment = document.getElementById("departmentFilter").value;
-
-    let filteredEmployees = Employees.filter(employee => {
-        let matchesSearch =
-            employee.name.toLowerCase().includes(searchValue) ||
-            employee.email.toLowerCase().includes(searchValue);
-
-        let matchesDepartment =
-            selectedDepartment === "" ||
-            employee.department === selectedDepartment;
-
-        return matchesSearch && matchesDepartment;
-    });
-
-    displayEmployees(filteredEmployees);
+    let text = search.value.toLowerCase().trim();
+    let department = departmentFilter.value;
+    let filtered = Employees.filter(employee =>
+        (employee.name.toLowerCase().includes(text) || employee.email.toLowerCase().includes(text)) &&
+        (department === "" || employee.department === department)
+    );
+    displayEmployees(filtered);
 }
 
-
-document.getElementById("search").addEventListener("input", applyFilters);
-document.getElementById("departmentFilter").addEventListener("change", applyFilters);
+search.addEventListener("input", applyFilters);
+departmentFilter.addEventListener("change", applyFilters);
+document.addEventListener("DOMContentLoaded", loadEmployees);
