@@ -59,7 +59,15 @@
           <!-- ================= TOOLBAR ================= -->
           <div class="toolbar">
             <span class="toolbar-icon" aria-hidden="true"><i class="bi bi-inbox-fill"></i></span>
-            <h2 class="toolbar-title" id="boardTitle">All submissions</h2>
+            <h2 class="toolbar-title" id="boardTitle">
+            <select id="categorySelect" >
+              <option value="all">All submissions</option>
+              <option value="suggestion">Suggestion</option>
+              <option value="Complaint">Complaint</option>
+              <option value="Praise">Praise</option>
+              <option value="Other">Other</option>
+            </select>
+            </h2>
           </div>
 
           <!-- ================= FEEDBACK GRID ================= -->
