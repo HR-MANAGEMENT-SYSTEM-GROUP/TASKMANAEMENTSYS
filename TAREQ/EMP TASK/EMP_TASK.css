@@ -1,73 +1,66 @@
-/* ==========================================================================
-   MASAR HR — EMPLOYEE TASK MANAGEMENT
-   Designed to match OMAR/EmployeeMeetings aesthetics 100%
-   Shared styles provide theme, navbar & footer tokens.
-   ========================================================================== */
+/* =========================================================
+   EMP TASK PAGE — CLEAN DESIGN + SAME ANIMATION
+========================================================= */
 
-*, *::before, *::after {
+:root {
+    --primary: #0179F1;
+    --primary-dark: #005BB5;
+    --primary-light: #4DA3FF;
+
+    --accent: #0179F1;
+    --accent-d: #005BB5;
+    --accent-hover: #005BB5;
+    --accent-rgb: 1, 121, 241;
+
+    --bg: #F5F8FC;
+    --ink: #172033;
+    --hdr-ink: #172033;
+    --body: #64748B;
+    --glass-text: #64748B;
+
+    --line: #E2E8F0;
+    --tint: #E8F3FF;
+    --glass: rgba(255, 255, 255, 0.75);
+    --glass-line: rgba(203, 213, 225, 0.8);
+
+    --head: 'Quicksand', system-ui, sans-serif;
+    --text: 'Inter', system-ui, sans-serif;
+
+    --shadow: 0 8px 24px rgba(23, 32, 51, 0.06);
+}
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+*,
+*::before,
+*::after {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 html {
-    background: var(--bg);
     scroll-behavior: smooth;
 }
 
-body {
+body.employee-tasks {
+    margin: 0;
+    padding: 0;
+
     font-family: var(--text);
     color: var(--ink);
     background: var(--bg);
+
     line-height: 1.6;
     overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    margin: 0;
-    padding: 0;
 }
 
-a {
+.employee-tasks a {
     color: inherit;
     text-decoration: none;
 }
 
-:focus-visible {
-    outline: 2px solid var(--on-bg);
-    outline-offset: 3px;
-}
-
-.skip-link {
-    position: fixed;
-    top: -100px;
-    left: 20px;
-    z-index: 102;
-    background: var(--accent);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 4px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: top .2s;
-}
-
-.skip-link:focus {
-    top: 16px;
-}
-
-/* Surfaces keep clean, crisp light cards in both themes */
-.employee-tasks .page,
-.employee-tasks .modal-box,
-.employee-meetings .page,
-.employee-meetings .modal {
-    --ink: #172033;
-    --body: #64748B;
-    --line: #E2E8F0;
-    --tint: #E8F3FF;
-}
-
-/* Page basics */
-.employee-tasks .page button,
-.employee-tasks .modal-box button,
+.employee-tasks button,
 .employee-tasks input,
 .employee-tasks select,
 .employee-tasks textarea {
@@ -78,22 +71,27 @@ a {
     cursor: pointer;
 }
 
-/* Page Container matching Omar's layout */
+/* =========================================================
+   PAGE
+========================================================= */
+
 .employee-tasks .page {
     width: min(1360px, calc(100% - 64px));
     margin: 28px auto 72px;
 }
 
-/* ==========================================================================
-   PAGE HEADER
-   ========================================================================== */
+/* =========================================================
+   HEADER
+========================================================= */
+
 .employee-tasks .page-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 32px;
+
     padding: 12px 0 28px;
-    color: var(--hdr-ink);
 }
 
 .employee-tasks .page-header > div {
@@ -101,67 +99,186 @@ a {
 }
 
 .employee-tasks h1 {
-    font: 700 clamp(32px, 4vw, 48px)/1.15 var(--head);
-    letter-spacing: -.025em;
     margin-bottom: 16px;
-    color: var(--hdr-ink);
-}
 
-.employee-tasks h1 span {
-    color: inherit;
+    font-family: var(--head);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800;
+    line-height: 1.15;
+
+    letter-spacing: -0.025em;
+
+    color: var(--hdr-ink);
 }
 
 .employee-tasks .subtitle {
     max-width: 620px;
+
     color: var(--glass-text);
+
     font-size: 15px;
     line-height: 1.75;
 }
 
-/* ==========================================================================
-   SHORTCUTS / OVERVIEW CARDS (Matching Omar's meeting-shortcuts)
-   ========================================================================== */
+/* =========================================================
+   STATUS CARDS ROW
+========================================================= */
+
 .employee-tasks .meeting-shortcuts {
-    position: relative;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
+
     gap: 16px;
+
     margin: 0 0 40px;
 }
 
-.employee-tasks .shortcut-card {
+/* =========================================================
+   STATUS CARD WITH SAME ROTATING ANIMATION
+========================================================= */
+
+.employee-tasks .shortcut-card.status-card {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+
+    min-width: 0;
+    min-height: 78px;
+
     display: flex;
     align-items: center;
     gap: 14px;
-    min-width: 0;
+
     padding: 18px 20px;
-    background: white;
+
+    background: #ffffff;
+
     border: 1px solid var(--line);
     border-radius: 14px;
+
     box-shadow: var(--shadow);
+
     cursor: pointer;
     user-select: none;
-    transition: transform .2s, border-color .2s, box-shadow .2s;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
 }
 
-.employee-tasks .shortcut-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--accent);
-    box-shadow: 0 8px 24px rgba(23, 32, 51, .08);
+/* Rotating Border Animation */
+.employee-tasks .shortcut-card.status-card::before {
+    content: "";
+
+    position: absolute;
+    inset: -2px;
+
+    border-radius: 16px;
+    padding: 2px;
+
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 45deg,
+        var(--status-color) 80deg,
+        rgba(255, 255, 255, 0.95) 110deg,
+        var(--status-color) 140deg,
+        transparent 200deg,
+        transparent 360deg
+    );
+
+    -webkit-mask:
+        linear-gradient(#ffffff 0 0) content-box,
+        linear-gradient(#ffffff 0 0);
+
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+
+    animation: spinBorder 3s linear infinite;
+
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 0;
 }
+
+/* Keep content above animation */
+.employee-tasks .shortcut-card.status-card > * {
+    position: relative;
+    z-index: 2;
+}
+
+.employee-tasks .shortcut-card.status-card:hover {
+    transform: translateY(-5px);
+
+    border-color: color-mix(in srgb, var(--status-color) 40%, white);
+
+    box-shadow:
+        0 16px 34px rgba(23, 32, 51, 0.10),
+        0 0 22px color-mix(in srgb, var(--status-color) 24%, transparent);
+}
+
+.employee-tasks .shortcut-card.status-card:hover::before {
+    animation-duration: 1.2s;
+}
+
+@keyframes spinBorder {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================================================
+   STATUS CARD COLORS
+========================================================= */
+
+.employee-tasks .status-total {
+    --status-color: #0179F1;
+}
+
+.employee-tasks .status-new {
+    --status-color: #F59E0B;
+}
+
+.employee-tasks .status-submitted {
+    --status-color: #7C3AED;
+}
+
+.employee-tasks .status-completed {
+    --status-color: #16A34A;
+}
+
+/* =========================================================
+   STATUS CARD INNER CONTENT
+========================================================= */
 
 .employee-tasks .shortcut-icon {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
     width: 44px;
     height: 44px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
     flex-shrink: 0;
+
     border-radius: 10px;
-    background: var(--tint);
-    color: var(--accent);
+
+    background: color-mix(in srgb, var(--status-color) 13%, white);
+    color: var(--status-color);
+
+    border: 1px solid color-mix(in srgb, var(--status-color) 26%, white);
+
     font-size: 20px;
-    transition: background-color .2s, color .2s;
+
+    transition:
+        transform 0.25s ease,
+        background-color 0.25s ease,
+        color 0.25s ease;
+}
+
+.employee-tasks .shortcut-card.status-card:hover .shortcut-icon {
+    transform: scale(1.07);
 }
 
 .employee-tasks .shortcut-info {
@@ -170,17 +287,30 @@ a {
 
 .employee-tasks .shortcut-info small {
     display: block;
-    font: 700 9px/1.5 var(--head);
-    letter-spacing: .12em;
-    color: var(--body);
+
     margin-bottom: 2px;
+
+    font-family: var(--head);
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.5;
+
+    letter-spacing: 0.12em;
     text-transform: uppercase;
+
+    color: var(--body);
 }
 
 .employee-tasks .shortcut-info strong {
     display: block;
-    font: 700 15px/1.3 var(--head);
+
+    font-family: var(--head);
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.3;
+
     color: var(--ink);
+
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -188,51 +318,34 @@ a {
 
 .employee-tasks .shortcut-number {
     margin-left: auto;
-    font: 700 22px/1 var(--head);
-    color: var(--accent);
-    background: var(--tint);
-    padding: 6px 12px;
-    border-radius: 8px;
+
     min-width: 40px;
+
+    padding: 6px 12px;
+
+    border-radius: 8px;
+
+    background: color-mix(in srgb, var(--status-color) 13%, white);
+    color: var(--status-color);
+
+    font-family: var(--head);
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1;
+
     text-align: center;
+
+    transition: transform 0.25s ease;
 }
 
-/* Card Specific Tint Accents */
-.employee-tasks .status-card.status-total .shortcut-icon {
-    background: #EFF6FF;
-    color: #0079F1;
+.employee-tasks .shortcut-card.status-card:hover .shortcut-number {
+    transform: scale(1.06);
 }
 
-.employee-tasks .status-card.status-new .shortcut-icon {
-    background: #FEF3C7;
-    color: #D97706;
-}
-.employee-tasks .status-card.status-new .shortcut-number {
-    background: #FEF3C7;
-    color: #D97706;
-}
+/* =========================================================
+   SECTION HEADER
+========================================================= */
 
-.employee-tasks .status-card.status-submitted .shortcut-icon {
-    background: #EDE9FE;
-    color: #7C3AED;
-}
-.employee-tasks .status-card.status-submitted .shortcut-number {
-    background: #EDE9FE;
-    color: #7C3AED;
-}
-
-.employee-tasks .status-card.status-completed .shortcut-icon {
-    background: #DCFCE7;
-    color: #16A34A;
-}
-.employee-tasks .status-card.status-completed .shortcut-number {
-    background: #DCFCE7;
-    color: #16A34A;
-}
-
-/* ==========================================================================
-   SECTION HEADER (Matching Omar's section styling)
-   ========================================================================== */
 .employee-tasks .section {
     scroll-margin-top: 25px;
     margin-bottom: 38px;
@@ -240,32 +353,41 @@ a {
 
 .employee-tasks .section-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+
     gap: 16px;
+
     margin-bottom: 18px;
 }
 
 .employee-tasks h2 {
-    font: 700 24px/1.3 var(--head);
-    letter-spacing: -.02em;
-}
+    font-family: var(--head);
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.3;
 
-.employee-tasks .section-header h2 {
+    letter-spacing: -0.02em;
+
     color: var(--hdr-ink);
 }
 
 .employee-tasks .section-number {
     display: inline-block;
+
     margin-right: 8px;
+
     font-size: 14px;
-    color: var(--on-bg);
+    color: var(--accent);
+
     vertical-align: middle;
 }
 
 .employee-tasks .section-header p {
     margin: 7px 0 0 30px;
+
     color: var(--glass-text);
+
     font-size: 13px;
 }
 
@@ -273,26 +395,41 @@ a {
     display: inline-flex;
     align-items: center;
     gap: 7px;
+
     padding: 6px 12px;
+
     border-radius: 999px;
+
     background: var(--glass);
     border: 1px solid var(--glass-line);
+
     color: var(--glass-text);
-    font: 700 11px/1.5 var(--head);
+
+    font-family: var(--head);
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.5;
 }
 
-/* ==========================================================================
-   FILTER CONTROLS CARD
-   ========================================================================== */
+/* =========================================================
+   FILTERS
+========================================================= */
+
 .employee-tasks .task-filters-card {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+
     gap: 20px;
+
     padding: 20px 24px;
-    background: white;
+
+    background: #ffffff;
+
     border: 1px solid var(--line);
     border-radius: 14px;
-    box-shadow: 0 4px 14px rgba(23, 32, 51, .04);
+
+    box-shadow: 0 4px 14px rgba(23, 32, 51, 0.04);
+
     margin-bottom: 24px;
 }
 
@@ -304,33 +441,51 @@ a {
     display: flex;
     align-items: center;
     gap: 6px;
+
     margin-bottom: 7px;
+
     color: var(--ink);
-    font: 600 12px/1.5 var(--head);
+
+    font-family: var(--head);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.5;
 }
 
 .employee-tasks .custom-select {
     width: 100%;
     min-height: 44px;
+
     border: 1px solid var(--line);
     border-radius: 8px;
+
     background-color: #F7FAFC;
     color: var(--ink);
+
     font-size: 13px;
+
     padding: 10px 14px;
+
     outline: none;
-    transition: border-color .15s, box-shadow .15s, background .15s;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
 }
 
 .employee-tasks .custom-select:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .12);
-    background-color: white;
+
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12);
+
+    background-color: #ffffff;
 }
 
-/* ==========================================================================
-   KANBAN BOARD & TRELLO COLUMNS
-   ========================================================================== */
+/* =========================================================
+   BOARD
+========================================================= */
+
 .employee-tasks .board-wrapper {
     background: transparent !important;
     border: none !important;
@@ -338,23 +493,162 @@ a {
     padding: 0 !important;
 }
 
+/* =========================================================
+   Make Trello Columns Bigger
+========================================================= */
+
+/* =========================================================
+   Bigger columns but keep them side by side
+========================================================= */
+
+.employee-tasks .page {
+    width: min(1500px, calc(100% - 40px)) !important;
+}
+
 .employee-tasks .task-board {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 20px;
-    align-items: flex-start;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(240px, 1fr)) !important;
+    gap: 18px !important;
+    align-items: stretch !important;
 }
 
 .employee-tasks .trello-column {
-    background: #F8FAFC;
-    border: 1px solid var(--line);
+    min-height: 610px !important;
+    height: 610px !important;
+    padding: 18px !important;
+}
+
+.employee-tasks .trello-cards {
+    flex: 1 !important;
+    min-height: 500px !important;
+    overflow-y: auto !important;
+}
+
+.employee-tasks .empty-column {
+    min-height: 170px !important;
+}
+
+.employee-tasks .trello-task-card {
+    min-height: 135px !important;
+    padding: 18px !important;
+}
+/* =========================================================
+   TRELLO COLUMNS
+========================================================= */
+/* =========================================================
+   TRELLO COLUMNS — SAME ROTATING BORDER ANIMATION
+========================================================= */
+
+.employee-tasks .trello-column {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+
+    border: none !important;
+    border-radius: 16px !important;
+
+    background: #F8FAFC !important;
+
+    box-shadow:
+        0 2px 8px rgba(23, 32, 51, 0.04),
+        0 12px 28px rgba(1, 121, 241, 0.08) !important;
+}
+
+/* rotating border */
+.employee-tasks .trello-column::before {
+    content: "";
+
+    position: absolute;
+    inset: -2px;
+
+    border-radius: 18px;
+    padding: 2px;
+
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 45deg,
+        var(--column-color) 85deg,
+        rgba(255, 255, 255, 0.95) 115deg,
+        var(--column-color) 150deg,
+        transparent 220deg,
+        transparent 360deg
+    );
+
+    -webkit-mask:
+        linear-gradient(#ffffff 0 0) content-box,
+        linear-gradient(#ffffff 0 0);
+
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+
+    animation: trelloColumnSpin 3s linear infinite;
+
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* white inner surface */
+.employee-tasks .trello-column::after {
+    content: "";
+
+    position: absolute;
+    inset: 2px;
+
     border-radius: 14px;
-    padding: 16px;
-    min-height: 520px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 2px 8px rgba(23, 32, 51, .03);
-    transition: border-color .2s, box-shadow .2s, background-color .2s;
+
+    background: #F8FAFC;
+
+    z-index: 1;
+}
+
+/* keep content above animation */
+.employee-tasks .trello-column > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* hover effect */
+.employee-tasks .trello-column:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 18px 36px rgba(23, 32, 51, 0.10),
+        0 0 26px color-mix(in srgb, var(--column-color) 28%, transparent) !important;
+}
+
+.employee-tasks .trello-column:hover::before {
+    animation-duration: 1.2s;
+}
+
+/* animation */
+@keyframes trelloColumnSpin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* column colors */
+.employee-tasks .column-new {
+    --column-color: #F59E0B;
+}
+
+.employee-tasks .column-progress {
+    --column-color: #0179F1;
+}
+
+.employee-tasks .column-submitted {
+    --column-color: #7C3AED;
+}
+
+.employee-tasks .column-completed {
+    --column-color: #10B981;
+}
+
+.employee-tasks .trello-column:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(23, 32, 51, 0.06);
 }
 
 .employee-tasks .column-new {
@@ -376,16 +670,20 @@ a {
 .employee-tasks .trello-column.drag-over {
     background: #EFF6FF;
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .2);
+
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.2);
 }
 
 .employee-tasks .trello-column-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 10px;
+
     margin-bottom: 14px;
     padding-bottom: 12px;
+
     border-bottom: 1px solid var(--line);
 }
 
@@ -398,74 +696,117 @@ a {
 .employee-tasks .trello-dot {
     width: 9px;
     height: 9px;
+
     border-radius: 50%;
+
     background: var(--column-color, var(--accent));
+
     flex-shrink: 0;
 }
 
 .employee-tasks .trello-column-title {
     margin: 0;
-    font: 700 14px/1.3 var(--head);
+
+    font-family: var(--head);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.3;
+
     color: var(--ink);
-    letter-spacing: -.01em;
+
+    letter-spacing: -0.01em;
 }
 
 .employee-tasks .trello-count {
+    min-width: 24px;
+    height: 24px;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 24px;
-    height: 24px;
+
     padding: 0 8px;
+
     border-radius: 999px;
-    background: white;
+
+    background: #ffffff;
+
     border: 1px solid var(--line);
-    font: 700 11px/1 var(--head);
+
     color: var(--body);
+
+    font-family: var(--head);
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
 }
 
 .employee-tasks .trello-cards {
     display: flex;
     flex-direction: column;
+
     gap: 12px;
+
     flex: 1;
+
     min-height: 200px;
 }
 
 .employee-tasks .empty-column {
     min-height: 140px;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     text-align: center;
+
     padding: 24px 16px;
+
     border: 1px dashed #CBD5E1;
     border-radius: 10px;
-    background: white;
+
+    background: #ffffff;
+
     color: var(--body);
+
     font-size: 13px;
     font-weight: 500;
 }
 
-/* ==========================================================================
+/* =========================================================
    TASK CARDS
-   ========================================================================== */
+========================================================= */
+
 .employee-tasks .trello-task-card {
     position: relative;
+
     padding: 16px;
-    background: white;
+
+    background: #ffffff;
+
     border: 1px solid var(--line);
     border-left: 5px solid var(--task-color, var(--accent));
+
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(23, 32, 51, .04);
+
+    box-shadow: 0 2px 8px rgba(23, 32, 51, 0.04);
+
     cursor: grab;
-    transition: transform .2s, box-shadow .2s, border-color .2s;
     user-select: none;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        opacity 0.2s ease;
 }
 
 .employee-tasks .trello-task-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(23, 32, 51, .08);
+
+    box-shadow: 0 8px 20px rgba(23, 32, 51, 0.08);
+
     border-color: #B1D7FF;
 }
 
@@ -480,29 +821,29 @@ a {
 }
 
 /* Task Status Accent Colors */
-.status-new,
-.status-pending {
+.employee-tasks .status-new,
+.employee-tasks .status-pending {
     --task-color: #F59E0B;
 }
 
-.status-in-progress {
+.employee-tasks .status-in-progress {
     --task-color: #0079F1;
 }
 
-.status-submitted {
+.employee-tasks .status-submitted {
     --task-color: #7C3AED;
 }
 
-.status-completed {
+.employee-tasks .status-completed {
     --task-color: #10B981;
 }
 
-.status-not-complete,
-.status-time-out {
+.employee-tasks .status-not-complete,
+.employee-tasks .status-time-out {
     --task-color: #EF4444;
 }
 
-.status-blocked {
+.employee-tasks .status-blocked {
     --task-color: #64748B;
 }
 
@@ -510,23 +851,38 @@ a {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+
     gap: 10px;
+
     margin-bottom: 8px;
 }
 
 .employee-tasks .trello-task-card h5 {
     margin: 0;
-    font: 700 14px/1.35 var(--head);
+
+    font-family: var(--head);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.35;
+
     color: var(--ink);
+
     word-break: break-word;
 }
 
 .employee-tasks .task-priority {
     padding: 3px 8px;
+
     border-radius: 999px;
-    font: 700 10px/1.3 var(--head);
+
+    font-family: var(--head);
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.3;
+
     text-transform: uppercase;
     white-space: nowrap;
+
     flex-shrink: 0;
 }
 
@@ -550,12 +906,16 @@ a {
 
 .employee-tasks .trello-task-card p {
     margin: 0 0 12px;
+
     color: var(--body);
+
     font-size: 12px;
     line-height: 1.55;
+
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+
     overflow: hidden;
 }
 
@@ -563,9 +923,13 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 8px;
+
     padding-top: 10px;
+
     border-top: 1px solid #F1F5F9;
+
     font-size: 11px;
 }
 
@@ -573,7 +937,9 @@ a {
     display: inline-flex;
     align-items: center;
     gap: 4px;
+
     color: var(--body);
+
     font-size: 11px;
     font-weight: 500;
 }
@@ -582,30 +948,51 @@ a {
     display: inline-flex;
     align-items: center;
     gap: 4px;
+
     padding: 3px 8px;
+
     border-radius: 999px;
-    font-size: 10px;
-    font-weight: 700;
+
     background: var(--tint);
     color: var(--accent-d);
+
+    font-size: 10px;
+    font-weight: 800;
 }
 
 .employee-tasks .task-card-actions {
     display: flex;
     gap: 8px;
+
     margin-top: 12px;
 }
 
-.employee-tasks .btn-start-task {
+.employee-tasks .btn-start-task,
+.employee-tasks .btn-view-task {
     flex: 1;
+
     min-height: 34px;
-    border: 1px solid var(--accent);
+
     border-radius: 6px;
-    background: var(--accent);
-    color: white;
-    font: 600 12px/1 var(--head);
+
+    font-family: var(--head);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+
     cursor: pointer;
-    transition: background .15s ease;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+.employee-tasks .btn-start-task {
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #ffffff;
 }
 
 .employee-tasks .btn-start-task:hover {
@@ -613,26 +1000,21 @@ a {
 }
 
 .employee-tasks .btn-view-task {
-    flex: 1;
-    min-height: 34px;
     border: 1px solid #BFDBFE;
-    border-radius: 6px;
     background: var(--tint);
     color: var(--accent-d);
-    font: 600 12px/1 var(--head);
-    cursor: pointer;
-    transition: all .15s ease;
 }
 
 .employee-tasks .btn-view-task:hover {
     background: var(--accent);
-    color: white;
+    color: #ffffff;
     border-color: var(--accent);
 }
 
-/* ==========================================================================
-   TASK MODAL (Bootstrap 5 Dialog Styled like Omar's modal-box)
-   ========================================================================== */
+/* =========================================================
+   MODAL
+========================================================= */
+
 .modal-backdrop.show {
     opacity: 0.55 !important;
     background-color: #0E1626 !important;
@@ -642,8 +1024,11 @@ a {
 .employee-tasks .modal-box {
     border: 1px solid var(--line) !important;
     border-radius: 16px !important;
-    background: white !important;
-    box-shadow: 0 24px 70px rgba(0, 0, 0, .18) !important;
+
+    background: #ffffff !important;
+
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.18) !important;
+
     padding: 24px 28px !important;
 }
 
@@ -651,46 +1036,70 @@ a {
     display: flex !important;
     align-items: flex-start !important;
     justify-content: space-between !important;
+
     padding: 0 0 20px !important;
+
     border-bottom: 1px solid var(--line) !important;
+
     margin-bottom: 20px !important;
 }
 
 .employee-tasks .modal-eyebrow {
-    color: var(--accent-d);
-    font: 700 10px/1.5 var(--head);
-    letter-spacing: .12em;
     margin-bottom: 6px;
+
+    color: var(--accent-d);
+
+    font-family: var(--head);
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.5;
+
+    letter-spacing: 0.12em;
     text-transform: uppercase;
 }
 
 .employee-tasks .modal-title {
-    font: 700 24px/1.3 var(--head) !important;
-    color: var(--ink) !important;
-    letter-spacing: -.02em !important;
     margin: 0 0 4px !important;
+
+    color: var(--ink) !important;
+
+    font-family: var(--head);
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    line-height: 1.3 !important;
+
+    letter-spacing: -0.02em !important;
 }
 
 .employee-tasks .modal-subtitle {
-    color: var(--body);
-    font-size: 13px;
     margin: 0;
+
+    color: var(--body);
+
+    font-size: 13px;
 }
 
 .employee-tasks .close-button {
     width: 32px;
     height: 32px;
-    flex-shrink: 0;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: #F7FAFC;
-    color: var(--body);
-    opacity: 1 !important;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
+    flex-shrink: 0;
+
+    border: 1px solid var(--line);
+    border-radius: 8px;
+
+    background: #F7FAFC;
+    color: var(--body);
+
+    opacity: 1 !important;
+
     cursor: pointer;
-    transition: all .15s ease;
+
+    transition: all 0.15s ease;
 }
 
 .employee-tasks .close-button:hover {
@@ -705,49 +1114,36 @@ a {
 
 .employee-tasks .task-detail-hero {
     background: #F8FAFC;
+
     border: 1px solid var(--line);
     border-radius: 12px;
+
     padding: 18px;
+
     margin-bottom: 18px;
-}
-
-.employee-tasks .task-detail-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 10px;
-}
-
-.employee-tasks .task-detail-header-row h3 {
-    margin: 0;
-    font: 700 18px/1.35 var(--head);
-    color: var(--ink);
-}
-
-.employee-tasks .task-description {
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--body);
-    margin: 0;
-    white-space: pre-wrap;
 }
 
 .employee-tasks .task-info-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+
     gap: 14px;
+
     margin-bottom: 18px;
 }
 
 .employee-tasks .task-info-item {
-    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 10px 14px;
+
+    background: #ffffff;
+
     border: 1px solid var(--line);
     border-radius: 8px;
-    padding: 10px 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
     font-size: 12px;
 }
 
@@ -758,67 +1154,93 @@ a {
 
 .employee-tasks .task-info-item .info-val {
     color: var(--ink);
-    font-weight: 700;
+
     font-family: var(--head);
+    font-weight: 800;
 }
 
 .employee-tasks #hrFeedback .alert {
-    border-radius: 8px;
-    font-size: 13px;
     margin-bottom: 18px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
     padding: 12px 14px;
 }
 
 .employee-tasks .form-group label {
     display: block;
+
     margin-bottom: 7px;
+
     color: var(--ink);
+
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .employee-tasks .form-row {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+
     gap: 16px;
 }
 
 .employee-tasks .form-control {
     width: 100%;
+
     border: 1px solid var(--line) !important;
     border-radius: 8px !important;
+
     background-color: #F7FAFC !important;
     color: var(--ink) !important;
+
     font-size: 13px !important;
+
     padding: 10px 12px !important;
-    transition: border-color .15s, box-shadow .15s, background .15s !important;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease !important;
 }
 
 .employee-tasks .form-control:focus {
     border-color: var(--accent) !important;
-    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .12) !important;
-    background-color: white !important;
+
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12) !important;
+
+    background-color: #ffffff !important;
 }
 
 .employee-tasks .modal-actions {
     display: flex;
     justify-content: flex-end;
+
     gap: 10px;
+
     padding-top: 20px;
     margin-top: 20px;
+
     border-top: 1px solid var(--line);
 }
 
 .employee-tasks .cancel-button {
     border: 1px solid var(--line) !important;
-    background: white !important;
-    color: var(--body) !important;
     border-radius: 8px !important;
+
+    background: #ffffff !important;
+    color: var(--body) !important;
+
     padding: 10px 18px !important;
+
     font-size: 13px !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
+
     cursor: pointer;
-    transition: all .15s ease !important;
+
+    transition: all 0.15s ease !important;
 }
 
 .employee-tasks .cancel-button:hover {
@@ -827,27 +1249,34 @@ a {
 }
 
 .employee-tasks .save-button {
-    border: 1px solid var(--accent) !important;
-    background: var(--accent) !important;
-    color: white !important;
-    border-radius: 8px !important;
-    padding: 10px 18px !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    transition: background .15s ease !important;
+
+    border: 1px solid var(--accent) !important;
+    border-radius: 8px !important;
+
+    background: var(--accent) !important;
+    color: #ffffff !important;
+
+    padding: 10px 18px !important;
+
+    font-size: 13px !important;
+    font-weight: 700 !important;
+
+    cursor: pointer;
+
+    transition: background-color 0.15s ease !important;
 }
 
 .employee-tasks .save-button:hover {
     background: var(--accent-hover) !important;
 }
 
-/* ==========================================================================
-   RESPONSIVE DESIGN (Matching Omar's breakpoints)
-   ========================================================================== */
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
 @media (max-width: 1200px) {
     .employee-tasks .meeting-shortcuts {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -869,6 +1298,11 @@ a {
     .employee-tasks .meeting-shortcuts {
         grid-template-columns: 1fr;
         gap: 10px;
+    }
+
+    .employee-tasks .section-header {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
     .employee-tasks .task-filters-card {
@@ -905,7 +1339,11 @@ a {
     html {
         scroll-behavior: auto;
     }
-    .employee-tasks *, .employee-tasks *::before, .employee-tasks *::after {
+
+    .employee-tasks *,
+    .employee-tasks *::before,
+    .employee-tasks *::after {
+        animation: none !important;
         transition: none !important;
     }
 }
