@@ -370,11 +370,21 @@
       btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
       if (lab) lab.textContent = dark ? 'Light' : 'Dark';
     }
+    var savedTheme = null;
+    try { savedTheme = localStorage.getItem('theme') || localStorage.getItem('journey-theme'); } catch (e) {}
+    if (savedTheme === 'dark') {
+      root.setAttribute('data-theme', 'dark');
+    } else {
+      root.removeAttribute('data-theme');
+    }
     btn.addEventListener('click', function () {
       var dark = root.getAttribute('data-theme') !== 'dark';
       if (!reduce) { root.classList.add('theme-anim'); setTimeout(function () { root.classList.remove('theme-anim'); }, 450); }
       if (dark) root.setAttribute('data-theme', 'dark'); else root.removeAttribute('data-theme');
-      try { localStorage.setItem('journey-theme', dark ? 'dark' : 'light'); } catch (e) { }
+      try {
+        localStorage.setItem('journey-theme', dark ? 'dark' : 'light');
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      } catch (e) { }
       paint();
     });
     paint();

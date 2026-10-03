@@ -4,6 +4,7 @@
    ========================================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
+@import url('HR-sidebar.css');
 
 
 /* =========================================================
@@ -259,6 +260,145 @@ body {
 .sidebar-bottom button.sidebar-link:hover {
     background: #FEF2F2;
     color: #DC2626;
+}
+
+/* =========================================================
+   THEME TOGGLE (DARK / LIGHT)
+   ========================================================= */
+.hr-sun-icon { display: none !important; }
+.hr-theme-label-light { display: none !important; }
+.hr-moon-icon { display: inline-block !important; }
+.hr-theme-label-dark { display: inline !important; }
+
+:root[data-theme="dark"] .hr-sun-icon,
+[data-theme="dark"] .hr-sun-icon,
+body.dark-mode .hr-sun-icon { display: inline-block !important; color: #F59E0B !important; }
+
+:root[data-theme="dark"] .hr-theme-label-light,
+[data-theme="dark"] .hr-theme-label-light,
+body.dark-mode .hr-theme-label-light { display: inline !important; }
+
+:root[data-theme="dark"] .hr-moon-icon,
+[data-theme="dark"] .hr-moon-icon,
+body.dark-mode .hr-moon-icon { display: none !important; }
+
+:root[data-theme="dark"] .hr-theme-label-dark,
+[data-theme="dark"] .hr-theme-label-dark,
+body.dark-mode .hr-theme-label-dark { display: none !important; }
+
+/* =========================================================
+   SIDEBAR DARK THEME
+   ========================================================= */
+:root[data-theme="dark"] .hr-sidebar,
+[data-theme="dark"] .hr-sidebar,
+body.dark-mode .hr-sidebar {
+    background: #0F172A !important;
+    border: 1px solid #334155 !important;
+    border-bottom: 6px solid #0179F1 !important;
+    color: #F8FAFC !important;
+    box-shadow: 0 12px 36px -6px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+:root[data-theme="dark"] .sidebar-header,
+[data-theme="dark"] .sidebar-header,
+body.dark-mode .sidebar-header {
+    border-bottom: 1px solid #1E293B !important;
+}
+
+:root[data-theme="dark"] .sidebar-logo,
+[data-theme="dark"] .sidebar-logo,
+body.dark-mode .sidebar-logo {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .sidebar-toggle,
+[data-theme="dark"] .sidebar-toggle,
+body.dark-mode .sidebar-toggle {
+    background: #1E293B !important;
+    border: 1px solid #334155 !important;
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .sidebar-toggle:hover,
+[data-theme="dark"] .sidebar-toggle:hover,
+body.dark-mode .sidebar-toggle:hover {
+    background: rgba(1, 121, 241, 0.2) !important;
+    border-color: #0179F1 !important;
+    color: #38BDF8 !important;
+}
+
+:root[data-theme="dark"] .sidebar-link,
+[data-theme="dark"] .sidebar-link,
+body.dark-mode .sidebar-link {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .sidebar-link:hover,
+[data-theme="dark"] .sidebar-link:hover,
+body.dark-mode .sidebar-link:hover {
+    background: #1E293B !important;
+    color: #38BDF8 !important;
+}
+
+:root[data-theme="dark"] .sidebar-link:hover > i:first-child,
+[data-theme="dark"] .sidebar-link:hover > i:first-child,
+body.dark-mode .sidebar-link:hover > i:first-child {
+    color: #38BDF8 !important;
+}
+
+:root[data-theme="dark"] .sidebar-link.active,
+[data-theme="dark"] .sidebar-link.active,
+body.dark-mode .sidebar-link.active {
+    background: #0179F1 !important;
+    border-color: #005BB5 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 14px rgba(1, 121, 241, 0.35) !important;
+}
+
+:root[data-theme="dark"] .sidebar-link.active > i:first-child,
+:root[data-theme="dark"] .sidebar-link.active span,
+[data-theme="dark"] .sidebar-link.active > i:first-child,
+[data-theme="dark"] .sidebar-link.active span,
+body.dark-mode .sidebar-link.active > i:first-child,
+body.dark-mode .sidebar-link.active span {
+    color: #FFFFFF !important;
+}
+
+:root[data-theme="dark"] .sidebar-bottom,
+[data-theme="dark"] .sidebar-bottom,
+body.dark-mode .sidebar-bottom {
+    border-top: 1px solid #1E293B !important;
+}
+
+:root[data-theme="dark"] .sidebar-nav a,
+:root[data-theme="dark"] .sidebar-bottom a,
+:root[data-theme="dark"] .sidebar-bottom button,
+[data-theme="dark"] .sidebar-nav a,
+[data-theme="dark"] .sidebar-bottom a,
+[data-theme="dark"] .sidebar-bottom button,
+body.dark-mode .sidebar-nav a,
+body.dark-mode .sidebar-bottom a,
+body.dark-mode .sidebar-bottom button {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .sidebar-nav a:hover,
+:root[data-theme="dark"] .sidebar-bottom a:hover,
+:root[data-theme="dark"] .sidebar-bottom button:hover,
+[data-theme="dark"] .sidebar-nav a:hover,
+[data-theme="dark"] .sidebar-bottom a:hover,
+[data-theme="dark"] .sidebar-bottom button:hover,
+body.dark-mode .sidebar-nav a:hover,
+body.dark-mode .sidebar-bottom a:hover,
+body.dark-mode .sidebar-bottom button:hover {
+    color: #38BDF8 !important;
+}
+
+:root[data-theme="dark"] .sidebar-bottom button.sidebar-link:hover,
+[data-theme="dark"] .sidebar-bottom button.sidebar-link:hover,
+body.dark-mode .sidebar-bottom button.sidebar-link:hover {
+    background: rgba(220, 38, 38, 0.15) !important;
+    color: #EF4444 !important;
 }
 
 

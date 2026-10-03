@@ -1185,15 +1185,29 @@
       if (lab) lab.textContent = dark ? 'Light' : 'Dark';
     }
 
+    let savedTheme = null;
+    try { savedTheme = localStorage.getItem('theme') || localStorage.getItem('journey-theme'); } catch (e) {}
+    if (savedTheme === 'dark') {
+      root.setAttribute('data-theme', 'dark');
+    } else {
+      root.removeAttribute('data-theme');
+    }
+
     if (btn) {
       btn.addEventListener('click', function () {
         const isDark = root.getAttribute('data-theme') === 'dark';
         if (!isDark) {
           root.setAttribute('data-theme', 'dark');
-          try { localStorage.setItem('journey-theme', 'dark'); } catch (e) {}
+          try {
+            localStorage.setItem('journey-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+          } catch (e) {}
         } else {
           root.removeAttribute('data-theme');
-          try { localStorage.setItem('journey-theme', 'light'); } catch (e) {}
+          try {
+            localStorage.setItem('journey-theme', 'light');
+            localStorage.setItem('theme', 'light');
+          } catch (e) {}
         }
         paint();
       });

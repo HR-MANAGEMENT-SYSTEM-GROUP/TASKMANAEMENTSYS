@@ -292,7 +292,7 @@ window.MASAR_BASE_PATH = "../../NADA/home/";
 function syncSharedTheme() {
     let dark = false;
     try {
-        dark = localStorage.getItem("journey-theme") === "dark";
+        dark = (localStorage.getItem("journey-theme") || localStorage.getItem("theme")) === "dark";
     } catch (_) {}
     let root = document.documentElement;
     if (dark) root.setAttribute("data-theme", "dark");

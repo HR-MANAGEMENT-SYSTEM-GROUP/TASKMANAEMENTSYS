@@ -707,27 +707,53 @@ function setupNavbarAndFooter() {
 
     setupActiveNavLink();}
 function setupDarkMode() {
+    function syncTheme() {
+        const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+        if (isDark) {
+            document.body.classList.add("dark-mode");
+        } else {
+            document.body.classList.remove("dark-mode");
+        }
+        updateDarkModeButton();
+    }
 
-    const darkModeBtn =  document.getElementById("darkModeBtn");
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {  document.body.classList.add("dark-mode");}
+    const savedTheme = localStorage.getItem("journey-theme") || localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        document.body.classList.add("dark-mode");
+    } else {
+        document.documentElement.removeAttribute("data-theme");
+        document.body.classList.remove("dark-mode");
+    }
 
-    updateDarkModeButton();
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
-if (darkModeBtn) {darkModeBtn.addEventListener("click", function () { document.body.classList.toggle("dark-mode");
-
- const isDark =  document.body.classList.contains("dark-mode");
-  localStorage.setItem("theme", isDark ? "dark" : "light");
-  updateDarkModeButton();   }); }}
+    const darkModeBtn = document.getElementById("darkModeBtn");
+    if (darkModeBtn) {
+        darkModeBtn.addEventListener("click", function () {
+            const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+            const newTheme = isDark ? "light" : "dark";
+            if (newTheme === "dark") {
+                document.documentElement.setAttribute("data-theme", "dark");
+            } else {
+                document.documentElement.removeAttribute("data-theme");
+            }
+            try {
+                localStorage.setItem("theme", newTheme);
+                localStorage.setItem("journey-theme", newTheme);
+            } catch (e) {}
+            syncTheme();
+        });
+    }
+}
 
 function updateDarkModeButton() {
-
-    const darkModeBtn =  document.getElementById("darkModeBtn");
-    if (!darkModeBtn) {    return; }
-    const isDark =  document.body.classList.contains("dark-mode");
-    const textSpan =   darkModeBtn.querySelector("span");
-    if (textSpan) {    textSpan.textContent = isDark ? "LIGHT" : "DARK"; }
-
+    const darkModeBtn = document.getElementById("darkModeBtn");
+    if (!darkModeBtn) { return; }
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark" || document.body.classList.contains("dark-mode");
+    const textSpan = darkModeBtn.querySelector("span");
+    if (textSpan) { textSpan.textContent = isDark ? "LIGHT" : "DARK"; }
 }
 
 

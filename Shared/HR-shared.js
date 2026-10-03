@@ -4,6 +4,10 @@
         const savedTheme = localStorage.getItem("theme") || localStorage.getItem("journey-theme");
         if (savedTheme === "dark") {
             document.documentElement.setAttribute("data-theme", "dark");
+            if (document.body) document.body.classList.add("dark-mode");
+        } else {
+            document.documentElement.removeAttribute("data-theme");
+            if (document.body) document.body.classList.remove("dark-mode");
         }
     } catch (e) {}
 })();
@@ -13,8 +17,10 @@ function toggleTheme() {
     const newTheme = isDark ? "light" : "dark";
     if (newTheme === "dark") {
         document.documentElement.setAttribute("data-theme", "dark");
+        if (document.body) document.body.classList.add("dark-mode");
     } else {
         document.documentElement.removeAttribute("data-theme");
+        if (document.body) document.body.classList.remove("dark-mode");
     }
     try {
         localStorage.setItem("theme", newTheme);

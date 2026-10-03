@@ -11,13 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
   <!-- فحص الثيم فورياً لمنع الوميض -->
-  <script>
-    try {
-      if (localStorage.getItem("journey-theme") === "dark") {
-        document.documentElement.setAttribute("data-theme", "dark");
-      }
-    } catch(e) {}
-  </script>
+  <script>try{const t=localStorage.getItem("journey-theme")||localStorage.getItem("theme");if(t==="dark"){document.documentElement.setAttribute("data-theme","dark");}else{document.documentElement.removeAttribute("data-theme");}}catch(e){}</script>
 
   <!-- ملف الستايل الخاص بالنافبار والفوتر -->
   <link rel="stylesheet" href="navbar-footer.css">

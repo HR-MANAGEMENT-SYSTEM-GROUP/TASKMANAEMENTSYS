@@ -227,8 +227,25 @@ document.addEventListener("click", function () {
 
 
 function setupDarkModeFromStorage() {
-
-    if (localStorage.getItem("theme") === "dark") {  document.body.classList.add("dark-mode"); }}
+    function syncTheme() {
+        const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+        if (isDark) {
+            document.body.classList.add("dark-mode");
+        } else {
+            document.body.classList.remove("dark-mode");
+        }
+    }
+    const savedTheme = localStorage.getItem("theme") || localStorage.getItem("journey-theme");
+    if (savedTheme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        document.body.classList.add("dark-mode");
+    } else {
+        document.documentElement.removeAttribute("data-theme");
+        document.body.classList.remove("dark-mode");
+    }
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+}
 
 
 function setupFiltersEvents() { const employeeFilter = document.getElementById("employeeFilter");
