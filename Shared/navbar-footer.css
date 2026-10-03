@@ -76,6 +76,83 @@
 /* ==========================================================================
    NAVBAR STYLING
    ========================================================================== */
+   /* ==========================================================================
+   FLIP ONLY NAVBAR & FOOTER COLORS
+   Normal Mode = Dark Navbar/Footer
+   Dark Mode   = Light Navbar/Footer
+   ========================================================================== */
+
+/* Normal mode: navbar/footer dark */
+.journey-header,
+.journey-footer-container {
+    --ink: #FFFFFF;
+    --body: #CBD5E1;
+    --line: rgba(255, 255, 255, 0.15);
+    --bg: #0E1626;
+    --hdr-ink: #FFFFFF;
+
+    --glass: rgba(255, 255, 255, 0.08);
+    --glass-line: rgba(255, 255, 255, 0.18);
+    --glass-text: #CBD5E1;
+    --glass-active: #3B9EFF;
+
+    --hbtn-bg: #FFFFFF;
+    --hbtn-color: #172033;
+    --hbtn-border: #FFFFFF;
+    --hbtn-hbg: #3B9EFF;
+    --hbtn-hcolor: #172033;
+
+    --logo-tile: #FFFFFF;
+    --logo-m: #172033;
+    --logo-word: #FFFFFF;
+
+    background: #0E1626 !important;
+    color: #FFFFFF !important;
+}
+
+.journey-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+.journey-footer-container {
+    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Dark mode: navbar/footer light */
+:root[data-theme="dark"] .journey-header,
+:root[data-theme="dark"] .journey-footer-container {
+    --ink: #172033;
+    --body: #64748B;
+    --line: #E2E8F0;
+    --bg: #F7FAFC;
+    --hdr-ink: #172033;
+
+    --glass: rgba(255, 255, 255, 0.9);
+    --glass-line: #E2E8F0;
+    --glass-text: #64748B;
+    --glass-active: #0079F1;
+
+    --hbtn-bg: #FFFFFF;
+    --hbtn-color: #0079F1;
+    --hbtn-border: #0079F1;
+    --hbtn-hbg: #0079F1;
+    --hbtn-hcolor: #FFFFFF;
+
+    --logo-tile: #172033;
+    --logo-m: #FFFFFF;
+    --logo-word: #172033;
+
+    background: #F7FAFC !important;
+    color: #172033 !important;
+}
+
+:root[data-theme="dark"] .journey-header {
+    border-bottom: 1px solid #E2E8F0 !important;
+}
+
+:root[data-theme="dark"] .journey-footer-container {
+    border-top: 1px solid #E2E8F0 !important;
+}
 .journey-header {
   position: relative;
   width: 100%;
@@ -357,10 +434,7 @@ html.theme-anim * {
   color: var(--accent);
   border-color: var(--accent);
 }
-.link-btn:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-}
+
 @media (max-width: 1024px) {
   .foot-grid { grid-template-columns: 1fr 1fr; }
 }
