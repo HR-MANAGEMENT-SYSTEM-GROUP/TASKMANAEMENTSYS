@@ -1,875 +1,1349 @@
-:root{
+/* =========================================================
+   EMP TASK PAGE — CLEAN DESIGN + SAME ANIMATION
+========================================================= */
 
+:root {
+    --primary: #0179F1;
+    --primary-dark: #005BB5;
+    --primary-light: #4DA3FF;
 
---primary:#0079F1;
+    --accent: #0179F1;
+    --accent-d: #005BB5;
+    --accent-hover: #005BB5;
+    --accent-rgb: 1, 121, 241;
 
---primary-dark:#005BB5;
+    --bg: #F5F8FC;
+    --ink: #172033;
+    --hdr-ink: #172033;
+    --body: #64748B;
+    --glass-text: #64748B;
 
---primary-light:#4DA3FF;
+    --line: #E2E8F0;
+    --tint: #E8F3FF;
+    --glass: rgba(255, 255, 255, 0.75);
+    --glass-line: rgba(203, 213, 225, 0.8);
 
+    --head: 'Quicksand', system-ui, sans-serif;
+    --text: 'Inter', system-ui, sans-serif;
 
---background:#F7FAFC;
-
-
---white:#FFFFFF;
-
-
---text-dark:#172033;
-
-
---text-gray:#64748B;
-
-
---success:#16A34A;
-
-
---danger:#DC2626;
-
-
---warning:#F59E0B;
-
-
+    --shadow: 0 8px 24px rgba(23, 32, 51, 0.06);
 }
 
+/* =========================================================
+   GLOBAL
+========================================================= */
 
-
-
-*{
-
-box-sizing:border-box;
-
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
-
-
-
-
-body{
-
-
-background:
-
-linear-gradient(
-135deg,
-#F7FAFC,
-#E8F3FF
-);
-
-
-font-family:
-
-"Segoe UI",
-Arial,
-sans-serif;
-
-
-color:var(--text-dark);
-
-
-overflow-x:hidden;
-
-
+html {
+    scroll-behavior: smooth;
 }
 
+body.employee-tasks {
+    margin: 0;
+    padding: 0;
 
+    font-family: var(--text);
+    color: var(--ink);
+    background: var(--bg);
 
-
-
-.task-board{
-
-display:flex;
-
-flex-direction:row;
-
-gap:20px;
-
-width:100%;
-
-align-items:flex-start;
-
+    line-height: 1.6;
+    overflow-x: hidden;
 }
 
-
-.task-column{
-
-background:#f4f5f7;
-
-padding:15px;
-
-border-radius:15px;
-
-width:33.33%;
-
-height:600px;
-
-overflow-y:auto;
-
+.employee-tasks a {
+    color: inherit;
+    text-decoration: none;
 }
 
-.task-card{
-
-background:white;
-
-padding:15px;
-
-border-radius:10px;
-
-margin-bottom:15px;
-
-box-shadow:0 2px 5px #ccc;
-
-width:100%;
-
+.employee-tasks button,
+.employee-tasks input,
+.employee-tasks select,
+.employee-tasks textarea {
+    font: inherit;
 }
 
-/* Navbar */
-
-
-.navbar{
-
-
-background:
-
-linear-gradient(
-135deg,
-var(--primary-dark),
-var(--primary)
-);
-
-
-padding:20px 0;
-
-
-color:white;
-
-
-box-shadow:
-
-0 10px 30px rgba(0,121,241,.3);
-
-
+.employee-tasks button {
+    cursor: pointer;
 }
 
+/* =========================================================
+   PAGE
+========================================================= */
 
-
-
-
-.logo{
-
-
-font-size:35px;
-
-
-font-weight:900;
-
-
-margin:0;
-
-
+.employee-tasks .page {
+    width: min(1360px, calc(100% - 64px));
+    margin: 28px auto 72px;
 }
 
+/* =========================================================
+   HEADER
+========================================================= */
 
+.employee-tasks .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
+    gap: 32px;
 
-
-.notification{
-
-
-background:
-
-rgba(255,255,255,.2);
-
-
-padding:
-
-12px 25px;
-
-
-border-radius:50px;
-
-
-font-weight:bold;
-
-
+    padding: 12px 0 28px;
 }
 
-
-
-
-
-
-
-
-
-
-
-/* Hero */
-
-
-.hero{
-
-
-background:white;
-
-
-padding:45px;
-
-
-border-radius:30px;
-
-
-box-shadow:
-
-
-0 15px 40px rgba(0,0,0,.08);
-
-
-animation:
-
-fade .5s ease;
-
-
+.employee-tasks .page-header > div {
+    max-width: 680px;
 }
 
+.employee-tasks h1 {
+    margin-bottom: 16px;
 
+    font-family: var(--head);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800;
+    line-height: 1.15;
 
+    letter-spacing: -0.025em;
 
-.hero h1{
-
-
-font-size:45px;
-
-
-font-weight:900;
-
-
+    color: var(--hdr-ink);
 }
 
+.employee-tasks .subtitle {
+    max-width: 620px;
 
+    color: var(--glass-text);
 
-.hero p{
-
-
-color:var(--text-gray);
-
-
-font-size:18px;
-
-
+    font-size: 15px;
+    line-height: 1.75;
 }
 
+/* =========================================================
+   STATUS CARDS ROW
+========================================================= */
 
+.employee-tasks .meeting-shortcuts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 
+    gap: 16px;
 
-
-
-
-
-
-/* Dashboard Cards */
-
-
-.stat-card{
-
-
-background:white;
-
-
-padding:30px;
-
-
-border-radius:25px;
-
-
-text-align:center;
-
-
-box-shadow:
-
-
-0 10px 30px rgba(0,0,0,.08);
-
-
-border-bottom:
-
-
-6px solid var(--primary);
-
-
-transition:.3s;
-
-
+    margin: 0 0 40px;
 }
 
+/* =========================================================
+   STATUS CARD WITH SAME ROTATING ANIMATION
+========================================================= */
 
+.employee-tasks .shortcut-card.status-card {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
 
+    min-width: 0;
+    min-height: 78px;
 
-.stat-card:hover{
+    display: flex;
+    align-items: center;
+    gap: 14px;
 
+    padding: 18px 20px;
 
-transform:
+    background: #ffffff;
 
-translateY(-10px);
+    border: 1px solid var(--line);
+    border-radius: 14px;
 
+    box-shadow: var(--shadow);
 
-box-shadow:
+    cursor: pointer;
+    user-select: none;
 
-0 20px 40px rgba(0,121,241,.2);
-
-
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
 }
 
+/* Rotating Border Animation */
+.employee-tasks .shortcut-card.status-card::before {
+    content: "";
 
+    position: absolute;
+    inset: -2px;
 
+    border-radius: 16px;
+    padding: 2px;
 
-.stat-card h2{
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 45deg,
+        var(--status-color) 80deg,
+        rgba(255, 255, 255, 0.95) 110deg,
+        var(--status-color) 140deg,
+        transparent 200deg,
+        transparent 360deg
+    );
 
+    -webkit-mask:
+        linear-gradient(#ffffff 0 0) content-box,
+        linear-gradient(#ffffff 0 0);
 
-font-size:45px;
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
 
+    animation: spinBorder 3s linear infinite;
 
-font-weight:900;
-
-
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 0;
 }
 
-
-
-
-
-
-
-
-
-/* Table */
-
-
-.table-card{
-
-
-background:white;
-
-
-padding:25px;
-
-
-border-radius:30px;
-
-
-box-shadow:
-
-
-0 15px 40px rgba(0,0,0,.08);
-
-
-overflow:hidden;
-
-
+/* Keep content above animation */
+.employee-tasks .shortcut-card.status-card > * {
+    position: relative;
+    z-index: 2;
 }
 
+.employee-tasks .shortcut-card.status-card:hover {
+    transform: translateY(-5px);
 
+    border-color: color-mix(in srgb, var(--status-color) 40%, white);
 
-
-
-table{
-
-
-margin:0!important;
-
-
+    box-shadow:
+        0 16px 34px rgba(23, 32, 51, 0.10),
+        0 0 22px color-mix(in srgb, var(--status-color) 24%, transparent);
 }
 
-
-
-
-thead{
-
-
-background:
-
-
-linear-gradient(
-135deg,
-var(--primary-dark),
-var(--primary)
-);
-
-
-color:white;
-
-
+.employee-tasks .shortcut-card.status-card:hover::before {
+    animation-duration: 1.2s;
 }
 
-
-
-thead th{
-
-
-padding:18px!important;
-
-
-border:none;
-
-
+@keyframes spinBorder {
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
+/* =========================================================
+   STATUS CARD COLORS
+========================================================= */
 
-
-
-tbody tr{
-
-
-transition:.3s;
-
-
+.employee-tasks .status-total {
+    --status-color: #0179F1;
 }
 
-
-
-tbody tr:hover{
-
-
-background:#E8F3FF;
-
-
+.employee-tasks .status-new {
+    --status-color: #F59E0B;
 }
 
-
-
-
-
-
-
-
-
-/* Buttons */
-
-
-.btn-primary{
-
-
-background:
-
-
-linear-gradient(
-135deg,
-var(--primary),
-var(--primary-light)
-);
-
-
-border:none;
-
-
-border-radius:14px;
-
-
-padding:
-
-10px 22px;
-
-
-font-weight:bold;
-
-
+.employee-tasks .status-submitted {
+    --status-color: #7C3AED;
 }
 
-
-
-
-.btn-primary:hover{
-
-
-background:
-
-var(--primary-dark);
-
-
+.employee-tasks .status-completed {
+    --status-color: #16A34A;
 }
 
+/* =========================================================
+   STATUS CARD INNER CONTENT
+========================================================= */
 
+.employee-tasks .shortcut-icon {
+    width: 44px;
+    height: 44px;
 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-.btn-sm{
+    flex-shrink: 0;
 
+    border-radius: 10px;
 
-border-radius:12px;
+    background: color-mix(in srgb, var(--status-color) 13%, white);
+    color: var(--status-color);
 
+    border: 1px solid color-mix(in srgb, var(--status-color) 26%, white);
 
-padding:
+    font-size: 20px;
 
-8px 15px;
-
-
+    transition:
+        transform 0.25s ease,
+        background-color 0.25s ease,
+        color 0.25s ease;
 }
 
-
-
-
-
-
-
-
-
-/* Status */
-
-
-.status-badge{
-
-
-padding:
-
-8px 16px;
-
-
-border-radius:20px;
-
-
-font-weight:700;
-
-
-display:inline-block;
-
-
-font-size:14px;
-
-
+.employee-tasks .shortcut-card.status-card:hover .shortcut-icon {
+    transform: scale(1.07);
 }
 
-
-
-.status-badge:contains(New){
-
-
-background:#FEF3C7;
-
-
+.employee-tasks .shortcut-info {
+    min-width: 0;
 }
 
+.employee-tasks .shortcut-info small {
+    display: block;
 
+    margin-bottom: 2px;
 
+    font-family: var(--head);
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.5;
 
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 
-
-
-
-
-/* Modal */
-
-
-.modal-content{
-
-
-border-radius:30px;
-
-
-border:none;
-
-
-overflow:hidden;
-
-
-box-shadow:
-
-
-0 30px 70px rgba(0,0,0,.3);
-
-
+    color: var(--body);
 }
 
+.employee-tasks .shortcut-info strong {
+    display: block;
 
+    font-family: var(--head);
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.3;
 
-.modal-header{
+    color: var(--ink);
 
-
-background:
-
-
-linear-gradient(
-135deg,
-var(--primary-dark),
-var(--primary)
-);
-
-
-color:white;
-
-
-padding:25px;
-
-
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+.employee-tasks .shortcut-number {
+    margin-left: auto;
 
+    min-width: 40px;
 
-.modal-body{
+    padding: 6px 12px;
 
+    border-radius: 8px;
 
-padding:35px;
+    background: color-mix(in srgb, var(--status-color) 13%, white);
+    color: var(--status-color);
 
+    font-family: var(--head);
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1;
 
+    text-align: center;
+
+    transition: transform 0.25s ease;
 }
 
-
-
-
-
-
-
-
-
-/* Inputs */
-
-
-textarea,
-input{
-
-
-border-radius:15px!important;
-
-
-padding:13px!important;
-
-
-border:
-
-1px solid #e5e7eb!important;
-
-
+.employee-tasks .shortcut-card.status-card:hover .shortcut-number {
+    transform: scale(1.06);
 }
 
+/* =========================================================
+   SECTION HEADER
+========================================================= */
 
-
-textarea:focus,
-input:focus{
-
-
-border-color:
-
-var(--primary)!important;
-
-
-box-shadow:
-
-
-0 0 0 3px rgba(0,121,241,.15)!important;
-
-
+.employee-tasks .section {
+    scroll-margin-top: 25px;
+    margin-bottom: 38px;
 }
 
+.employee-tasks .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
+    gap: 16px;
 
-
-
-
-
-
-
-/* HR Feedback */
-
-
-.alert{
-
-
-border-radius:18px;
-
-
-border:none;
-
-
-padding:20px;
-
-
-font-weight:600;
-
-
+    margin-bottom: 18px;
 }
 
+.employee-tasks h2 {
+    font-family: var(--head);
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.3;
 
+    letter-spacing: -0.02em;
 
-
-
-
-
-
-
-/* Solution area */
-
-
-#solutionText{
-
-
-min-height:150px;
-
-
-resize:none;
-
-
+    color: var(--hdr-ink);
 }
 
+.employee-tasks .section-number {
+    display: inline-block;
 
+    margin-right: 8px;
 
+    font-size: 14px;
+    color: var(--accent);
 
-
-
-
-
-
-/* Status colors */
-
-
-.completed{
-
-
-background:#DCFCE7;
-
-
-color:#166534;
-
-
+    vertical-align: middle;
 }
 
+.employee-tasks .section-header p {
+    margin: 7px 0 0 30px;
 
-.submitted{
+    color: var(--glass-text);
 
-
-background:#EDE9FE;
-
-
-color:#6D28D9;
-
-
+    font-size: 13px;
 }
 
+.employee-tasks .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
 
-.in-progress{
+    padding: 6px 12px;
 
+    border-radius: 999px;
 
-background:#DBEAFE;
+    background: var(--glass);
+    border: 1px solid var(--glass-line);
 
+    color: var(--glass-text);
 
-color:#1D4ED8;
-
-
+    font-family: var(--head);
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.5;
 }
 
+/* =========================================================
+   FILTERS
+========================================================= */
 
-.new{
+.employee-tasks .task-filters-card {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 
+    gap: 20px;
 
-background:#FEF3C7;
+    padding: 20px 24px;
 
+    background: #ffffff;
 
-color:#92400E;
+    border: 1px solid var(--line);
+    border-radius: 14px;
 
+    box-shadow: 0 4px 14px rgba(23, 32, 51, 0.04);
 
+    margin-bottom: 24px;
 }
 
-
-.blocked{
-
-
-background:#111827;
-
-
-color:white;
-
-
+.employee-tasks .filter-group {
+    min-width: 0;
 }
 
+.employee-tasks .filter-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 
-.not-complete{
+    margin-bottom: 7px;
 
+    color: var(--ink);
 
-background:#FEE2E2;
-
-
-color:#991B1B;
-
-
+    font-family: var(--head);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.5;
 }
 
+.employee-tasks .custom-select {
+    width: 100%;
+    min-height: 44px;
 
-.time-out{
+    border: 1px solid var(--line);
+    border-radius: 8px;
 
+    background-color: #F7FAFC;
+    color: var(--ink);
 
-background:#374151;
+    font-size: 13px;
 
+    padding: 10px 14px;
 
-color:white;
+    outline: none;
 
-
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
 }
 
+.employee-tasks .custom-select:focus {
+    border-color: var(--accent);
 
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12);
 
-
-
-
-
-
-
-/* Animation */
-
-
-@keyframes fade{
-
-
-from{
-
-
-opacity:0;
-
-
-transform:translateY(20px);
-
-
+    background-color: #ffffff;
 }
 
+/* =========================================================
+   BOARD
+========================================================= */
 
-to{
-
-
-opacity:1;
-
-
-transform:translateY(0);
-
-
+.employee-tasks .board-wrapper {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
 }
 
+/* =========================================================
+   Make Trello Columns Bigger
+========================================================= */
 
+/* =========================================================
+   Bigger columns but keep them side by side
+========================================================= */
+
+.employee-tasks .page {
+    width: min(1500px, calc(100% - 40px)) !important;
 }
 
-
-
-
-
-
-
-
-
-@media(max-width:768px){
-
-
-
-.hero h1{
-
-
-font-size:32px;
-
-
+.employee-tasks .task-board {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(240px, 1fr)) !important;
+    gap: 18px !important;
+    align-items: stretch !important;
 }
 
-
-
-.table-card{
-
-
-overflow-x:auto;
-
-
+.employee-tasks .trello-column {
+    min-height: 610px !important;
+    height: 610px !important;
+    padding: 18px !important;
 }
 
+.employee-tasks .trello-cards {
+    flex: 1 !important;
+    min-height: 500px !important;
+    overflow-y: auto !important;
+}
 
+.employee-tasks .empty-column {
+    min-height: 170px !important;
+}
+
+.employee-tasks .trello-task-card {
+    min-height: 135px !important;
+    padding: 18px !important;
+}
+/* =========================================================
+   TRELLO COLUMNS
+========================================================= */
+/* =========================================================
+   TRELLO COLUMNS — SAME ROTATING BORDER ANIMATION
+========================================================= */
+
+.employee-tasks .trello-column {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+
+    border: none !important;
+    border-radius: 16px !important;
+
+    background: #F8FAFC !important;
+
+    box-shadow:
+        0 2px 8px rgba(23, 32, 51, 0.04),
+        0 12px 28px rgba(1, 121, 241, 0.08) !important;
+}
+
+/* rotating border */
+.employee-tasks .trello-column::before {
+    content: "";
+
+    position: absolute;
+    inset: -2px;
+
+    border-radius: 18px;
+    padding: 2px;
+
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 45deg,
+        var(--column-color) 85deg,
+        rgba(255, 255, 255, 0.95) 115deg,
+        var(--column-color) 150deg,
+        transparent 220deg,
+        transparent 360deg
+    );
+
+    -webkit-mask:
+        linear-gradient(#ffffff 0 0) content-box,
+        linear-gradient(#ffffff 0 0);
+
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+
+    animation: trelloColumnSpin 3s linear infinite;
+
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* white inner surface */
+.employee-tasks .trello-column::after {
+    content: "";
+
+    position: absolute;
+    inset: 2px;
+
+    border-radius: 14px;
+
+    background: #F8FAFC;
+
+    z-index: 1;
+}
+
+/* keep content above animation */
+.employee-tasks .trello-column > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* hover effect */
+.employee-tasks .trello-column:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 18px 36px rgba(23, 32, 51, 0.10),
+        0 0 26px color-mix(in srgb, var(--column-color) 28%, transparent) !important;
+}
+
+.employee-tasks .trello-column:hover::before {
+    animation-duration: 1.2s;
+}
+
+/* animation */
+@keyframes trelloColumnSpin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* column colors */
+.employee-tasks .column-new {
+    --column-color: #F59E0B;
+}
+
+.employee-tasks .column-progress {
+    --column-color: #0179F1;
+}
+
+.employee-tasks .column-submitted {
+    --column-color: #7C3AED;
+}
+
+.employee-tasks .column-completed {
+    --column-color: #10B981;
+}
+
+.employee-tasks .trello-column:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(23, 32, 51, 0.06);
+}
+
+.employee-tasks .column-new {
+    --column-color: #F59E0B;
+}
+
+.employee-tasks .column-progress {
+    --column-color: #0079F1;
+}
+
+.employee-tasks .column-submitted {
+    --column-color: #7C3AED;
+}
+
+.employee-tasks .column-completed {
+    --column-color: #10B981;
+}
+
+.employee-tasks .trello-column.drag-over {
+    background: #EFF6FF;
+    border-color: var(--accent);
+
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.2);
+}
+
+.employee-tasks .trello-column-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+
+    border-bottom: 1px solid var(--line);
+}
+
+.employee-tasks .trello-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.employee-tasks .trello-dot {
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: var(--column-color, var(--accent));
+
+    flex-shrink: 0;
+}
+
+.employee-tasks .trello-column-title {
+    margin: 0;
+
+    font-family: var(--head);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.3;
+
+    color: var(--ink);
+
+    letter-spacing: -0.01em;
+}
+
+.employee-tasks .trello-count {
+    min-width: 24px;
+    height: 24px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 8px;
+
+    border-radius: 999px;
+
+    background: #ffffff;
+
+    border: 1px solid var(--line);
+
+    color: var(--body);
+
+    font-family: var(--head);
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.employee-tasks .trello-cards {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+
+    flex: 1;
+
+    min-height: 200px;
+}
+
+.employee-tasks .empty-column {
+    min-height: 140px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 24px 16px;
+
+    border: 1px dashed #CBD5E1;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: var(--body);
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* =========================================================
+   TASK CARDS
+========================================================= */
+
+.employee-tasks .trello-task-card {
+    position: relative;
+
+    padding: 16px;
+
+    background: #ffffff;
+
+    border: 1px solid var(--line);
+    border-left: 5px solid var(--task-color, var(--accent));
+
+    border-radius: 12px;
+
+    box-shadow: 0 2px 8px rgba(23, 32, 51, 0.04);
+
+    cursor: grab;
+    user-select: none;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.employee-tasks .trello-task-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow: 0 8px 20px rgba(23, 32, 51, 0.08);
+
+    border-color: #B1D7FF;
+}
+
+.employee-tasks .trello-task-card.dragging {
+    opacity: 0.45;
+    transform: scale(0.98);
+}
+
+.employee-tasks .trello-task-card.task-locked {
+    cursor: default;
+    opacity: 0.85;
+}
+
+/* Task Status Accent Colors */
+.employee-tasks .status-new,
+.employee-tasks .status-pending {
+    --task-color: #F59E0B;
+}
+
+.employee-tasks .status-in-progress {
+    --task-color: #0079F1;
+}
+
+.employee-tasks .status-submitted {
+    --task-color: #7C3AED;
+}
+
+.employee-tasks .status-completed {
+    --task-color: #10B981;
+}
+
+.employee-tasks .status-not-complete,
+.employee-tasks .status-time-out {
+    --task-color: #EF4444;
+}
+
+.employee-tasks .status-blocked {
+    --task-color: #64748B;
+}
+
+.employee-tasks .task-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 8px;
+}
+
+.employee-tasks .trello-task-card h5 {
+    margin: 0;
+
+    font-family: var(--head);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.35;
+
+    color: var(--ink);
+
+    word-break: break-word;
+}
+
+.employee-tasks .task-priority {
+    padding: 3px 8px;
+
+    border-radius: 999px;
+
+    font-family: var(--head);
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.3;
+
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    flex-shrink: 0;
+}
+
+.employee-tasks .task-priority.high {
+    background: #FEE2E2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+}
+
+.employee-tasks .task-priority.medium {
+    background: #FEF3C7;
+    color: #D97706;
+    border: 1px solid #FDE68A;
+}
+
+.employee-tasks .task-priority.low {
+    background: #DCFCE7;
+    color: #16A34A;
+    border: 1px solid #BBF7D0;
+}
+
+.employee-tasks .trello-task-card p {
+    margin: 0 0 12px;
+
+    color: var(--body);
+
+    font-size: 12px;
+    line-height: 1.55;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+}
+
+.employee-tasks .task-card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    padding-top: 10px;
+
+    border-top: 1px solid #F1F5F9;
+
+    font-size: 11px;
+}
+
+.employee-tasks .task-deadline {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    color: var(--body);
+
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.employee-tasks .task-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    padding: 3px 8px;
+
+    border-radius: 999px;
+
+    background: var(--tint);
+    color: var(--accent-d);
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.employee-tasks .task-card-actions {
+    display: flex;
+    gap: 8px;
+
+    margin-top: 12px;
+}
+
+.employee-tasks .btn-start-task,
+.employee-tasks .btn-view-task {
+    flex: 1;
+
+    min-height: 34px;
+
+    border-radius: 6px;
+
+    font-family: var(--head);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+.employee-tasks .btn-start-task {
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #ffffff;
+}
+
+.employee-tasks .btn-start-task:hover {
+    background: var(--accent-hover);
+}
+
+.employee-tasks .btn-view-task {
+    border: 1px solid #BFDBFE;
+    background: var(--tint);
+    color: var(--accent-d);
+}
+
+.employee-tasks .btn-view-task:hover {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal-backdrop.show {
+    opacity: 0.55 !important;
+    background-color: #0E1626 !important;
+    backdrop-filter: blur(4px) !important;
+}
+
+.employee-tasks .modal-box {
+    border: 1px solid var(--line) !important;
+    border-radius: 16px !important;
+
+    background: #ffffff !important;
+
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.18) !important;
+
+    padding: 24px 28px !important;
+}
+
+.employee-tasks .modal-header {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+
+    padding: 0 0 20px !important;
+
+    border-bottom: 1px solid var(--line) !important;
+
+    margin-bottom: 20px !important;
+}
+
+.employee-tasks .modal-eyebrow {
+    margin-bottom: 6px;
+
+    color: var(--accent-d);
+
+    font-family: var(--head);
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.5;
+
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.employee-tasks .modal-title {
+    margin: 0 0 4px !important;
+
+    color: var(--ink) !important;
+
+    font-family: var(--head);
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    line-height: 1.3 !important;
+
+    letter-spacing: -0.02em !important;
+}
+
+.employee-tasks .modal-subtitle {
+    margin: 0;
+
+    color: var(--body);
+
+    font-size: 13px;
+}
+
+.employee-tasks .close-button {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border: 1px solid var(--line);
+    border-radius: 8px;
+
+    background: #F7FAFC;
+    color: var(--body);
+
+    opacity: 1 !important;
+
+    cursor: pointer;
+
+    transition: all 0.15s ease;
+}
+
+.employee-tasks .close-button:hover {
+    background: var(--tint);
+    color: var(--accent);
+    border-color: #BFDBFE;
+}
+
+.employee-tasks .modal-body {
+    padding: 0 !important;
+}
+
+.employee-tasks .task-detail-hero {
+    background: #F8FAFC;
+
+    border: 1px solid var(--line);
+    border-radius: 12px;
+
+    padding: 18px;
+
+    margin-bottom: 18px;
+}
+
+.employee-tasks .task-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-bottom: 18px;
+}
+
+.employee-tasks .task-info-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 10px 14px;
+
+    background: #ffffff;
+
+    border: 1px solid var(--line);
+    border-radius: 8px;
+
+    font-size: 12px;
+}
+
+.employee-tasks .task-info-item strong {
+    color: var(--body);
+    font-weight: 500;
+}
+
+.employee-tasks .task-info-item .info-val {
+    color: var(--ink);
+
+    font-family: var(--head);
+    font-weight: 800;
+}
+
+.employee-tasks #hrFeedback .alert {
+    margin-bottom: 18px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+    padding: 12px 14px;
+}
+
+.employee-tasks .form-group label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--ink);
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.employee-tasks .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 16px;
+}
+
+.employee-tasks .form-control {
+    width: 100%;
+
+    border: 1px solid var(--line) !important;
+    border-radius: 8px !important;
+
+    background-color: #F7FAFC !important;
+    color: var(--ink) !important;
+
+    font-size: 13px !important;
+
+    padding: 10px 12px !important;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease !important;
+}
+
+.employee-tasks .form-control:focus {
+    border-color: var(--accent) !important;
+
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12) !important;
+
+    background-color: #ffffff !important;
+}
+
+.employee-tasks .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding-top: 20px;
+    margin-top: 20px;
+
+    border-top: 1px solid var(--line);
+}
+
+.employee-tasks .cancel-button {
+    border: 1px solid var(--line) !important;
+    border-radius: 8px !important;
+
+    background: #ffffff !important;
+    color: var(--body) !important;
+
+    padding: 10px 18px !important;
+
+    font-size: 13px !important;
+    font-weight: 700 !important;
+
+    cursor: pointer;
+
+    transition: all 0.15s ease !important;
+}
+
+.employee-tasks .cancel-button:hover {
+    background: #F1F5F9 !important;
+    color: var(--ink) !important;
+}
+
+.employee-tasks .save-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    border: 1px solid var(--accent) !important;
+    border-radius: 8px !important;
+
+    background: var(--accent) !important;
+    color: #ffffff !important;
+
+    padding: 10px 18px !important;
+
+    font-size: 13px !important;
+    font-weight: 700 !important;
+
+    cursor: pointer;
+
+    transition: background-color 0.15s ease !important;
+}
+
+.employee-tasks .save-button:hover {
+    background: var(--accent-hover) !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+    .employee-tasks .meeting-shortcuts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .employee-tasks .task-board {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .employee-tasks .page {
+        width: calc(100% - 32px);
+        margin-top: 16px;
+        margin-bottom: 40px;
+    }
+
+    .employee-tasks .meeting-shortcuts {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .employee-tasks .section-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .employee-tasks .task-filters-card {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 16px;
+    }
+
+    .employee-tasks .task-board {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .employee-tasks .trello-column {
+        min-height: auto;
+    }
+
+    .employee-tasks .form-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .employee-tasks .task-info-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .employee-tasks .modal-box {
+        padding: 20px !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .employee-tasks *,
+    .employee-tasks *::before,
+    .employee-tasks *::after {
+        animation: none !important;
+        transition: none !important;
+    }
 }

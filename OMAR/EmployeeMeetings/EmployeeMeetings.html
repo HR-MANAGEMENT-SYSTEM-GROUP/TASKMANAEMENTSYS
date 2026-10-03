@@ -3,44 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Meetings</title>
+    <title>Masar — My Meetings</title>
+    <link rel="icon" href="../../NADA/home/MASAR.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../../Shared/navbar-footer.css">
     <link rel="stylesheet" href="EmployeeMeetings.css">
 </head>
-<body>
+<body class="employee-meetings" id="top">
+<a href="#main-content" class="skip-link">Skip to meetings</a>
+<div id="navbar-placeholder"></div>
 
-<div class="page">
+<main class="page" id="main-content">
 
     <!-- Header -->
-    <div class="page-header">
+    <header class="page-header">
         <div>
-            <p class="eyebrow">EMPLOYEE PORTAL</p>
-            <h1>My Meetings</h1>
-            <p class="subtitle">View invitations, confirmed meetings, and your requests.</p>
+            <h1>My <span>Meetings.</span></h1>
+            <p class="subtitle">Your meetings, all in one place. Respond to invitations, join your team, or start a conversation with HR.</p>
         </div>
 
-        <button class="request-button" onclick="showRequestForm()">
-            <span>+</span> Request Meeting
+        <button type="button" class="request-button" onclick="showRequestForm()">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i> Request Meeting
         </button>
-    </div>
+    </header>
+
+    <nav class="meeting-shortcuts" aria-label="Meeting sections">
+        <a href="#meeting-invitations"><span class="shortcut-icon"><i class="bi bi-envelope-open" aria-hidden="true"></i></span><span><small>RESPOND &amp; CONNECT</small><strong>Meeting Invitations</strong></span><i class="bi bi-arrow-down-right" aria-hidden="true"></i></a>
+        <a href="#upcoming-meetings"><span class="shortcut-icon"><i class="bi bi-calendar-check" aria-hidden="true"></i></span><span><small>YOUR NEXT CONVERSATION</small><strong>Upcoming Meetings</strong></span><i class="bi bi-arrow-down-right" aria-hidden="true"></i></a>
+        <a href="#my-meeting-requests"><span class="shortcut-icon"><i class="bi bi-chat-square-text" aria-hidden="true"></i></span><span><small>FOLLOW YOUR REQUESTS</small><strong>My Requests</strong></span><i class="bi bi-arrow-down-right" aria-hidden="true"></i></a>
+    </nav>
 
     <!-- Meeting Invitations -->
-    <section class="section">
+    <section class="section invitations-section" id="meeting-invitations" aria-labelledby="invitationsTitle">
         <div class="section-header">
             <div>
-                <h2>Meeting Invitations</h2>
+                <h2 id="invitationsTitle"><span class="section-number">01</span> Meeting Invitations</h2>
                 <p>Meetings assigned to you by HR.</p>
             </div>
-            <span class="section-badge">Action Needed</span>
+            <span class="section-badge"><i class="bi bi-inbox" aria-hidden="true"></i> Invitations</span>
         </div>
 
         <div id="invitationsContainer" class="cards-container"></div>
     </section>
 
     <!-- Upcoming Meetings -->
-    <section class="section">
+    <section class="section" id="upcoming-meetings" aria-labelledby="upcomingTitle">
         <div class="section-header">
             <div>
-                <h2>Upcoming Meetings</h2>
+                <h2 id="upcomingTitle"><span class="section-number">02</span> Upcoming Meetings</h2>
                 <p>Your confirmed meetings.</p>
             </div>
         </div>
@@ -49,10 +62,10 @@
     </section>
 
     <!-- My Requests -->
-    <section class="section">
+    <section class="section" id="my-meeting-requests" aria-labelledby="requestsTitle">
         <div class="section-header">
             <div>
-                <h2>My Meeting Requests</h2>
+                <h2 id="requestsTitle"><span class="section-number">03</span> My Meeting Requests</h2>
                 <p>Requests you sent to the HR Manager.</p>
             </div>
         </div>
@@ -60,27 +73,24 @@
         <div id="myRequestsContainer" class="cards-container"></div>
     </section>
 
-</div>
+</main>
 
+<div id="footer-placeholder"></div>
 
 <!-- Request Meeting Modal -->
-<div id="requestFormContainer" class="modal" hidden>
+<div id="requestFormContainer" class="modal" role="dialog" aria-modal="true" aria-labelledby="requestFormTitle" hidden>
     <div class="modal-box">
 
         <div class="modal-header">
             <div>
-                <h2>Request Meeting</h2>
+                <p class="modal-eyebrow">LET’S START A CONVERSATION</p>
+                <h2 id="requestFormTitle">Request Meeting</h2>
                 <p>Send a meeting request to the HR Manager.</p>
             </div>
-            <button class="close-button" type="button" onclick="hideRequestForm()">&times;</button>
+            <button class="close-button" type="button" onclick="hideRequestForm()" aria-label="Close meeting request">&times;</button>
         </div>
 
         <form id="requestMeetingForm">
-            <div class="form-group">
-                <label for="hrManager">Meeting With</label>
-                <input id="hrManager" type="text" readonly>
-            </div>
-
             <div class="form-group">
                 <label for="requestTitle">Meeting Title</label>
                 <input id="requestTitle" type="text" placeholder="Example: Schedule Discussion" required>
@@ -113,5 +123,6 @@
 </div>
 
 <script src="EmployeeMeetings.js"></script>
+<script src="../../Shared/navbar-footer.js"></script>
 </body>
 </html>

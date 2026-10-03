@@ -165,13 +165,6 @@
     <div class="sidebar-bottom">
 
 
-        <!-- Notifications -->
-
-        <a
-            href="/NADA/hrdashboard/hrdashboard.html#notifications"
-            class="sidebar-link">
-        </a>
-
 
         <!-- Profile -->
 
@@ -188,8 +181,20 @@
 </a>
 
 
-        <!-- Logout -->
+        <!-- Theme Toggle -->
+        <button
+            type="button"
+            class="sidebar-link"
+            id="hrThemeToggle"
+            onclick="toggleTheme()"
+            aria-label="Toggle dark mode">
+            <i class="bi bi-moon-stars hr-moon-icon"></i>
+            <i class="bi bi-sun-fill hr-sun-icon"></i>
+            <span class="hr-theme-label-dark">Dark Mode</span>
+            <span class="hr-theme-label-light">Light Mode</span>
+        </button>
 
+        <!-- Logout -->
 <button
     type="button"
     class="sidebar-link"

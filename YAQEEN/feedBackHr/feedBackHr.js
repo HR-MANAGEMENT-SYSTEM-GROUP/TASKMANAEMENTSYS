@@ -1,7 +1,10 @@
 let output=document.getElementById("parent");
-
+let count=document.getElementById("count");
 let feedbacks=JSON.parse(localStorage.getItem("feedbacks")) || [];
-
+let categorySelect=document.getElementById("categorySelect");
+count.textContent=feedbacks.length;
+function displayfeedBacks(feedbacks){
+ output.innerHTML="";
 for(let i=0;i<feedbacks.length;i++){
     
     output.innerHTML+=`
@@ -20,3 +23,23 @@ for(let i=0;i<feedbacks.length;i++){
     
     `
 }
+}
+displayfeedBacks(feedbacks);
+function filterFeedbacks(feedbacks, categorySelect) {
+  if(categorySelect.value=="all"){
+    displayfeedBacks(feedbacks);
+  }
+  else if(categorySelect.value=="suggestion"){
+    displayfeedBacks(feedbacks.filter(feedback=>feedback.category.toLowerCase()==categorySelect.value.toLowerCase()));
+  }
+  else if(categorySelect.value=="Complaint"){
+    displayfeedBacks(feedbacks.filter(feedback=>feedback.category.toLowerCase()==categorySelect.value.toLowerCase()));
+  }
+  else if(categorySelect.value=="Praise"){
+    displayfeedBacks(feedbacks.filter(feedback=>feedback.category.toLowerCase()==categorySelect.value.toLowerCase()));
+  }
+  else if(categorySelect.value=="Other"){
+    displayfeedBacks(feedbacks.filter(feedback=>feedback.category.toLowerCase()==categorySelect.value.toLowerCase()));
+  }}
+
+  categorySelect.addEventListener("click",()=>{filterFeedbacks(feedbacks ,categorySelect)});

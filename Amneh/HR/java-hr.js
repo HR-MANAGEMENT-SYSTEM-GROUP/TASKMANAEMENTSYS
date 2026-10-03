@@ -4,101 +4,28 @@ let searchEmployee = document.getElementById('searchEmployee');
 let statusFilter = document.getElementById('statusFilter');
 let hrRequestsTable = document.getElementById('hrRequestsTable');
 
-function escapeHtml(str) {
-  if (!str) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
-
+// 1. جلب كافة الطلبات من السجل العام الموحد
 function getAllRequests() {
-  let allRequests = [];
-
-  for (let i = 0; i < localStorage.length; i++) {
-    let key = localStorage.key(i);
-    if (key && key.startsWith('requests_')) {
-      try {
-        let userRequests = JSON.parse(localStorage.getItem(key)) || [];
-        allRequests = allRequests.concat(userRequests);
-      } catch (e) {
-        console.error('Error parsing stored requests for key:', key, e);
-      }
-    }
-  }
-
-  return allRequests;
-}
-
-// Helper to open PDF from Base64 via Blob URL
-function openPdfDocument(base64Data, fileName = 'document.pdf') {
   try {
-    let arr = base64Data.split(',');
-    let mime = 'application/pdf';
-    let bstr;
-    if (arr.length > 1) {
-      let mimeMatch = arr[0].match(/:(.*?);/);
-      if (mimeMatch) mime = mimeMatch[1];
-      bstr = atob(arr[1]);
-    } else {
-      bstr = atob(arr[0]);
-    }
-
-    let n = bstr.length;
-    let u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    let blob = new Blob([u8arr], { type: mime });
-    let blobUrl = URL.createObjectURL(blob);
-
-    let win = window.open(blobUrl, '_blank');
-    if (!win || win.closed || typeof win.closed === 'undefined') {
-      let a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
+    return JSON.parse(localStorage.getItem('all_leave_requests')) || [];
   } catch (err) {
-    console.error('Error opening PDF document:', err);
-    alert('Unable to open the attached PDF.');
+    console.error('Error loading all_leave_requests:', err);
+    return [];
   }
 }
-
-// Function to view PDF for HR
-window.openHRPdfAttachment = function(username, requestId) {
-  let storageKey = `requests_${username}`;
-  let userRequests = [];
-  try {
-    userRequests = JSON.parse(localStorage.getItem(storageKey)) || [];
-  } catch (err) {
-    userRequests = [];
-  }
-
-  let req = userRequests.find(r => r.id === requestId);
-  if (!req || !req.attachment) {
-    alert('Attachment not found.');
-    return;
-  }
-
-  openPdfDocument(req.attachment, req.attachmentName || 'document.pdf');
-};
 
 // 2. دالة العرض مع تطبيق الفلاتر (اسم الموظف + حالة الطلب)
 function displayHRRequests() {
   if (!hrRequestsTable) return;
 
   let allRequests = getAllRequests();
-  let searchValue = (searchEmployee ? searchEmployee.value : '').toLowerCase().trim();
+  let searchValue = searchEmployee ? searchEmployee.value.toLowerCase().trim() : '';
   let selectedStatus = statusFilter ? statusFilter.value : 'All';
 
-  // التصفية
+  // التصفية والفرز بحسب اسم الموظف والحالة
   let filteredRequests = allRequests.filter(req => {
-    let userName = (req.user || '').toLowerCase();
+    // 🟢 قراءة الاسم بمرونة لضمان عدم الخروج بـ undefined
+    let userName = (req.userName || req.user || req.name || '').toLowerCase();
     let matchesUser = userName.includes(searchValue);
     let matchesStatus = (selectedStatus === 'All') || (req.status === selectedStatus);
     return matchesUser && matchesStatus;
@@ -109,50 +36,56 @@ function displayHRRequests() {
   if (filteredRequests.length === 0) {
     hrRequestsTable.innerHTML = `
       <tr>
-        <td colspan="7" class="text-center text-muted" style="padding: 24px;">No matching requests found.</td>
+        <td colspan="7" class="text-center text-muted" style="padding: 20px;">No matching requests found.</td>
       </tr>
     `;
     return;
   }
 
-  // الرسم بالجدول
+  // رسم الجدول
   filteredRequests.forEach((req) => {
-    let actionButtons = '<span style="color: #94a3b8;">—</span>';
+    let actionButtons = '—';
+    let displayName = req.userName || req.user || req.name || 'Unknown Employee';
 
+    // استخدام window لربط الدوال مع أزرار الموارد الديناميكية
     if (req.status === 'Pending') {
       actionButtons = `
-        <button class="btn btn-warning btn-sm me-1 btn-approve" onclick="approveRequest('${escapeHtml(req.user)}', ${req.id})">Approve</button>
-        <button class="btn btn-danger btn-sm btn-reject" onclick="rejectRequest('${escapeHtml(req.user)}', ${req.id})">Reject</button>
+        <button class="btn btn-warning btn-sm me-1" onclick="window.approveRequest(${req.id})">Approve</button>
+        <button class="btn btn-danger btn-sm" onclick="window.rejectRequest(${req.id})">Reject</button>
       `;
     } else if (req.status === 'Rejected' && req.rejectionReason) {
       actionButtons = `<small class="text-danger">Reason: ${escapeHtml(req.rejectionReason)}</small>`;
     }
 
-    let attachmentHTML = '<span style="color: #94a3b8;">—</span>';
-    if (req.attachment) {
-      let displayName = req.attachmentName || 'document.pdf';
-      attachmentHTML = `
-        <a href="javascript:void(0)" class="btn-attachment-hr" onclick="openHRPdfAttachment('${escapeHtml(req.user)}', ${req.id})" title="Click to view/download ${escapeHtml(displayName)}">
-          ${escapeHtml(displayName)}
-        </a>
-      `;
-    }
+    let attachmentContent = req.attachment ? 
+      `<a href="${req.attachment}" target="_blank" class="btn btn-sm btn-outline-info">View Attachment</a>` : '—';
 
     let row = `
       <tr>
-        <td><strong>${escapeHtml(req.user)}</strong></td>
-        <td>${escapeHtml(req.type)}</td>
-        <td>${escapeHtml(req.dateTime)}</td>
-        <td>${escapeHtml(req.reason)}</td>
-        <td>${attachmentHTML}</td>
+        <td><strong>${escapeHtml(displayName)}</strong></td>
+        <td>${escapeHtml(req.type || 'N/A')}</td>
+        <td>${escapeHtml(req.dateTime || 'N/A')}</td>
+        <td>${escapeHtml(req.reason || 'N/A')}</td>
+        <td>${attachmentContent}</td>
         <td>
-          <span class="badge ${getStatusBadgeClass(req.status)}">${escapeHtml(req.status)}</span>
+          <span class="badge ${getStatusBadgeClass(req.status)}">${escapeHtml(req.status || 'Pending')}</span>
         </td>
         <td>${actionButtons}</td>
       </tr>
     `;
     hrRequestsTable.innerHTML += row;
   });
+}
+
+// دالة حماية للحد من ثغرات HTML Injection
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 // ألوان التميز للحالات
@@ -163,12 +96,12 @@ function getStatusBadgeClass(status) {
 }
 
 // 3. الموافقة على الطلب
-window.approveRequest = function(username, requestId) {
-  updateRequestStatus(username, requestId, 'Approved');
+window.approveRequest = function(requestId) {
+  updateRequestStatus(requestId, 'Approved');
 };
 
 // 4. رفض الطلب مع إرسال رسالة سبب الرفض
-window.rejectRequest = function(username, requestId) {
+window.rejectRequest = function(requestId) {
   let reason = prompt('Please enter the reason for rejection:');
   
   if (reason === null) return; // تم إلغاء العملية
@@ -177,36 +110,65 @@ window.rejectRequest = function(username, requestId) {
     return;
   }
 
-  updateRequestStatus(username, requestId, 'Rejected', reason.trim());
+  updateRequestStatus(requestId, 'Rejected', reason.trim());
 };
 
-// 5. التعديل والحفظ في LocalStorage
-function updateRequestStatus(username, requestId, newStatus, rejectionReason = '') {
-  let storageKey = `requests_${username}`;
-  let userRequests = [];
-  try {
-    userRequests = JSON.parse(localStorage.getItem(storageKey)) || [];
-  } catch (e) {
-    userRequests = [];
-  }
+// 5. التعديل والحفظ الموحد والمزامن مع الموظف
+function updateRequestStatus(requestId, newStatus, rejectionReason = '') {
+  let targetId = Number(requestId);
 
-  userRequests = userRequests.map(req => {
-    if (req.id === requestId) {
+  // أ) تحديث السجل العام الـ HR
+  let allRequests = getAllRequests();
+  allRequests = allRequests.map(req => {
+    if (Number(req.id) === targetId) {
       req.status = newStatus;
       if (rejectionReason) {
         req.rejectionReason = rejectionReason;
+      } else {
+        delete req.rejectionReason;
       }
     }
     return req;
   });
+  localStorage.setItem('all_leave_requests', JSON.stringify(allRequests));
 
-  localStorage.setItem(storageKey, JSON.stringify(userRequests));
+  // ب) مزامنة الرد مع الموظف في currentUser (إذا كان هو صاحب الطلب المفعل)
+  let currentUser = {};
+  try {
+    currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+  } catch (e) {
+    currentUser = {};
+  }
+
+  if (Array.isArray(currentUser.requests)) {
+    currentUser.requests = currentUser.requests.map(req => {
+      if (Number(req.id) === targetId) {
+        req.status = newStatus;
+        if (rejectionReason) {
+          req.rejectionReason = rejectionReason;
+        } else {
+          delete req.rejectionReason;
+        }
+      }
+      return req;
+    });
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+  }
+
+  alert(`Request updated successfully to ${newStatus}!`);
   displayHRRequests(); // تحديث الجدول فوراً
 }
 
 // الأحداث (Event Listeners) للفلاتر
-if (searchEmployee) searchEmployee.addEventListener('input', displayHRRequests);
-if (statusFilter) statusFilter.addEventListener('change', displayHRRequests);
+if (searchEmployee) {
+  searchEmployee.addEventListener('input', displayHRRequests);
+}
+
+if (statusFilter) {
+  statusFilter.addEventListener('change', displayHRRequests);
+}
 
 // التشغيل الأولي عند فتح الصفحة
-displayHRRequests();
+document.addEventListener('DOMContentLoaded', () => {
+  displayHRRequests();
+});

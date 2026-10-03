@@ -76,6 +76,83 @@
 /* ==========================================================================
    NAVBAR STYLING
    ========================================================================== */
+   /* ==========================================================================
+   FLIP ONLY NAVBAR & FOOTER COLORS
+   Normal Mode = Dark Navbar/Footer
+   Dark Mode   = Light Navbar/Footer
+   ========================================================================== */
+
+/* Normal mode: navbar/footer dark */
+.journey-header,
+.journey-footer-container {
+    --ink: #FFFFFF;
+    --body: #CBD5E1;
+    --line: rgba(255, 255, 255, 0.15);
+    --bg: #0E1626;
+    --hdr-ink: #FFFFFF;
+
+    --glass: rgba(255, 255, 255, 0.08);
+    --glass-line: rgba(255, 255, 255, 0.18);
+    --glass-text: #CBD5E1;
+    --glass-active: #3B9EFF;
+
+    --hbtn-bg: #FFFFFF;
+    --hbtn-color: #172033;
+    --hbtn-border: #FFFFFF;
+    --hbtn-hbg: #3B9EFF;
+    --hbtn-hcolor: #172033;
+
+    --logo-tile: #FFFFFF;
+    --logo-m: #172033;
+    --logo-word: #FFFFFF;
+
+    background: #0E1626 !important;
+    color: #FFFFFF !important;
+}
+
+.journey-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+.journey-footer-container {
+    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Dark mode: navbar/footer light */
+:root[data-theme="dark"] .journey-header,
+:root[data-theme="dark"] .journey-footer-container {
+    --ink: #172033;
+    --body: #64748B;
+    --line: #E2E8F0;
+    --bg: #F7FAFC;
+    --hdr-ink: #172033;
+
+    --glass: rgba(255, 255, 255, 0.9);
+    --glass-line: #E2E8F0;
+    --glass-text: #64748B;
+    --glass-active: #0079F1;
+
+    --hbtn-bg: #FFFFFF;
+    --hbtn-color: #0079F1;
+    --hbtn-border: #0079F1;
+    --hbtn-hbg: #0079F1;
+    --hbtn-hcolor: #FFFFFF;
+
+    --logo-tile: #172033;
+    --logo-m: #FFFFFF;
+    --logo-word: #172033;
+
+    background: #F7FAFC !important;
+    color: #172033 !important;
+}
+
+:root[data-theme="dark"] .journey-header {
+    border-bottom: 1px solid #E2E8F0 !important;
+}
+
+:root[data-theme="dark"] .journey-footer-container {
+    border-top: 1px solid #E2E8F0 !important;
+}
 .journey-header {
   position: relative;
   width: 100%;
@@ -102,6 +179,13 @@
   gap: 12px;
 }
 
+.masar-logo-img {
+  display: block;
+  height: 34px;
+  width: auto;
+  object-fit: contain;
+}
+
 .masar-lockup {
   display: block;
   height: 34px;
@@ -114,7 +198,38 @@
 .ml-word { stroke: var(--logo-word); }
 
 @media (max-width: 820px) {
-  .masar-lockup { height: 28px; }
+  .masar-lockup,
+  .masar-logo-img { height: 28px; }
+}
+
+/* ==========================================================================
+   LOGO THEME SWITCHING (PURE CSS - NO JS)
+   - Normal Mode: Navbar & Footer have dark background (#0E1626)
+     -> Show logo with white text/tile (.logo-dark-bg: masar-logo-dark.svg)
+     -> Hide logo with dark text/tile (.logo-light-bg: masar-logo.svg)
+   - Dark Mode (:root[data-theme="dark"]): Navbar & Footer have light background (#F7FAFC)
+     -> Show logo with dark text/tile (.logo-light-bg: masar-logo.svg)
+     -> Hide logo with white text/tile (.logo-dark-bg: masar-logo-dark.svg)
+   ========================================================================== */
+
+.journey-header .logo-dark-bg,
+.journey-footer-container .logo-dark-bg {
+  display: block !important;
+}
+
+.journey-header .logo-light-bg,
+.journey-footer-container .logo-light-bg {
+  display: none !important;
+}
+
+:root[data-theme="dark"] .journey-header .logo-dark-bg,
+:root[data-theme="dark"] .journey-footer-container .logo-dark-bg {
+  display: none !important;
+}
+
+:root[data-theme="dark"] .journey-header .logo-light-bg,
+:root[data-theme="dark"] .journey-footer-container .logo-light-bg {
+  display: block !important;
 }
 
 .journey-nav-menu {
@@ -243,7 +358,13 @@ html.theme-anim * {
   display: block;
   height: 34px;
   width: auto;
+  object-fit: contain;
   margin-bottom: 16px;
+}
+
+.foot-logo-link {
+  display: inline-block;
+  text-decoration: none;
 }
 
 .foot-grid {

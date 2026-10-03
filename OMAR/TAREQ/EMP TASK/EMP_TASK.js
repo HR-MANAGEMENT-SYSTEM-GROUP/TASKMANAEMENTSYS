@@ -383,7 +383,7 @@ function createTaskCard(task) {
     const statusClass =    getStatusClass(status);
     const priorityClass =  getPriorityClass(priority);
     const isLocked = isTaskLocked(task);
-    const canDrag = !isLocked;
+    const canDrag =!isLocked && status !== "Submitted" && status !== "Completed";
 
     return `
         <article
@@ -468,30 +468,44 @@ function handleDrop(event) {
 
  const newStatus =   column.dataset.dropStatus;   moveTaskByDrag(taskId, newStatus);}
 
+
 function moveTaskByDrag(taskId, newStatus) {
 
     const task = getTaskById(taskId);
 
-    if (!task) {    return; }
+    if (!task) {  return; }
 
-    const oldStatus = normalizeStatus(task.status);
-    newStatus = normalizeStatus(newStatus);
+    const oldStatus =   normalizeStatus(task.status);
 
-    if (newStatus === "Completed") { alert("Only HR can approve tasks as Completed."); return;   }
+    newStatus =  normalizeStatus(newStatus);
 
-    if (isTaskLocked(task)) {  alert("This task cannot be moved.");  return;   }
+    if (newStatus === "Completed") {   alert("Only HR can approve tasks as Completed."); return;}
+
+    if (oldStatus === "Submitted") {   alert("Submitted tasks are waiting for HR review.");   return;}
+
+    if (isTaskLocked(task)) {  alert("This task cannot be moved.");  return; }
+
+    if (newStatus === "Pending") {
+
+        if (  oldStatus === "New" ||  oldStatus === "Pending" ||  oldStatus === "Not Complete" ) {    return; }
+
+      alert("You cannot move this task back."); return;}
+
+    if (newStatus === "In Progress") {
+
+        if (  oldStatus === "New" ||   oldStatus === "Pending" ||  oldStatus === "Not Complete" ) {
+
+ updateTaskStatus(    task,     "In Progress",   "Employee moved task to In Progress."  );    return; }
+
+        alert("This task cannot be moved to In Progress.");  return; }
 
     if (newStatus === "Submitted") {
 
-        if (!hasValidSubmission(task)) {  alert("Please write a solution or upload a file/image before submitting.")
-            selectedTaskId = Number(taskId);  openTask(taskId);    return;  }
+  if (oldStatus !== "In Progress") {   alert("Only In Progress tasks can be submitted.");  return; }
 
-        updateTaskStatus(   task,   "Submitted",  "Employee moved task to Submitted." );  return; }
+ if (!hasValidSubmission(task)) { alert("Please open the task, write a solution or upload a file, then submit it.");  return;}
 
-    if (newStatus === "In Progress") { updateTaskStatus( task, "In Progress","Employee moved task to In Progress.");    return; }
-
-    if (newStatus === "Pending") {  updateTaskStatus( task, "Pending","Employee moved task to New / Pending.");  return;  }
-}
+ updateTaskStatus( task, "Submitted",  "Employee moved task to Submitted." );return; }}
 function updateTaskStatus(task, newStatus, historyMessage) {
 
     task.status = newStatus;

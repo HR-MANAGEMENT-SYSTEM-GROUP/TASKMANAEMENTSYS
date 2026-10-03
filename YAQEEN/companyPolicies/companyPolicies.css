@@ -1,199 +1,90 @@
-
-:root {
-  --lb-bg: #f8fafc;
-  --lb-surface: #ffffff;
-  --lb-surface-muted: #f1f5f9;
-  --lb-border: #e2e8f0;
-  --lb-border-subtle: rgba(15, 23, 42, 0.08);
-  --lb-text: #0f172a;
-  --lb-text-secondary: #475569;
-  --lb-text-muted: #94a3b8;
-  --lb-primary: #2563eb;
-  --lb-primary-dark: #1d4ed8;
-  --lb-primary-light: #eff6ff;
-  --lb-primary-border: #bfdbfe;
-  --lb-navy-deep: #0b1f3a;
-  --lb-navy-card: #0f172a;
-  --lb-gold: #f59e0b;
-  --lb-gold-light: #fef3c7;
-  --lb-danger: #dc2626;
-  --lb-danger-light: #fef2f2;
-  --lb-success: #059669;
-  --lb-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --lb-font: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-
-/* ---------- Base ---------- */
-body {
-  font-family: var(--lb-font);
-  background: var(--lb-bg);
-  color: var(--lb-text);
-  -webkit-font-smoothing: antialiased;
-}
-h1, h2, h3, .btn, .form-control, .form-label { font-family: var(--lb-font); }
-
-/* ---------- Header ---------- */
-.page-header {
-  position: relative;
-  overflow: hidden;
-  padding: 64px 0 110px;
-  color: #fff;
-  background: linear-gradient(135deg, var(--lb-primary-dark), var(--lb-primary));
-}
-.page-header::before,
-.page-header::after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.07);
-  pointer-events: none;
-}
-.page-header::before { width: 340px; height: 340px; top: -150px; right: -80px; }
-.page-header::after  { width: 200px; height: 200px; bottom: -110px; left: 8%; }
-.page-header .container { position: relative; z-index: 1; }
-
-.page-eyebrow {
-  margin: 0 0 8px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--lb-primary-border);
-}
-.page-title {
-  margin: 0 0 10px;
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-.page-subtitle {
+/* Company policies, styled like the employee meetings page (OMAR/EmployeeMeetings).
+   Colors and fonts come from /Shared/navbar-footer.css (--accent, --head, --text, ...).
+   The policy cards are built by companyPolicies.js, so the card rules follow its markup. */
+.company-policies {
+  /* Cards stay light in both themes, like the meetings page. */
+  --card-bg: #fff;
+  --card-ink: #172033;
+  --card-body: #64748B;
+  --card-line: #E2E8F0;
+  --card-tint: #E8F3FF;
   margin: 0;
-  max-width: 520px;
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 1.02rem;
+  font-family: var(--text);
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .35s;
 }
+html { background: var(--bg); }
+.company-policies :focus-visible { outline: 2px solid var(--on-bg); outline-offset: 3px; }
 
-/* ---------- Main + toolbar ---------- */
-.page-main { margin-top: -52px; padding-bottom: 72px; position: relative; z-index: 2; }
+/* ---------- Page header ---------- */
+.company-policies .page { width: min(1200px, calc(100% - 64px)); margin: 30px auto 72px; }
+.company-policies .page-header { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 12px 0 28px; color: var(--hdr-ink); }
+.company-policies .page-header > div:first-child { max-width: 680px; }
+.company-policies h1 { margin: 0 0 16px; font: 700 clamp(32px, 4vw, 48px)/1.15 var(--head); letter-spacing: -.025em; color: var(--hdr-ink); }
+.company-policies .subtitle { max-width: 570px; margin: 0; color: var(--glass-text); font-size: 15px; line-height: 1.75; }
 
+/* ---------- Search ---------- */
+.company-policies .search-box { position: relative; flex: 0 1 340px; }
+.company-policies .search-box .bi { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); line-height: 1; color: var(--accent); font-size: 15px; pointer-events: none; }
+.company-policies .search-box input { width: 100%; min-height: 46px; padding: 11px 16px 11px 42px; border: 1px solid var(--card-line); border-radius: 8px; background: var(--card-bg); color: var(--card-ink); font: 14px var(--text); box-shadow: var(--shadow); }
+.company-policies .search-box input::placeholder { color: #94A3B8; }
+.company-policies .search-box input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .12); }
 
-.search-box { position: relative; }
-.search-box .bi {
-  position: absolute;
-  left: 16px; top: 50%;
-  transform: translateY(-50%);
-  color: var(--lb-text-muted);
-  pointer-events: none;
-}
-.search-box .form-control { padding-left: 44px; }
+/* ---------- Section ---------- */
+.company-policies .section { margin-bottom: 38px; }
+.company-policies .section-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 18px; }
+.company-policies .section-header h2 { margin: 0; font: 700 24px/1.3 var(--head); letter-spacing: -.02em; color: var(--hdr-ink); }
+.company-policies .section-number { display: inline-block; margin-right: 8px; font-size: 14px; color: var(--on-bg); vertical-align: middle; }
+.company-policies .section-header p { margin: 7px 0 0 30px; color: var(--glass-text); font-size: 13px; }
+.company-policies .section-badge { display: inline-flex; align-items: center; gap: 7px; padding: 6px 11px; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-line); color: var(--glass-text); font: 700 11px/1.5 var(--head); white-space: nowrap; }
 
-
-
-
-
-/* ---------- Buttons ---------- */
-.btn {
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  padding: 10px 18px;
-  display: inline-flex;
+/* ---------- Policy cards ---------- */
+.company-policies .policy-card { display: flex; flex-direction: column; padding: 24px; background: var(--card-bg); border: 1px solid var(--card-line); box-shadow: 0 4px 14px rgba(23,32,51,.04); transition: border-color .2s, box-shadow .2s; }
+.company-policies .policy-card:hover { border-color: #B1D7FF; box-shadow: 0 8px 22px rgba(23,32,51,.08); }
+.company-policies .policy-desc { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.company-policies .policy-title { margin: 0 0 14px; color: var(--card-ink); font: 700 18px/1.45 var(--head); overflow-wrap: anywhere; }
+.company-policies .policy-icon { display: inline-flex; justify-content: center; align-items: center; width: 42px; height: 42px; flex-shrink: 0; margin-right: 5px; border-radius: 10px; background: var(--card-tint); color: var(--accent); font-size: 20px; }
+.company-policies .card-text { flex: 1; margin: 0; padding-bottom: 20px; border-bottom: 1px solid var(--card-line); color: var(--card-body); font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.company-policies .policy-card .btn {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--accent);
+  --bs-btn-border-color: var(--accent);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--accent-hover);
+  --bs-btn-hover-border-color: var(--accent-hover);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--accent-d);
+  --bs-btn-active-border-color: var(--accent-d);
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  transition: background .2s var(--lb-ease), color .2s, border-color .2s, transform .2s var(--lb-ease), box-shadow .2s;
-}
-.btn:active { transform: translateY(1px); }
-.btn:focus-visible { outline: 0; box-shadow: 0 0 0 4px var(--lb-primary-border); }
-
-.btn-lb {
-  background: var(--lb-primary);
-  border: 1px solid var(--lb-primary);
-  color: #fff;
-}
-.btn-lb:hover { background: var(--lb-primary-dark); border-color: var(--lb-primary-dark); color: #fff; }
-
-.btn-lb-soft {
-  background: var(--lb-primary-light);
-  border: 1px solid var(--lb-primary-border);
-  color: var(--lb-primary-dark);
-}
-.btn-lb-soft:hover { background: var(--lb-primary); border-color: var(--lb-primary); color: #fff; }
-
-.btn-lb-danger {
-  background: var(--lb-danger-light);
-  border: 1px solid rgba(220, 38, 38, 0.2);
-  color: var(--lb-danger);
-}
-.btn-lb-danger:hover { background: var(--lb-danger); border-color: var(--lb-danger); color: #fff; }
-.btn-lb-danger:focus-visible { box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2); }
-
-/* ---------- Policy card ---------- */
-.policy-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: var(--lb-surface);
-  border: 1px solid var(--lb-border);
-  border-radius: 18px;
-  padding: 24px;
-  box-shadow: 0 1px 2px var(--lb-border-subtle);
-  transition: transform .3s var(--lb-ease), box-shadow .3s var(--lb-ease), border-color .3s;
-  animation: cardIn .45s var(--lb-ease) both;
-}
-.policy-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--lb-primary-border);
-  box-shadow: 0 1px 2px var(--lb-border-subtle), 0 18px 36px -16px rgba(37, 99, 235, 0.25);
+  width: 100%;
+  min-height: 42px;
+  margin-top: 16px;
+  padding: 10px 18px;
+  border-radius: 8px !important; /* the JS adds .rounded-pill, which is !important too */
+  font-size: 13px;
+  font-weight: 600;
 }
 
-.policy-icon {
-  width: 46px; height: 46px;
-  display: grid; place-items: center;
-  margin-bottom: 18px;
-  border-radius: 12px;
-  background: var(--lb-primary-light);
-  border: 1px solid var(--lb-primary-border);
-  color: var(--lb-primary);
-  font-size: 1.3rem;
+/* ---------- Responsive ---------- */
+@media (max-width: 950px) {
+  .company-policies .page-header { flex-wrap: wrap; gap: 22px; }
+  .company-policies .search-box { flex-basis: 100%; }
 }
-.policy-title {
-  margin: 0 0 8px;
-  font-size: 1.12rem;
-  font-weight: 700;
-  line-height: 1.3;
-  color: var(--lb-text);
-  overflow-wrap: anywhere;
+@media (max-width: 650px) {
+  .company-policies .page { width: calc(100% - 32px); margin-top: 14px; margin-bottom: 40px; }
+  .company-policies .page-header { padding: 8px 0 24px; }
+  .company-policies .subtitle { font-size: 13px; }
+  .company-policies .section-header { align-items: flex-start; }
+  .company-policies .section-header h2 { font-size: 20px; }
+  .company-policies .section-header p { font-size: 12px; margin-left: 0; }
+  .company-policies .section-badge { display: none; }
 }
-.policy-desc {
-  margin: 0 0 22px;
-  font-size: 0.93rem;
-  line-height: 1.65;
-  color: var(--lb-text-secondary);
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  overflow-wrap: anywhere;
+@media (prefers-reduced-motion: reduce) {
+  .company-policies *, .company-policies *::before, .company-policies *::after { transition: none !important; }
 }
-.policy-actions {
-  margin-top: auto;
-  padding-top: 18px;
-  border-top: 1px solid var(--lb-border);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.policy-actions .btn { padding: 9px 14px; font-size: 0.85rem; }
-.policy-actions .btn-lb-soft { flex: 1 1 auto; }
-
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: none; }
-}
-@keyframes newRing {
-  0%   { box-shadow: 0 0 0 4px var(--lb-gold-light), 0 0 0 5px var(--lb-gold); }
-  100% { box-shadow: 0 0 0 0 transparent; }
-}
-
-

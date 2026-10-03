@@ -9,35 +9,17 @@
   // كود النافبار (تم استبدال كلمة Profile وجعل اسم المستخدم هو الزر الذي يوجه للبروفايل)
   const navbarHTML = `
   <header class="journey-header">
-    <a href="${BASE_PATH}home.html" class="journey-logo" aria-label="Masar — home">
-      <svg class="masar-lockup" viewBox="0 0 332.6 56" role="img" aria-label="Masar" focusable="false">
-        <g transform="scale(0.875)">
-          <rect class="ml-tile" width="64" height="64" rx="16"/>
-          <g transform="translate(0 -2.4)">
-            <path class="ml-m" d="M14 48V17L32 38L50 17V48" fill="none" stroke-width="6.6" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle class="ml-hollow" cx="14" cy="48" r="5" stroke="#0079F1" stroke-width="3"/>
-            <circle cx="50" cy="48" r="7.6" fill="#0079F1"/>
-            <circle cx="50" cy="48" r="2.7" fill="#fff"/>
-          </g>
-        </g>
-        <g transform="translate(81.3 6)">
-          <g class="ml-word" fill="none" stroke-width="6.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M0 44V0L21 27L42 0V44"/>
-            <path transform="translate(56 0)" d="M0 44L21 0L42 44M6.2 31H35.8"/>
-            <path transform="translate(112 0)" d="M30 9C27 3.4 22 0 16.4 0C8 0 2.6 4.6 2.6 11.2C2.6 18.6 9.4 20.8 16 22.4C23.4 24.2 30 26.4 30 33.4C30 40 24.4 44 16.2 44C9.6 44 4.2 41 1.4 35"/>
-            <path transform="translate(158 0)" d="M0 44L21 0L42 44M6.2 31H35.8"/>
-            <path transform="translate(214 0)" d="M0 44V0H18A12.5 12.5 0 0 1 18 25H0M17 25L33 44"/>
-          </g>
-        </g>
-      </svg>
+    <a href="${BASE_PATH}../../NADA/home/home.html" class="journey-logo" aria-label="Masar — home">
+      <img src="${BASE_PATH}../../assets/masar-logo-dark.svg" alt="Masar" class="masar-logo-img logo-dark-bg" height="34" onerror="this.src='${BASE_PATH}../../Shared/masar-logo-dark.svg'">
+      <img src="${BASE_PATH}../../assets/masar-logo.svg" alt="Masar" class="masar-logo-img logo-light-bg" height="34" onerror="this.src='${BASE_PATH}../../Shared/masar-logo.svg'">
     </a>
 
     <nav class="journey-nav-menu" aria-label="Main">
-      <a href="${BASE_PATH}home.html" class="nav-menu-link">Home</a>
-      <a href="${BASE_PATH}home.html#stop-1" class="nav-menu-link">About us</a>
-      <a href="${BASE_PATH}home.html#stop-2" class="nav-menu-link">Services</a>
-      <a href="${BASE_PATH}team.html" class="nav-menu-link">Team</a>
-      <a href="${BASE_PATH}home.html#stop-4" class="nav-menu-link">Contact us</a>
+      <a href="${BASE_PATH}../../NADA/home/home.html" class="nav-menu-link">Home</a>
+      <a href="${BASE_PATH}../../NADA/home/home.html" class="nav-menu-link">About us</a>
+      <a href="${BASE_PATH}../../NADA/home/home.html" class="nav-menu-link">Services</a>
+      <a href="${BASE_PATH}../../NADA/home/team.html" class="nav-menu-link">Team</a>
+      <a href="${BASE_PATH}../../NADA/home/home.html" class="nav-menu-link">Contact us</a>
     </nav>
 
     <div class="header-actions">
@@ -75,8 +57,9 @@
   <footer class="journey-footer-container">
     <div class="foot-grid">
       <div>
-        <a href="${BASE_PATH}home.html" aria-label="Masar — back to start">
-          <img src="${BASE_PATH}MASAR.png" alt="Masar" class="foot-logo" onerror="this.style.display='none'">
+        <a href="${BASE_PATH}../../NADA/home/home.html" aria-label="Masar — back to start" class="foot-logo-link">
+          <img src="${BASE_PATH}../../assets/masar-logo-dark.svg" alt="Masar" class="foot-logo logo-dark-bg" height="34" onerror="this.src='${BASE_PATH}../../Shared/masar-logo-dark.svg'">
+          <img src="${BASE_PATH}../../assets/masar-logo.svg" alt="Masar" class="foot-logo logo-light-bg" height="34" onerror="this.src='${BASE_PATH}../../Shared/masar-logo.svg'">
         </a>
         <p>Empowering people and simplifying HR for modern teams.</p>
         <div class="socials">
@@ -88,11 +71,11 @@
       <div>
         <h3>Quick Links</h3>
         <ul class="plain">
-          <li><a href="${BASE_PATH}home.html">Home</a></li>
-          <li><a href="${BASE_PATH}home.html#stop-1">About</a></li>
-          <li><a href="${BASE_PATH}home.html#stop-2">Services</a></li>
+          <li><a href="${BASE_PATH}../../NADA/home/home.html">Home</a></li>
+          <li><a href="${BASE_PATH}../../NADA/home/home.html">About</a></li>
+          <li><a href="${BASE_PATH}../../NADA/home/home.html">Services</a></li>
           <li><a href="${BASE_PATH}../../YAQEEN/companyPolicies/companyPolicies.html">Policies</a></li>
-          <li><a href="${BASE_PATH}team.html" class="accent">Meet the Team &nearr;</a></li>
+          <li><a href="${BASE_PATH}../../NADA/home/team.html" class="accent">Meet the Team &nearr;</a></li>
         </ul>
       </div>
       <div>

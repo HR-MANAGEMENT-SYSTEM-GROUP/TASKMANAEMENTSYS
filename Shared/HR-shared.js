@@ -1,3 +1,28 @@
+// ================= THEME (LIGHT / DARK) =================
+(function initTheme() {
+    try {
+        const savedTheme = localStorage.getItem("theme") || localStorage.getItem("journey-theme");
+        if (savedTheme === "dark") {
+            document.documentElement.setAttribute("data-theme", "dark");
+        }
+    } catch (e) {}
+})();
+
+function toggleTheme() {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const newTheme = isDark ? "light" : "dark";
+    if (newTheme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+        document.documentElement.removeAttribute("data-theme");
+    }
+    try {
+        localStorage.setItem("theme", newTheme);
+        localStorage.setItem("journey-theme", newTheme);
+    } catch (e) {}
+}
+window.toggleTheme = toggleTheme;
+
 document.addEventListener("DOMContentLoaded", () => {
     loadHRShared();
 });
