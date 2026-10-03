@@ -16,3 +16,25 @@ body {
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
+
+/* Dark theme overrides */
+:root[data-theme="dark"] body {
+    background-color: #0B1120;
+    color: #F8FAFC;
+}
+
+:root[data-theme="dark"] #meet {
+    border-color: #334155;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) body {
+        background-color: #0B1120;
+        color: #F8FAFC;
+    }
+    :root:not([data-theme="light"]) #meet {
+        border-color: #334155;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+}

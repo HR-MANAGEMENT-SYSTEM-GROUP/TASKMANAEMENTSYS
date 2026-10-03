@@ -1784,3 +1784,253 @@ label {
     }
 
 }
+
+
+/* =========================================================
+   DARK THEME OVERRIDES
+   Activated via :root[data-theme="dark"]
+========================================================= */
+
+/* ---------- Body & Page Background ---------- */
+:root[data-theme="dark"] body {
+    background:
+        radial-gradient(circle at top left, rgba(1, 121, 241, 0.08), transparent 30%),
+        linear-gradient(135deg, #0B1120 0%, #0F172A 100%) !important;
+    color: #E2E8F0 !important;
+}
+
+/* ---------- Hero Section ---------- */
+:root[data-theme="dark"] .hr-task-hero {
+    background:
+        radial-gradient(
+            circle at 10% 20%,
+            rgba(1, 121, 241, 0.12),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #131E35 0%,
+            #0F172A 100%
+        ) !important;
+    border-color: #1E3A5F !important;
+    border-bottom-color: var(--primary) !important;
+}
+
+:root[data-theme="dark"] .hr-task-hero h1 {
+    color: #F1F5F9 !important;
+}
+
+:root[data-theme="dark"] .hr-task-hero p {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .hero-pill {
+    background: rgba(1, 121, 241, 0.15) !important;
+    border-color: #1E3A5F !important;
+    color: #4DA3FF !important;
+}
+
+:root[data-theme="dark"] .hero-status-pill {
+    background: #131E35 !important;
+    border-color: #1E3A5F !important;
+    color: #E2E8F0 !important;
+}
+
+:root[data-theme="dark"] .hero-status-pill:hover {
+    border-color: var(--primary) !important;
+}
+
+:root[data-theme="dark"] .hero-status-pill i {
+    color: #4DA3FF !important;
+}
+
+/* ---------- Stat Cards ---------- */
+:root[data-theme="dark"] .stat-card {
+    background: #131E35 !important;
+    border-color: #1E3A5F !important;
+    border-bottom-color: var(--primary) !important;
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.2),
+        0 14px 30px rgba(1, 121, 241, 0.08) !important;
+}
+
+:root[data-theme="dark"] .stat-card::after {
+    background: #131E35 !important;
+}
+
+:root[data-theme="dark"] .stat-card h6 {
+    color: #CBD5E1 !important;
+}
+
+:root[data-theme="dark"] .stat-card h2 {
+    color: #F1F5F9 !important;
+}
+
+:root[data-theme="dark"] .stat-card:hover {
+    box-shadow:
+        0 20px 45px rgba(1, 121, 241, 0.16),
+        0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ---------- Section Titles ---------- */
+:root[data-theme="dark"] .d-flex.justify-content-between.mb-3 h2 {
+    color: #F1F5F9 !important;
+}
+
+/* ---------- Labels & Form Inputs ---------- */
+:root[data-theme="dark"] label {
+    color: #CBD5E1 !important;
+}
+
+:root[data-theme="dark"] .form-control,
+:root[data-theme="dark"] .form-select {
+    background: #0F172A !important;
+    border-color: #1E3A5F !important;
+    color: #E2E8F0 !important;
+}
+
+:root[data-theme="dark"] .form-control:focus,
+:root[data-theme="dark"] .form-select:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 4px rgba(1, 121, 241, 0.15) !important;
+}
+
+:root[data-theme="dark"] .form-control::placeholder {
+    color: #64748B !important;
+}
+
+/* ---------- Table Card ---------- */
+:root[data-theme="dark"] .table-card {
+    background: #131E35 !important;
+    border-color: #1E3A5F !important;
+    border-bottom-color: var(--primary) !important;
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.2),
+        0 18px 42px rgba(1, 121, 241, 0.06) !important;
+}
+
+:root[data-theme="dark"] .table-card::after {
+    background: #131E35 !important;
+}
+
+:root[data-theme="dark"] .table thead th {
+    color: #94A3B8 !important;
+    border-color: #1E3A5F !important;
+}
+
+:root[data-theme="dark"] .table tbody tr {
+    background: #0F172A !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+:root[data-theme="dark"] .table tbody tr:hover {
+    box-shadow: 0 8px 20px rgba(1, 121, 241, 0.12) !important;
+}
+
+:root[data-theme="dark"] .table tbody td {
+    color: #E2E8F0 !important;
+    border-color: #1E293B !important;
+}
+
+:root[data-theme="dark"] .table tbody td b {
+    color: #F1F5F9 !important;
+}
+
+:root[data-theme="dark"] .table tbody td small {
+    color: #94A3B8 !important;
+}
+
+/* ---------- Modals ---------- */
+:root[data-theme="dark"] .modal-content {
+    background: #131E35 !important;
+    border-color: #1E3A5F !important;
+}
+
+:root[data-theme="dark"] .modal-content::after {
+    background: #131E35 !important;
+}
+
+:root[data-theme="dark"] .modal-header {
+    background: linear-gradient(135deg, #0F172A, #131E35) !important;
+    border-bottom-color: #1E3A5F !important;
+}
+
+:root[data-theme="dark"] .modal-header h4 {
+    color: #F1F5F9 !important;
+}
+
+:root[data-theme="dark"] .modal-body {
+    color: #E2E8F0 !important;
+}
+
+:root[data-theme="dark"] .modal-body h3 {
+    color: #F1F5F9 !important;
+}
+
+:root[data-theme="dark"] .btn-close {
+    filter: invert(1) !important;
+}
+
+/* ---------- Employee List / Select ---------- */
+:root[data-theme="dark"] #employeeList,
+:root[data-theme="dark"] #editEmployeeList {
+    background: #0F172A !important;
+    border-color: #1E3A5F !important;
+}
+
+:root[data-theme="dark"] .employee-select-control,
+:root[data-theme="dark"] .employee-select-btn {
+    background: #0F172A !important;
+    border-color: #1E3A5F !important;
+    color: #E2E8F0 !important;
+}
+
+:root[data-theme="dark"] .employee-select-dropdown,
+:root[data-theme="dark"] .employee-select-menu {
+    background: #131E35 !important;
+    border-color: #1E3A5F !important;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.4) !important;
+}
+
+:root[data-theme="dark"] .employee-option,
+:root[data-theme="dark"] .employee-check-row {
+    color: #E2E8F0 !important;
+}
+
+:root[data-theme="dark"] .employee-option:hover,
+:root[data-theme="dark"] .employee-check-row:hover {
+    background: rgba(1, 121, 241, 0.12) !important;
+    color: #4DA3FF !important;
+}
+
+:root[data-theme="dark"] .select-all-option,
+:root[data-theme="dark"] .select-all-row {
+    background: rgba(1, 121, 241, 0.12) !important;
+    border-color: #1E3A5F !important;
+    color: #4DA3FF !important;
+}
+
+/* ---------- Form Checks ---------- */
+:root[data-theme="dark"] .form-check:hover {
+    background: rgba(1, 121, 241, 0.08) !important;
+}
+
+:root[data-theme="dark"] .form-check-label {
+    color: #CBD5E1 !important;
+}
+
+/* ---------- Scrollbar ---------- */
+:root[data-theme="dark"] .employee-select-dropdown::-webkit-scrollbar-track,
+:root[data-theme="dark"] .employee-select-menu::-webkit-scrollbar-track {
+    background: #0F172A !important;
+}
+
+:root[data-theme="dark"] .employee-select-dropdown::-webkit-scrollbar-thumb,
+:root[data-theme="dark"] .employee-select-menu::-webkit-scrollbar-thumb {
+    background: rgba(1, 121, 241, 0.35) !important;
+}
+
+/* ---------- Blocked Row ---------- */
+:root[data-theme="dark"] .blocked-row {
+    opacity: 0.6;
+}

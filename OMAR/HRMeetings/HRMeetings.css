@@ -284,32 +284,253 @@
     .hr-meetings-page *, .hr-meetings-page *::before, .hr-meetings-page *::after { transition: none !important; animation: none !important; }
 }
 
-/* ================= DARK THEME OVERRIDES ================= */
-:root[data-theme="dark"] .hr-meetings-page .section,
-:root[data-theme="dark"] .hr-meetings-page .meeting-card {
+/* =========================================================
+   DARK THEME OVERRIDES
+   Activated via :root[data-theme="dark"]
+========================================================= */
+
+:root[data-theme="dark"] .hr-meetings-page {
+    --meeting-bg: #0B132B;
+    --meeting-surface: #131E35;
+    --meeting-ink: #F8FAFC;
+    --meeting-body: #94A3B8;
+    --meeting-muted: #64748B;
+    --meeting-line: #334155;
+    --meeting-tint: rgba(1, 121, 241, 0.12);
+    --meeting-tint-border: #1E3A5F;
+    background: #0B132B !important;
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page body {
+    background: #0B132B !important;
+    color: #F8FAFC !important;
+}
+
+/* ---------- Page Header / Hero Banner ---------- */
+:root[data-theme="dark"] .hr-meetings-page .page-header {
+    background: linear-gradient(135deg, #131E35, #0B132B) !important;
+    border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .page-title {
+    color: #FFFFFF !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .page-subtitle {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .page-eyebrow {
+    color: #60A5FA !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .header-meta-pill {
     background: #131E35 !important;
     border-color: #334155 !important;
     color: #F8FAFC !important;
 }
 
-:root[data-theme="dark"] .hr-meetings-page .section-header h2,
+/* ---------- Sections & Cards ---------- */
+:root[data-theme="dark"] .hr-meetings-page .section {
+    background: #131E35 !important;
+    border-color: #334155 !important;
+    border-bottom-color: var(--primary) !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .section-header {
+    border-bottom-color: #1E293B !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .section-header h2 {
+    color: #FFFFFF !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .section-header p {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .section-icon {
+    background: rgba(1, 121, 241, 0.15) !important;
+    border-color: #1E3A5F !important;
+    color: #60A5FA !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .section-badge {
+    background: rgba(1, 121, 241, 0.15) !important;
+    border-color: #1E3A5F !important;
+    color: #60A5FA !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .meeting-card {
+    background: linear-gradient(160deg, #131E35, #0F172A) !important;
+    border-color: #334155 !important;
+    border-bottom-color: var(--primary) !important;
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .meeting-card:hover {
+    border-color: var(--primary) !important;
+    box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.5) !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .meeting-card-header {
+    border-bottom-color: #1E293B !important;
+}
+
 :root[data-theme="dark"] .hr-meetings-page .meeting-card h3 {
     color: #FFFFFF !important;
 }
 
-:root[data-theme="dark"] .hr-meetings-page .section-header p,
-:root[data-theme="dark"] .hr-meetings-page .meeting-card p {
+:root[data-theme="dark"] .hr-meetings-page .meeting-info {
     color: #94A3B8 !important;
 }
 
-:root[data-theme="dark"] .hr-meetings-page .view-item {
-    background: #17243E !important;
-    border-color: #334155 !important;
+:root[data-theme="dark"] .hr-meetings-page .meeting-info strong {
+    color: #64748B !important;
 }
 
-:root[data-theme="dark"] .hr-meetings-page .view-participant {
+:root[data-theme="dark"] .hr-meetings-page .meeting-info span {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .notes-preview {
+    background: #0B132B !important;
+    border-color: #334155 !important;
+    color: #94A3B8 !important;
+}
+
+/* ---------- Status Badges ---------- */
+:root[data-theme="dark"] .hr-meetings-page .status-upcoming {
+    background: rgba(1, 121, 241, 0.18) !important;
+    color: #60A5FA !important;
+    border-color: #1E3A5F !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .status-pending {
+    background: rgba(245, 158, 11, 0.18) !important;
+    color: #FCD34D !important;
+    border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .status-accepted {
+    background: rgba(22, 163, 74, 0.18) !important;
+    color: #86EFAC !important;
+    border-color: rgba(22, 163, 74, 0.3) !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .status-rejected {
+    background: rgba(220, 38, 38, 0.18) !important;
+    color: #FCA5A5 !important;
+    border-color: rgba(220, 38, 38, 0.3) !important;
+}
+
+/* ---------- Card Action Buttons ---------- */
+:root[data-theme="dark"] .hr-meetings-page .card-actions {
+    border-top-color: #1E293B !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .view-button,
+:root[data-theme="dark"] .hr-meetings-page .edit-button {
+    background: #1E293B !important;
+    border-color: #334155 !important;
+    color: #60A5FA !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .view-button:hover,
+:root[data-theme="dark"] .hr-meetings-page .edit-button:hover {
+    background: rgba(1, 121, 241, 0.2) !important;
+    border-color: var(--primary) !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .delete-button,
+:root[data-theme="dark"] .hr-meetings-page .reject-button {
+    background: #1E293B !important;
+    border-color: rgba(220, 38, 38, 0.4) !important;
+    color: #FCA5A5 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .delete-button:hover,
+:root[data-theme="dark"] .hr-meetings-page .reject-button:hover {
+    background: rgba(220, 38, 38, 0.2) !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .empty-message {
     background: #0F172A !important;
     border-color: #334155 !important;
+    color: #94A3B8 !important;
+}
+
+/* ---------- Modals ---------- */
+:root[data-theme="dark"] .hr-meetings-page .modal {
+    background: rgba(0, 0, 0, 0.7) !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .modal-box {
+    background: #131E35 !important;
+    border-color: #334155 !important;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6) !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .modal-header {
+    background: linear-gradient(135deg, #1E293B, #0F172A) !important;
+    border-bottom-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .modal-eyebrow {
+    color: #60A5FA !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .modal-header h2 {
+    color: #FFFFFF !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .modal-header p {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .close-button {
+    background: #0B132B !important;
+    border-color: #334155 !important;
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .close-button:hover {
+    background: rgba(1, 121, 241, 0.2) !important;
+    color: #60A5FA !important;
+}
+
+/* ---------- Form Controls & Typing Colors ---------- */
+:root[data-theme="dark"] .hr-meetings-page .form-group > label {
+    color: #E2E8F0 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .form-group input:not([type='checkbox']),
+:root[data-theme="dark"] .hr-meetings-page .form-group textarea,
+:root[data-theme="dark"] .hr-meetings-page .participants-button {
+    background: #0F172A !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .form-group input::placeholder,
+:root[data-theme="dark"] .hr-meetings-page .form-group textarea::placeholder {
+    color: #64748B !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .form-group input:not([type='checkbox']):focus,
+:root[data-theme="dark"] .hr-meetings-page .form-group textarea:focus,
+:root[data-theme="dark"] .hr-meetings-page .participants-button:focus-visible {
+    background: #131E35 !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(1, 121, 241, 0.25) !important;
+    color: #FFFFFF !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .form-buttons,
+:root[data-theme="dark"] .hr-meetings-page .request-actions,
+:root[data-theme="dark"] .hr-meetings-page .view-buttons {
+    border-top-color: #334155 !important;
 }
 
 :root[data-theme="dark"] .hr-meetings-page .cancel-button {
@@ -317,4 +538,86 @@
     border-color: #334155 !important;
     color: #F8FAFC !important;
 }
+
+:root[data-theme="dark"] .hr-meetings-page .cancel-button:hover {
+    background: #334155 !important;
+}
+
+/* ---------- Participants Dropdown ---------- */
+:root[data-theme="dark"] .hr-meetings-page .participants-menu {
+    background: #131E35 !important;
+    border-color: #334155 !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .participant-option {
+    color: #E2E8F0 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .participant-option:hover,
+:root[data-theme="dark"] .hr-meetings-page .participant-option:has(input:checked) {
+    background: rgba(1, 121, 241, 0.15) !important;
+    color: #60A5FA !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .dropdown-section {
+    border-top-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .dropdown-title {
+    color: #94A3B8 !important;
+}
+
+/* ---------- View Details Modal Elements ---------- */
+:root[data-theme="dark"] .hr-meetings-page .view-item {
+    background: #0F172A !important;
+    border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .view-item > span {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .view-item strong {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .view-section {
+    border-top-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .view-section h3 {
+    color: #FFFFFF !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .view-section p {
+    color: #CBD5E1 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .view-participant {
+    background: #0F172A !important;
+    border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .participant-name {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .participant-department {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .response-item {
+    border-bottom-color: #1E293B !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .response-header strong {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .hr-meetings-page .view-section .response-message {
+    background: #0F172A !important;
+    color: #CBD5E1 !important;
+}
+
 

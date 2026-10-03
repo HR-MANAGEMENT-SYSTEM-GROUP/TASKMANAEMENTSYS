@@ -127,3 +127,144 @@ html { scroll-behavior: smooth; }
 }
 
 .employee-meetings .save-button:disabled { opacity: .55; cursor: wait; }
+
+/* ================= DARK THEME OVERRIDES ================= */
+:root[data-theme="dark"] .employee-meetings .page,
+:root[data-theme="dark"] .employee-meetings .modal {
+  --ink: #F8FAFC;
+  --body: #94A3B8;
+  --line: #334155;
+  --tint: rgba(30, 111, 255, 0.15);
+}
+
+:root[data-theme="dark"] .employee-meetings .meeting-shortcuts a {
+  background: #131E35;
+  border-color: #334155;
+}
+
+:root[data-theme="dark"] .employee-meetings .meeting-shortcuts strong {
+  color: #F8FAFC;
+}
+
+:root[data-theme="dark"] .employee-meetings .meeting-shortcuts small {
+  color: #94A3B8;
+}
+
+:root[data-theme="dark"] .employee-meetings .meeting-card {
+  background: #131E35;
+  border-color: #334155;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme="dark"] .employee-meetings .meeting-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme="dark"] .employee-meetings .meeting-card h3 {
+  color: #F8FAFC;
+}
+
+:root[data-theme="dark"] .employee-meetings .meeting-info {
+  border-bottom-color: #1E293B;
+}
+
+:root[data-theme="dark"] .employee-meetings .meeting-info span {
+  color: #F8FAFC;
+}
+
+:root[data-theme="dark"] .employee-meetings .meeting-info strong {
+  color: #94A3B8;
+}
+
+:root[data-theme="dark"] .employee-meetings .notes-preview {
+  background: #0F172A;
+  color: #94A3B8;
+}
+
+:root[data-theme="dark"] .employee-meetings .response-area textarea,
+:root[data-theme="dark"] .employee-meetings .form-group textarea,
+:root[data-theme="dark"] .employee-meetings .form-group input {
+  background: #0F172A;
+  color: #F8FAFC;
+  border-color: #334155;
+}
+
+:root[data-theme="dark"] .employee-meetings input:focus,
+:root[data-theme="dark"] .employee-meetings textarea:focus {
+  background: #131E35;
+  border-color: var(--accent);
+}
+
+:root[data-theme="dark"] .employee-meetings input[readonly] {
+  background: #1E293B;
+  color: #94A3B8;
+}
+
+:root[data-theme="dark"] .employee-meetings .hr-message {
+  background: rgba(30, 111, 255, 0.15);
+  color: #60A5FA;
+}
+
+:root[data-theme="dark"] .employee-meetings .hr-message p {
+  color: #94A3B8;
+}
+
+:root[data-theme="dark"] .employee-meetings .reject-button {
+  background: #131E35;
+  border-color: rgba(220, 38, 38, 0.4);
+  color: #FCA5A5;
+}
+
+:root[data-theme="dark"] .employee-meetings .reject-button:hover {
+  background: rgba(220, 38, 38, 0.2);
+}
+
+:root[data-theme="dark"] .employee-meetings .cancel-button {
+  background: #1E293B;
+  border-color: #334155;
+  color: #F8FAFC;
+}
+
+:root[data-theme="dark"] .employee-meetings .cancel-button:hover {
+  background: #334155;
+}
+
+:root[data-theme="dark"] .employee-meetings .empty-message {
+  background: #131E35;
+  border-color: #334155;
+  color: #94A3B8;
+}
+
+:root[data-theme="dark"] .employee-meetings .modal-box {
+  background: #131E35;
+  border-color: #334155;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme="dark"] .employee-meetings .close-button {
+  background: #0F172A;
+  border-color: #334155;
+  color: #94A3B8;
+}
+
+:root[data-theme="dark"] .employee-meetings .close-button:hover {
+  background: rgba(30, 111, 255, 0.2);
+  color: var(--accent);
+}
+
+:root[data-theme="dark"] .employee-meetings .status-pending {
+  background: rgba(245, 158, 11, 0.18);
+  color: #FCD34D;
+}
+
+:root[data-theme="dark"] .employee-meetings .status-accepted {
+  background: rgba(22, 163, 74, 0.18);
+  color: #86EFAC;
+}
+
+:root[data-theme="dark"] .employee-meetings .status-rejected {
+  background: rgba(220, 38, 38, 0.18);
+  color: #FCA5A5;
+}
+

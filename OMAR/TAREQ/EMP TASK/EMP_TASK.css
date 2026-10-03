@@ -2430,3 +2430,227 @@ body {
     }
 
 }
+
+/* ================= DARK THEME OVERRIDES ================= */
+:root[data-theme="dark"] body.employee-tasks,
+body.dark-mode.employee-tasks,
+body.dark-mode {
+    --bg: #0B1120;
+    --ink: #F8FAFC;
+    --hdr-ink: #F8FAFC;
+    --body: #94A3B8;
+    --glass-text: #94A3B8;
+    --line: #334155;
+    --tint: rgba(1, 121, 241, 0.15);
+    --glass: rgba(19, 30, 53, 0.85);
+    --glass-line: rgba(51, 65, 85, 0.8);
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    background-color: #0B1120 !important;
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .shortcut-card.status-card,
+body.dark-mode .employee-tasks .shortcut-card.status-card {
+    background: #131E35 !important;
+    border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .shortcut-info strong,
+body.dark-mode .employee-tasks .shortcut-info strong {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .shortcut-info small,
+body.dark-mode .employee-tasks .shortcut-info small {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .task-filters-card,
+body.dark-mode .employee-tasks .task-filters-card {
+    background: #131E35 !important;
+    border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .filter-group label,
+body.dark-mode .employee-tasks .filter-group label {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .custom-select,
+body.dark-mode .employee-tasks .custom-select {
+    background-color: #0F172A !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .custom-select:focus,
+body.dark-mode .employee-tasks .custom-select:focus {
+    background-color: #131E35 !important;
+    border-color: var(--accent) !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .custom-select option,
+body.dark-mode .employee-tasks .custom-select option {
+    background-color: #131E35;
+    color: #F8FAFC;
+}
+
+:root[data-theme="dark"] .employee-tasks .trello-column,
+body.dark-mode .employee-tasks .trello-column {
+    background: #131E35 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .trello-column::after,
+body.dark-mode .employee-tasks .trello-column::after {
+    background: #131E35 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .trello-column-header,
+body.dark-mode .employee-tasks .trello-column-header {
+    border-bottom-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .trello-column-title,
+body.dark-mode .employee-tasks .trello-column-title {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .trello-count,
+body.dark-mode .employee-tasks .trello-count {
+    background: #0F172A !important;
+    border-color: #334155 !important;
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .trello-task-card,
+body.dark-mode .employee-tasks .trello-task-card {
+    background: #0F172A !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .trello-task-card:hover,
+body.dark-mode .employee-tasks .trello-task-card:hover {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .trello-task-card h5,
+body.dark-mode .employee-tasks .trello-task-card h5 {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .trello-task-card p,
+body.dark-mode .employee-tasks .trello-task-card p {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .task-card-meta,
+body.dark-mode .employee-tasks .task-card-meta {
+    border-top-color: #1E293B !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .task-deadline,
+body.dark-mode .employee-tasks .task-deadline {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .empty-column,
+body.dark-mode .employee-tasks .empty-column {
+    background: #0F172A !important;
+    border-color: #334155 !important;
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .modal-box,
+body.dark-mode .employee-tasks .modal-box {
+    background: #131E35 !important;
+    border-color: #334155 !important;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5) !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .modal-header,
+body.dark-mode .employee-tasks .modal-header {
+    border-bottom-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .modal-title,
+body.dark-mode .employee-tasks .modal-title {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .modal-subtitle,
+body.dark-mode .employee-tasks .modal-subtitle {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .close-button,
+body.dark-mode .employee-tasks .close-button {
+    background: #0F172A !important;
+    border-color: #334155 !important;
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .close-button:hover,
+body.dark-mode .employee-tasks .close-button:hover {
+    background: rgba(1, 121, 241, 0.2) !important;
+    color: var(--accent) !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .task-detail-hero,
+body.dark-mode .employee-tasks .task-detail-hero {
+    background: #0F172A !important;
+    border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .task-info-item,
+body.dark-mode .employee-tasks .task-info-item {
+    background: #131E35 !important;
+    border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .task-info-item strong,
+body.dark-mode .employee-tasks .task-info-item strong {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .task-info-item .info-val,
+body.dark-mode .employee-tasks .task-info-item .info-val {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .form-group label,
+body.dark-mode .employee-tasks .form-group label {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .form-control,
+body.dark-mode .employee-tasks .form-control {
+    background-color: #0F172A !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .form-control:focus,
+body.dark-mode .employee-tasks .form-control:focus {
+    background-color: #131E35 !important;
+    border-color: var(--accent) !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .cancel-button,
+body.dark-mode .employee-tasks .cancel-button {
+    background: #1E293B !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .cancel-button:hover,
+body.dark-mode .employee-tasks .cancel-button:hover {
+    background: #334155 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .modal-actions,
+body.dark-mode .employee-tasks .modal-actions {
+    border-top-color: #334155 !important;
+}

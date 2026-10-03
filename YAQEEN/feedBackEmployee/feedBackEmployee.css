@@ -816,3 +816,85 @@ html { background: var(--bg); }
   .btn, .form-control, .form-select, .fb-card, .fb-cta-pill, .fb-toast,
   .modal.fade .modal-dialog { transition: none; }
 }
+
+/* ================= DARK THEME OVERRIDES ================= */
+:root[data-theme="dark"] {
+  --lb-surface: #131E35;
+  --lb-surface-muted: #0F172A;
+  --lb-border: #334155;
+  --lb-text: #F8FAFC;
+  --lb-text-secondary: #94A3B8;
+  --lb-text-muted: #64748B;
+  --lb-primary-light: rgba(30, 111, 255, 0.15);
+  --lb-primary-border: #2563eb;
+  --lb-navy-deep: #020617;
+  --lb-gold-light: rgba(245, 158, 11, 0.15);
+  --lb-danger-light: rgba(220, 38, 38, 0.15);
+  --lb-success-light: rgba(22, 163, 74, 0.15);
+}
+
+:root[data-theme="dark"] .fb-scene {
+  background: linear-gradient(160deg, #0F172A 0%, #131E35 55%, #1E293B 100%);
+  border-color: #334155;
+}
+
+:root[data-theme="dark"] .fb-card {
+  box-shadow: 0 1.6em 3.2em -1.4em rgba(0, 0, 0, 0.6), 0 0.3em 0.7em -0.4em rgba(0, 0, 0, 0.4);
+}
+
+:root[data-theme="dark"] .fb-cta-pill {
+  background: rgba(19, 30, 53, 0.95);
+  color: #60A5FA;
+  border-color: #334155;
+}
+
+:root[data-theme="dark"] .chip-suggestion {
+  background: rgba(245, 158, 11, 0.18);
+  color: #FCD34D;
+}
+
+:root[data-theme="dark"] .chip-complaint {
+  background: rgba(220, 38, 38, 0.18);
+  color: #FCA5A5;
+}
+
+:root[data-theme="dark"] .chip-praise {
+  background: rgba(22, 163, 74, 0.18);
+  color: #86EFAC;
+}
+
+:root[data-theme="dark"] .fb-chip-praise {
+  background: rgba(22, 163, 74, 0.18);
+  border-color: #16A34A;
+  color: #86EFAC;
+}
+
+:root[data-theme="dark"] .fb-modal {
+  background: #131E35;
+  border-color: #334155;
+  color: #F8FAFC;
+}
+
+:root[data-theme="dark"] .fb-modal .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+:root[data-theme="dark"] .form-control,
+:root[data-theme="dark"] .form-select {
+  background-color: #0F172A;
+  border-color: #334155;
+  color: #F8FAFC;
+}
+
+:root[data-theme="dark"] .form-control:focus,
+:root[data-theme="dark"] .form-select:focus {
+  background-color: #131E35;
+  border-color: var(--lb-primary);
+  color: #F8FAFC;
+}
+
+:root[data-theme="dark"] .form-select option {
+  background-color: #131E35;
+  color: #F8FAFC;
+}
+

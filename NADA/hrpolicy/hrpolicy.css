@@ -743,3 +743,180 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* ================= DARK THEME OVERRIDES ================= */
+:root[data-theme="dark"] {
+  --bg: #0B1120;
+  --surface: #131E35;
+  --ink: #F8FAFC;
+  --body: #94A3B8;
+  --body-muted: #64748B;
+  --line: #334155;
+  --line-light: #1E293B;
+  --tint: rgba(1, 121, 241, 0.15);
+  --tint-border: rgba(1, 121, 241, 0.35);
+}
+
+:root[data-theme="dark"] body {
+  background: #0B1120 !important;
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .page-header {
+  background: linear-gradient(135deg, #131E35 0%, #1A2846 55%, #101B30 100%) !important;
+  border-color: #334155 !important;
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.4) !important;
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .page-title {
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .page-subtitle {
+  color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .page-eyebrow {
+  background: #0F172A !important;
+  border-color: var(--tint-border) !important;
+}
+
+:root[data-theme="dark"] .header-meta-pill {
+  background: #0F172A !important;
+  border-color: #334155 !important;
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .toolbar {
+  background: #131E35 !important;
+  border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .search-box .form-control {
+  background: #0F172A !important;
+  border-color: #334155 !important;
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .search-box .form-control:focus {
+  background: #131E35 !important;
+  border-color: var(--primary) !important;
+}
+
+:root[data-theme="dark"] .search-box .form-control::placeholder {
+  color: #64748B !important;
+}
+
+:root[data-theme="dark"] .policy-card {
+  background: #131E35 !important;
+  border-color: #334155 !important;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4) !important;
+}
+
+:root[data-theme="dark"] .policy-card:hover {
+  border-color: #3b82f6 !important;
+}
+
+:root[data-theme="dark"] .policy-title {
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .policy-desc {
+  color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .policy-actions {
+  border-top-color: #1E293B !important;
+}
+
+:root[data-theme="dark"] .btn-card-edit {
+  background: #0F172A !important;
+  border-color: #334155 !important;
+  color: #60A5FA !important;
+}
+
+:root[data-theme="dark"] .btn-card-edit:hover {
+  background: var(--primary) !important;
+  color: #FFFFFF !important;
+}
+
+:root[data-theme="dark"] .btn-card-delete {
+  background: rgba(225, 29, 72, 0.15) !important;
+  border-color: rgba(225, 29, 72, 0.35) !important;
+  color: #FDA4AF !important;
+}
+
+:root[data-theme="dark"] .btn-card-delete:hover {
+  background: #E11D48 !important;
+  color: #FFFFFF !important;
+}
+
+:root[data-theme="dark"] .modal-box {
+  background: #131E35 !important;
+  border-color: #334155 !important;
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.6) !important;
+}
+
+:root[data-theme="dark"] .modal-header-custom {
+  background: #0F172A !important;
+  border-bottom-color: #1E293B !important;
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .modal-header-custom h4 {
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .btn-close-custom {
+  color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .modal-footer-custom {
+  background: #0F172A !important;
+  border-top-color: #1E293B !important;
+}
+
+:root[data-theme="dark"] .modal-body-custom {
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .modal-body-custom .form-label {
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .modal-body-custom .form-control {
+  background: #0F172A !important;
+  border-color: #334155 !important;
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .modal-body-custom .form-control:focus {
+  background: #131E35 !important;
+  border-color: var(--primary) !important;
+}
+
+:root[data-theme="dark"] .btn-masar-ghost {
+  border-color: #334155 !important;
+  color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .btn-masar-ghost:hover {
+  background: #1E293B !important;
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .empty-state {
+  background: #131E35 !important;
+  border-color: #334155 !important;
+  color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .empty-state h2 {
+  color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .empty-state p {
+  color: #94A3B8 !important;
+}
+
+

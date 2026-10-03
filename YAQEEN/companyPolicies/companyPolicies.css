@@ -88,3 +88,37 @@ html { background: var(--bg); }
 @media (prefers-reduced-motion: reduce) {
   .company-policies *, .company-policies *::before, .company-policies *::after { transition: none !important; }
 }
+
+/* ================= DARK THEME OVERRIDES ================= */
+:root[data-theme="dark"] .company-policies {
+  --card-bg: #131E35;
+  --card-ink: #F8FAFC;
+  --card-body: #94A3B8;
+  --card-line: #334155;
+  --card-tint: rgba(30, 111, 255, 0.15);
+}
+
+:root[data-theme="dark"] .company-policies .policy-card {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme="dark"] .company-policies .policy-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme="dark"] .company-policies .search-box input {
+  background: #131E35;
+  color: #F8FAFC;
+  border-color: #334155;
+}
+
+:root[data-theme="dark"] .company-policies .search-box input::placeholder {
+  color: #64748B;
+}
+
+:root[data-theme="dark"] .company-policies .search-box input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .25);
+}
+

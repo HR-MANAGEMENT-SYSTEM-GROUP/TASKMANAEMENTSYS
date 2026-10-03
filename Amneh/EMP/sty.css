@@ -860,3 +860,140 @@ a[href*="leaves-hr"] {
         transition: none !important;
     }
 }
+
+/* ================= DARK THEME OVERRIDES ================= */
+:root[data-theme="dark"] .employee-leaves .page,
+:root[data-theme="dark"] .employee-leaves .modal,
+:root[data-theme="dark"] .employee-leaves .modal-overlay {
+    --ink: #F8FAFC;
+    --body: #94A3B8;
+    --line: #334155;
+    --tint: rgba(30, 111, 255, 0.15);
+}
+
+:root[data-theme="dark"] .employee-leaves .meeting-shortcuts label.shortcut-card,
+:root[data-theme="dark"] .employee-leaves .meeting-shortcuts .stat-card {
+    background: #131E35;
+    border-color: #334155;
+}
+
+:root[data-theme="dark"] .employee-leaves .meeting-shortcuts strong {
+    color: #F8FAFC;
+}
+
+:root[data-theme="dark"] .employee-leaves .meeting-shortcuts small {
+    color: #94A3B8;
+}
+
+:root[data-theme="dark"] .employee-leaves .table-card {
+    background: #131E35;
+    border-color: #334155;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme="dark"] .employee-leaves .custom-table th {
+    background: #0F172A;
+    color: #94A3B8;
+    border-bottom-color: #334155;
+}
+
+:root[data-theme="dark"] .employee-leaves .custom-table td {
+    border-bottom-color: #1E293B;
+    color: #F8FAFC;
+}
+
+:root[data-theme="dark"] .employee-leaves .custom-table td strong {
+    color: #F8FAFC;
+}
+
+:root[data-theme="dark"] .employee-leaves .custom-table tbody tr:hover {
+    background-color: #1A2846;
+}
+
+:root[data-theme="dark"] .employee-leaves .custom-table td[colspan="5"] {
+    background: #131E35 !important;
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .employee-leaves .badge-pending {
+    background: rgba(245, 158, 11, 0.18);
+    color: #FCD34D;
+    border-color: rgba(245, 158, 11, 0.35);
+}
+
+:root[data-theme="dark"] .employee-leaves .badge-approved {
+    background: rgba(22, 163, 74, 0.18);
+    color: #86EFAC;
+    border-color: rgba(22, 163, 74, 0.35);
+}
+
+:root[data-theme="dark"] .employee-leaves .badge-rejected {
+    background: rgba(220, 38, 38, 0.18);
+    color: #FCA5A5;
+    border-color: rgba(220, 38, 38, 0.35);
+}
+
+:root[data-theme="dark"] .employee-leaves .modal-box,
+:root[data-theme="dark"] .employee-leaves .modal-content {
+    background: #131E35;
+    border-color: #334155;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme="dark"] .employee-leaves .close-button,
+:root[data-theme="dark"] .employee-leaves .close-btn {
+    background: #0F172A;
+    border-color: #334155;
+    color: #94A3B8;
+}
+
+:root[data-theme="dark"] .employee-leaves .close-button:hover,
+:root[data-theme="dark"] .employee-leaves .close-btn:hover {
+    background: rgba(30, 111, 255, 0.2);
+    color: var(--accent);
+}
+
+:root[data-theme="dark"] .employee-leaves .form-group input,
+:root[data-theme="dark"] .employee-leaves .form-group select,
+:root[data-theme="dark"] .employee-leaves .form-group textarea,
+:root[data-theme="dark"] .employee-leaves .custom-textarea-container {
+    background: #0F172A;
+    border-color: #334155;
+    color: #F8FAFC;
+}
+
+:root[data-theme="dark"] .employee-leaves .form-group input:focus,
+:root[data-theme="dark"] .employee-leaves .form-group select:focus,
+:root[data-theme="dark"] .employee-leaves .form-group textarea:focus,
+:root[data-theme="dark"] .employee-leaves .custom-textarea-container:focus-within {
+    background: #131E35;
+    border-color: var(--accent);
+}
+
+:root[data-theme="dark"] .employee-leaves .attachment-bar {
+    background: #0F172A;
+    border-top-color: #334155;
+}
+
+:root[data-theme="dark"] .employee-leaves .attachment-btn {
+    background: #1E293B;
+    border-color: #334155;
+    color: #F8FAFC;
+}
+
+:root[data-theme="dark"] .employee-leaves .attachment-btn:hover {
+    background: rgba(30, 111, 255, 0.2);
+    color: var(--accent);
+}
+
+:root[data-theme="dark"] .employee-leaves .cancel-button,
+:root[data-theme="dark"] .employee-leaves .btn-secondary {
+    background: #1E293B;
+    border-color: #334155;
+    color: #F8FAFC;
+}
+
+:root[data-theme="dark"] .employee-leaves .cancel-button:hover,
+:root[data-theme="dark"] .employee-leaves .btn-secondary:hover {
+    background: #334155;
+}

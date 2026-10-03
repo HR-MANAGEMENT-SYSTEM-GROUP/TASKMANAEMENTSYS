@@ -666,28 +666,173 @@ small.text-danger {
   }
 }
 
-/* ================= DARK THEME OVERRIDES ================= */
-:root[data-theme="dark"] .toolbar-card,
-:root[data-theme="dark"] .card-section {
-  background: #131E35 !important;
-  border-color: #334155 !important;
-  color: #F8FAFC !important;
+/* =========================================================
+   DARK THEME OVERRIDES
+   Activated via :root[data-theme="dark"]
+========================================================= */
+
+/* ---------- Body / Canvas ---------- */
+:root[data-theme="dark"] body {
+  background: linear-gradient(135deg, #0B1120 0%, #0F172A 100%) !important;
+  color: #E2E8F0 !important;
 }
 
-:root[data-theme="dark"] #hrRequestsTable td[colspan="7"] {
-  background: #131E35 !important;
+/* ---------- Hero Banner ---------- */
+:root[data-theme="dark"] .page-header {
+  background: linear-gradient(135deg, #0F172A 0%, #131E35 55%, #162544 100%) !important;
+  border-color: #1E3A5F !important;
+  border-bottom-color: var(--primary) !important;
+  color: #F1F5F9 !important;
+}
+
+:root[data-theme="dark"] .page-title {
+  color: #F1F5F9 !important;
+}
+
+:root[data-theme="dark"] .page-subtitle {
   color: #94A3B8 !important;
 }
 
-:root[data-theme="dark"] .filter-select,
-:root[data-theme="dark"] .search-input {
-  background: #0F172A !important;
-  border-color: #334155 !important;
+:root[data-theme="dark"] .page-eyebrow {
+  background: rgba(1, 121, 241, 0.12) !important;
+  border-color: #1E3A5F !important;
+  color: #4DA3FF !important;
+}
+
+:root[data-theme="dark"] .header-meta-pill {
+  background: #131E35 !important;
+  border-color: #1E3A5F !important;
+  color: #E2E8F0 !important;
+}
+
+:root[data-theme="dark"] .header-meta-pill i {
+  color: #4DA3FF !important;
+}
+
+/* ---------- Toolbar Card ---------- */
+:root[data-theme="dark"] .toolbar-card {
+  background: #131E35 !important;
+  border-color: #1E3A5F !important;
+  border-bottom-color: var(--primary) !important;
   color: #F8FAFC !important;
 }
 
-:root[data-theme="dark"] .leave-detail-modal {
+:root[data-theme="dark"] .search-box .form-control {
+  background: #0F172A !important;
+  border-color: #1E3A5F !important;
+  color: #E2E8F0 !important;
+}
+
+:root[data-theme="dark"] .search-box .form-control:focus {
   background: #131E35 !important;
-  border-color: #334155 !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(1, 121, 241, 0.2) !important;
+}
+
+:root[data-theme="dark"] .search-box .form-control::placeholder {
+  color: #64748B !important;
+}
+
+:root[data-theme="dark"] .select-wrapper .form-select {
+  background-color: #0F172A !important;
+  border-color: #1E3A5F !important;
+  color: #E2E8F0 !important;
+}
+
+:root[data-theme="dark"] .select-wrapper .form-select:focus {
+  background-color: #131E35 !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(1, 121, 241, 0.2) !important;
+}
+
+/* ---------- Card Section (Table Wrapper) ---------- */
+:root[data-theme="dark"] .card-section {
+  background: #131E35 !important;
+  border-color: #1E3A5F !important;
+  border-bottom-color: var(--primary) !important;
   color: #F8FAFC !important;
-}
+}
+
+:root[data-theme="dark"] .card-header-bar {
+  border-bottom-color: #1E3A5F !important;
+}
+
+:root[data-theme="dark"] .card-title-text {
+  color: #F1F5F9 !important;
+}
+
+:root[data-theme="dark"] .card-subtitle-text {
+  color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .card-title-icon {
+  background: rgba(1, 121, 241, 0.12) !important;
+  border-color: #1E3A5F !important;
+  color: #4DA3FF !important;
+}
+
+/* ---------- Table ---------- */
+:root[data-theme="dark"] .table-wrapper {
+  background: #0F172A !important;
+  border-color: #1E3A5F !important;
+}
+
+:root[data-theme="dark"] .table thead th {
+  background: #0B1120 !important;
+  color: #94A3B8 !important;
+  border-bottom-color: #1E3A5F !important;
+}
+
+:root[data-theme="dark"] .table tbody td {
+  background: #0F172A !important;
+  color: #E2E8F0 !important;
+  border-bottom-color: #1E293B !important;
+}
+
+:root[data-theme="dark"] .table tbody tr:hover td {
+  background: #1A2846 !important;
+}
+
+:root[data-theme="dark"] .table tbody td strong {
+  color: #F1F5F9 !important;
+}
+
+:root[data-theme="dark"] #hrRequestsTable td[colspan="7"] {
+  background: #0F172A !important;
+  color: #94A3B8 !important;
+}
+
+/* ---------- Action Buttons ---------- */
+:root[data-theme="dark"] .btn-reject {
+  background: #131E35 !important;
+  border-color: #FCA5A5 !important;
+  color: #FCA5A5 !important;
+}
+
+:root[data-theme="dark"] .btn-reject:hover {
+  background: #DC2626 !important;
+  color: #FFFFFF !important;
+}
+
+/* ---------- Rejection Reason ---------- */
+:root[data-theme="dark"] small.text-danger {
+  background: rgba(220, 38, 38, 0.15) !important;
+  border-color: rgba(252, 165, 165, 0.3) !important;
+  color: #FCA5A5 !important;
+}
+
+/* ---------- Headings ---------- */
+:root[data-theme="dark"] h1,
+:root[data-theme="dark"] h2,
+:root[data-theme="dark"] h3,
+:root[data-theme="dark"] h4,
+:root[data-theme="dark"] h5,
+:root[data-theme="dark"] h6 {
+  color: #F1F5F9 !important;
+}
+
+/* ---------- Close Button ---------- */
+:root[data-theme="dark"] .btn-close {
+  filter: invert(1) !important;
+}
+

@@ -16,7 +16,7 @@
     <!-- Theme pre-check to prevent dark mode flicker -->
     <script>
         try {
-            if (localStorage.getItem("journey-theme") === "dark") {
+            if (localStorage.getItem("journey-theme") === "dark" || localStorage.getItem("theme") === "dark") {
                 document.documentElement.setAttribute("data-theme", "dark");
             }
         } catch (e) { }
