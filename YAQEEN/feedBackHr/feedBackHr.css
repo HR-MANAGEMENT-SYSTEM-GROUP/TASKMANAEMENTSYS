@@ -439,6 +439,20 @@ body {
   .header-meta-pill { white-space: nowrap; }
 }
 
+/* The sidebar is icons only here (72px), so the content moves next to it.
+   !important because HR-shared.css sets these with !important. */
+@media (max-width: 650px) {
+  .hr-page-content {
+    margin-left: 90px !important;
+    width: calc(100% - 90px) !important;
+  }
+  .hr-page-content > .fb-hr {
+    padding-left: 0 !important;
+    padding-right: 10px !important;
+  }
+  .page-header { padding: 26px 22px !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   #parent .card { transition: none; }
   #categorySelect { transition: none; }
