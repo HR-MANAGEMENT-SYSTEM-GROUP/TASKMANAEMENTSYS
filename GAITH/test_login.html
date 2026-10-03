@@ -461,17 +461,9 @@
 <script>
 window.addEventListener('load', () => {
   setTimeout(() => {
-    const sheets = Array.from(document.styleSheets).map(s => {
-      let ruleCount = 0;
-      let err = null;
-      try {
-        ruleCount = s.cssRules ? s.cssRules.length : 0;
-      } catch(e) {
-        err = e.message;
-      }
-      return { href: s.href, ruleCount, err };
-    });
-    document.title = JSON.stringify(sheets);
+    const shackle = document.getElementById('padlockShackle');
+    shackle.style.transform = 'translateY(-3px) rotate(-18deg)';
+    document.title = 'INLINE_TEST:' + window.getComputedStyle(shackle).transform;
   }, 300);
 });
 </script>
