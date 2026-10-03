@@ -1232,18 +1232,20 @@ body.sidebar-collapsed .hr-page-content {
    Guarantees all pages have identical 28px left/right margins
    ========================================================= */
 
-.hr-with-sidebar-content {
-    margin-left: 300px !important;
-    padding: 16px 28px 60px !important;
-    box-sizing: border-box !important;
-    width: calc(100% - 300px) !important;
-}
+@media (min-width: 992px) {
+    .hr-with-sidebar-content {
+        margin-left: 300px !important;
+        padding: 16px 28px 60px !important;
+        box-sizing: border-box !important;
+        width: calc(100% - 300px) !important;
+    }
 
-.hr-page-content {
-    margin-left: 300px !important;
-    width: calc(100% - 300px) !important;
-    padding: 0 !important;
-    box-sizing: border-box !important;
+    .hr-page-content {
+        margin-left: 300px !important;
+        width: calc(100% - 300px) !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
 }
 
 .hr-page-content > .container-fluid,

@@ -211,38 +211,139 @@
     color: #0079F1;
 }
 
-@media (max-width: 900px) {
+/* =========================================================
+   RESPONSIVE SIDEBAR SYSTEM
+   Preserves laptop/PC 100% while optimizing tablet/mobile
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. Tablets & Small Laptops (max-width: 991.98px)
+   --------------------------------------------------------- */
+@media (max-width: 991.98px) {
     .hr-sidebar {
-        left: 10px;
-        top: 10px;
-        height: calc(100vh - 20px);
-        width: 220px;
+        width: 72px !important;
+        left: 10px !important;
+        top: 10px !important;
+        height: calc(100vh - 20px) !important;
+        height: calc(100dvh - 20px) !important;
+        padding: 16px 8px !important;
+        border-radius: 20px !important;
     }
-    .hr-with-sidebar-content {
-        margin-left: 245px;
-        padding-right: 15px;
+
+    .hr-sidebar .sidebar-header {
+        justify-content: center !important;
+        padding: 0 0 12px !important;
+        min-height: 42px !important;
+    }
+
+    .hr-sidebar .sidebar-logo span,
+    .hr-sidebar .sidebar-nav span,
+    .hr-sidebar .sidebar-bottom span,
+    .hr-sidebar .sidebar-toggle,
+    .hr-sidebar .menu-arrow {
+        display: none !important;
+    }
+
+    .hr-sidebar .sidebar-link {
+        justify-content: center !important;
+        padding: 0 !important;
+        min-height: 40px !important;
+    }
+
+    .hr-sidebar .sidebar-link > i:first-child {
+        margin: 0 !important;
+        font-size: 18px !important;
+    }
+
+    .hr-with-sidebar-content,
+    .hr-page-content {
+        margin-left: 92px !important;
+        width: calc(100% - 92px) !important;
+        max-width: calc(100% - 92px) !important;
+        padding-right: 16px !important;
+        box-sizing: border-box !important;
     }
 }
 
-@media (max-width: 650px) {
+/* ---------------------------------------------------------
+   2. Smartphones & Mobile (max-width: 768px)
+   --------------------------------------------------------- */
+@media (max-width: 768px) {
     .hr-sidebar {
-        width: 72px;
-        left: 8px;
+        width: 62px !important;
+        left: 8px !important;
+        top: 8px !important;
+        height: calc(100vh - 16px) !important;
+        height: calc(100dvh - 16px) !important;
+        padding: 12px 6px !important;
+        border-radius: 18px !important;
     }
-    .hr-sidebar .sidebar-logo span,
-    .hr-sidebar .sidebar-link span {
-        display: none;
-    }
-    .hr-sidebar .sidebar-link {
-        justify-content: center;
-        padding: 0;
-    }
+
     .hr-sidebar .sidebar-header {
-        justify-content: center;
+        min-height: 38px !important;
+        padding-bottom: 10px !important;
     }
-    .hr-with-sidebar-content {
-        margin-left: 95px;
-        padding-right: 10px;
+
+    .hr-sidebar .sidebar-masar-icon {
+        width: 26px !important;
+        height: 26px !important;
+    }
+
+    .hr-sidebar .sidebar-link {
+        min-height: 38px !important;
+    }
+
+    .hr-sidebar .sidebar-link > i:first-child {
+        font-size: 16px !important;
+    }
+
+    .hr-with-sidebar-content,
+    .hr-page-content {
+        margin-left: 78px !important;
+        width: calc(100% - 78px) !important;
+        max-width: calc(100% - 78px) !important;
+        padding-right: 10px !important;
+    }
+}
+
+/* ---------------------------------------------------------
+   3. Extra Small Screens (max-width: 480px)
+   --------------------------------------------------------- */
+@media (max-width: 480px) {
+    .hr-sidebar {
+        width: 54px !important;
+        left: 6px !important;
+        top: 6px !important;
+        height: calc(100vh - 12px) !important;
+        height: calc(100dvh - 12px) !important;
+        padding: 10px 4px !important;
+        border-radius: 16px !important;
+    }
+
+    .hr-sidebar .sidebar-header {
+        min-height: 34px !important;
+        padding-bottom: 8px !important;
+    }
+
+    .hr-sidebar .sidebar-masar-icon {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    .hr-sidebar .sidebar-link {
+        min-height: 36px !important;
+    }
+
+    .hr-sidebar .sidebar-link > i:first-child {
+        font-size: 15px !important;
+    }
+
+    .hr-with-sidebar-content,
+    .hr-page-content {
+        margin-left: 66px !important;
+        width: calc(100% - 66px) !important;
+        max-width: calc(100% - 66px) !important;
+        padding-right: 8px !important;
     }
 }
 
