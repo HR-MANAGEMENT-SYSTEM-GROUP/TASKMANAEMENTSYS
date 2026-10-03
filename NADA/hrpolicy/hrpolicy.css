@@ -478,60 +478,23 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--body-muted);
 }
 
-/* ================= DARK THEME OVERRIDES ================= */
-:root[data-theme="dark"] .policy-card {
-  background: #131E35 !important;
-  border-color: #334155 !important;
-  color: #F8FAFC !important;
+@media (max-width: 768px) {
+  .btn-masar {
+    padding: 6px 8px !important;
+    font-size: 10.5px !important;
+    gap: 3px !important;
+    border-radius: 8px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
 }
 
-:root[data-theme="dark"] .policy-card:hover {
-  border-color: #0179F1 !important;
-  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.5) !important;
+@media (max-width: 420px) {
+  .btn-masar {
+    padding: 5px 6px !important;
+    font-size: 9.5px !important;
+    gap: 2px !important;
+    border-radius: 6px !important;
+  }
 }
-
-:root[data-theme="dark"] .policy-title {
-  color: #FFFFFF !important;
-}
-
-:root[data-theme="dark"] .policy-desc {
-  color: #94A3B8 !important;
-}
-
-:root[data-theme="dark"] .modal-box {
-  background: #131E35 !important;
-  border-color: #334155 !important;
-  color: #F8FAFC !important;
-}
-
-:root[data-theme="dark"] .modal-header-custom {
-  background: #17243E !important;
-  border-color: #334155 !important;
-}
-
-:root[data-theme="dark"] .modal-footer-custom {
-  background: #0F172A !important;
-  border-color: #334155 !important;
-}
-
-:root[data-theme="dark"] .modal-body-custom .form-control {
-  background: #0F172A !important;
-  border-color: #334155 !important;
-  color: #F8FAFC !important;
-}
-
-:root[data-theme="dark"] .btn-action-ghost {
-  background: #1E293B !important;
-  border-color: #334155 !important;
-  color: #94A3B8 !important;
-}
-
-:root[data-theme="dark"] .btn-action-ghost:hover {
-  background: rgba(1, 121, 241, 0.2) !important;
-  border-color: #0179F1 !important;
-  color: #38BDF8 !important;
-}
-
-
-
 
