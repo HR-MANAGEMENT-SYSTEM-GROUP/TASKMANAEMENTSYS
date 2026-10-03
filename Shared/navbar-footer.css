@@ -357,7 +357,10 @@ html.theme-anim * {
   color: var(--accent);
   border-color: var(--accent);
 }
-
+.link-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
 @media (max-width: 1024px) {
   .foot-grid { grid-template-columns: 1fr 1fr; }
 }
