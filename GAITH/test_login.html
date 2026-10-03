@@ -459,12 +459,44 @@
   </div>
 
 <script>
+window.__LOGS__ = [];
+function log(msg) {
+  window.__LOGS__.push(msg);
+  console.log(msg);
+}
+
 window.addEventListener('load', () => {
   setTimeout(() => {
+    const btn = document.getElementById('togglePasswordBtn');
+    const badgeCard = document.getElementById('badgeCard');
+    const passInput = document.getElementById('loginPassword');
     const shackle = document.getElementById('padlockShackle');
-    shackle.style.transform = 'translateY(-3px) rotate(-18deg)';
-    document.title = 'INLINE_TEST:' + window.getComputedStyle(shackle).transform;
-  }, 300);
+    const body = document.getElementById('padlockBody');
+
+    log('T0 passType=' + passInput.type + ' classes=' + badgeCard.className + ' shackleTransform=' + window.getComputedStyle(shackle).transform);
+    
+    // Test 1: Click toggle button while password field is NOT focused initially
+    btn.click();
+    
+    setTimeout(() => {
+      log('T1 passType=' + passInput.type + ' classes=' + badgeCard.className + ' shackleTransform=' + window.getComputedStyle(shackle).transform);
+      
+      // Test 2: Click toggle button again (to hide password)
+      btn.click();
+      
+      setTimeout(() => {
+        log('T2 passType=' + passInput.type + ' classes=' + badgeCard.className + ' shackleTransform=' + window.getComputedStyle(shackle).transform + ' bodyClasses=' + body.className.baseVal);
+        
+        // Test 3: Click toggle button again (to show password again)
+        btn.click();
+        
+        setTimeout(() => {
+          log('T3 passType=' + passInput.type + ' classes=' + badgeCard.className + ' shackleTransform=' + window.getComputedStyle(shackle).transform);
+          document.title = JSON.stringify(window.__LOGS__);
+        }, 150);
+      }, 150);
+    }, 150);
+  }, 400);
 });
 </script>
 </body>
