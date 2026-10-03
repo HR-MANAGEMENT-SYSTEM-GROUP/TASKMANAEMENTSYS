@@ -205,6 +205,18 @@
     const pageTitle = document.getElementById('profilePageTitle');
     const pageSubtitle = document.getElementById('profilePageSubtitle');
     const breadcrumbText = document.getElementById('profileBreadcrumbText');
+    const portalLink = document.getElementById('profilePortalLink') || document.querySelector('.breadcrumb-parent-link');
+    const brandLogoLink = document.getElementById('navBrandLogoLink') || document.querySelector('.profile-navbar a');
+
+    if (portalLink) {
+      portalLink.href = isHR ? '../../NADA/hrdashboard/hrdashboard.html' : '../../NADA/home/home.html';
+      portalLink.setAttribute('title', isHR ? 'Back to HR Dashboard' : 'Back to Home');
+    }
+
+    if (brandLogoLink) {
+      brandLogoLink.href = isHR ? '../../NADA/hrdashboard/hrdashboard.html' : '../../NADA/home/home.html';
+      brandLogoLink.setAttribute('title', isHR ? 'Masar HR Dashboard' : 'Masar Home');
+    }
 
     if (pageTitle) pageTitle.textContent = isHR ? 'HR Administrator Profile' : 'Employee Profile';
     if (pageSubtitle) {
