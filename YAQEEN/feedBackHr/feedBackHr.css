@@ -175,6 +175,96 @@ body {
   font-size: 16px;
 }
 
+/* Category filter, a pill like .header-meta-pill with its own arrow */
+#categorySelect {
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 190px;
+  max-width: 100%;
+  padding: 9px 40px 9px 16px;
+  background-color: var(--tint);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%230179F1' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 12px;
+  border: 1px solid var(--tint-border);
+  border-radius: 999px;
+  color: var(--ink);
+  font-family: var(--head);
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+#categorySelect:hover {
+  border-color: var(--primary);
+}
+
+#categorySelect:focus {
+  outline: none;
+  background-color: var(--surface);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(1, 121, 241, 0.15);
+}
+
+#categorySelect option {
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--text);
+  font-weight: 500;
+}
+
+/* The opened list. Browsers without base-select keep their normal list. */
+@supports (appearance: base-select) {
+  #categorySelect,
+  #categorySelect::picker(select) {
+    appearance: base-select;
+  }
+
+  /* The arrow is already drawn as the select's background */
+  #categorySelect::picker-icon {
+    display: none;
+  }
+
+  #categorySelect::picker(select) {
+    margin-block: 8px;
+    padding: 6px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  #categorySelect option {
+    padding: 9px 12px;
+    background: transparent;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  #categorySelect option:hover,
+  #categorySelect option:focus-visible {
+    background: #F1F5F9;
+    outline: none;
+  }
+
+  #categorySelect option:checked {
+    background: var(--tint);
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  /* Tick of the chosen option, moved to the right */
+  #categorySelect option::checkmark {
+    order: 1;
+    margin-left: auto;
+    color: var(--primary);
+  }
+}
+
 /* ---------- Feedback cards (markup comes from feedBackHr.js) ----------
    Styled like .policy-card on the policy page.
    !important only where a Bootstrap utility on that markup would win. */
@@ -351,6 +441,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   #parent .card { transition: none; }
+  #categorySelect { transition: none; }
 }
 
 /* ================= DARK THEME OVERRIDES ================= */
@@ -373,6 +464,48 @@ body {
 :root[data-theme="dark"] .author-role,
 :root[data-theme="dark"] .card-text {
   color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] #categorySelect {
+  background-color: #0F172A;
+  border-color: #334155;
+  color: #F8FAFC;
+}
+
+:root[data-theme="dark"] #categorySelect:hover,
+:root[data-theme="dark"] #categorySelect:focus {
+  border-color: #0179F1;
+}
+
+:root[data-theme="dark"] #categorySelect option {
+  background: #131E35;
+  color: #F8FAFC;
+}
+
+@supports (appearance: base-select) {
+  :root[data-theme="dark"] #categorySelect::picker(select) {
+    background: #131E35;
+    border-color: #334155;
+    box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.5);
+  }
+
+  :root[data-theme="dark"] #categorySelect option {
+    background: transparent;
+  }
+
+  :root[data-theme="dark"] #categorySelect option:hover,
+  :root[data-theme="dark"] #categorySelect option:focus-visible {
+    background: #1E293B;
+  }
+
+  :root[data-theme="dark"] #categorySelect option:checked {
+    background: rgba(1, 121, 241, 0.18);
+    color: #4DA3FF;
+  }
+
+  :root[data-theme="dark"] #categorySelect option::checkmark {
+    color: #4DA3FF;
+  }
 }
 
 :root[data-theme="dark"] .reply-box {
