@@ -75,25 +75,98 @@ body.employee-tasks {
    PAGE
 ========================================================= */
 
-.employee-tasks .page {
-    width: min(1360px, calc(100% - 64px));
-    margin: 28px auto 72px;
-}
-
 /* =========================================================
-   HEADER
+   Center Employee Tasks Page Like Policies Page
+========================================================= */
+/* =========================================================
+   Final Page Width Like Policies Page
 ========================================================= */
 
-.employee-tasks .page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 32px;
-
-    padding: 12px 0 28px;
+body.employee-tasks main.page,
+.employee-tasks .page {
+    width: min(1200px, calc(100% - 260px)) !important;
+    max-width: 1380px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 40px !important;
 }
 
+/* خلي البطاقات والفلتر ياخذوا عرض الصفحة فقط */
+.employee-tasks .meeting-shortcuts,
+.employee-tasks .section,
+.employee-tasks .task-filters-card,
+.employee-tasks .task-board {
+    width: 100% !important;
+}
+
+/* الشاشات المتوسطة */
+@media (max-width: 1400px) {
+    body.employee-tasks main.page,
+    .employee-tasks .page {
+        width: calc(100% - 120px) !important;
+        max-width: 1280px !important;
+    }
+}
+
+/* التابلت */
+@media (max-width: 992px) {
+    body.employee-tasks main.page,
+    .employee-tasks .page {
+        width: calc(100% - 64px) !important;
+    }
+}
+
+/* الموبايل */
+@media (max-width: 768px) {
+    body.employee-tasks main.page,
+    .employee-tasks .page {
+        width: calc(100% - 32px) !important;
+    }
+}
+
+
+.employee-tasks .page-header {
+    padding: 0 0 44px !important;
+}
+
+.employee-tasks .meeting-shortcuts {
+    margin-bottom: 48px !important;
+}
+
+.employee-tasks .section {
+    margin-bottom: 44px !important;
+}
+
+/* Medium screens */
+@media (max-width: 1400px) {
+    .employee-tasks .page {
+        width: min(1280px, calc(100% - 120px)) !important;
+    }
+}
+
+/* Tablets */
+@media (max-width: 1200px) {
+    .employee-tasks .page {
+        width: calc(100% - 64px) !important;
+        margin: 40px auto 60px !important;
+    }
+
+    .employee-tasks .task-board {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .employee-tasks .page {
+        width: calc(100% - 32px) !important;
+        margin: 24px auto 40px !important;
+    }
+
+    .employee-tasks .task-board {
+        grid-template-columns: 1fr !important;
+    }
+}
 .employee-tasks .page-header > div {
     max-width: 680px;
 }
