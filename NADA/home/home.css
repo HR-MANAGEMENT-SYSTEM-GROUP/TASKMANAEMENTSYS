@@ -79,7 +79,12 @@ ul{list-style:none}
 .masar-lockup{display:block;height:34px;width:auto}
 .ml-tile{fill:var(--logo-tile)}.ml-hollow{fill:var(--logo-tile)}
 .ml-m{stroke:var(--logo-m)}.ml-word{stroke:var(--logo-word)}
-.foot-logo{display:block;height:34px;width:auto;margin-bottom:16px}
+.foot-logo{display:block;height:34px;width:auto;object-fit:contain;margin-bottom:16px}
+.foot-logo-link{display:inline-block;text-decoration:none}
+.foot-logo.logo-dark-mode{display:none!important}
+.foot-logo.logo-light-mode{display:block!important}
+:root[data-theme="dark"] .foot-logo.logo-dark-mode{display:block!important}
+:root[data-theme="dark"] .foot-logo.logo-light-mode{display:none!important}
 
 .journey-nav-menu{
   display:flex;gap:clamp(12px,1.8vw,26px);padding:6px 18px;
