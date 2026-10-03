@@ -457,6 +457,33 @@
       </div>
     </div>
   </div>
+
+<script>
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const badgeCard = document.getElementById('badgeCard');
+    const shackle = document.getElementById('padlockShackle');
+    badgeCard.classList.add('is-unlatched');
+    
+    // Find all rules matching shackle
+    const matchingRules = [];
+    for (const sheet of document.styleSheets) {
+      try {
+        for (const rule of sheet.cssRules) {
+          if (rule.selectorText && shackle.matches(rule.selectorText)) {
+            matchingRules.push({
+              selector: rule.selectorText,
+              transform: rule.style.transform,
+              cssText: rule.cssText
+            });
+          }
+        }
+      } catch(e){}
+    }
+    document.title = JSON.stringify(matchingRules);
+  }, 300);
+});
+</script>
 </body>
 
 </html>

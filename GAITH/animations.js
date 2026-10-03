@@ -564,6 +564,27 @@
     setTimeout(syncBadgeFlipState, 40);
   });
 
+  if (togglePasswordBtn) {
+    togglePasswordBtn.addEventListener('mousedown', (e) => {
+      // Prevent focusout on passwordInput so badge stays flipped on click
+      e.preventDefault();
+    });
+
+    togglePasswordBtn.addEventListener('click', () => {
+      if (badgeCard && !badgeCard.classList.contains('is-flipped')) {
+        badgeCard.classList.add('is-flipped');
+        if (!prefersReducedMotion.matches) {
+          velocity += SWING_SIGN * -14.0;
+          startPhysicsLoop();
+        }
+      }
+      if (passwordInput && document.activeElement !== passwordInput) {
+        passwordInput.focus();
+      }
+      setTimeout(syncPadlockState, 10);
+    });
+  }
+
   // --------------------------------------------------------------------------
   // 11. PADLOCK UNLATCH ANIMATION (WHEN PASSWORD SHOWN / HIDDEN)
   // --------------------------------------------------------------------------
@@ -587,6 +608,9 @@
       }
     }
   }
+
+  // Export so login logic can trigger it directly
+  window.syncPadlockState = syncPadlockState;
 
   // React to password type attribute changes
   if (passwordInput && window.MutationObserver) {

@@ -29,6 +29,7 @@ let passErr = document.getElementById("passwordError");
 document.getElementById("togglePasswordBtn").onclick = () => {
   passInput.type = passInput.type === "password" ? "text" : "password";
   document.getElementById("toggleIcon").className = passInput.type === "text" ? "bi bi-eye" : "bi bi-eye-slash";
+  if (typeof window.syncPadlockState === "function") window.syncPadlockState();
 };
 
 // اخفاء رسائل الخطأ لما اليوزر يكتب
