@@ -88,10 +88,10 @@
     <div class="toolbar-filters">
         <button type="button" class="filter-chip active" data-filter="all">All Modules</button>
         <button type="button" class="filter-chip" data-filter="employees">Employees</button>
-        <button type="button" class="filter-chip" data-filter="leaves">Leaves (7)</button>
-        <button type="button" class="filter-chip" data-filter="tasks">Tasks (23)</button>
-        <button type="button" class="filter-chip" data-filter="feedback">Feedback (2)</button>
-        <button type="button" class="filter-chip" data-filter="meetings">Meetings (2)</button>
+        <button type="button" class="filter-chip" data-filter="leaves">Leaves(<span id="LeavesCount"></span>)</button>
+        <button type="button" class="filter-chip" data-filter="tasks">Tasks (<span id="TasksCount"></span>)</button>
+        <button type="button" class="filter-chip" data-filter="feedback">Feedback (<span id="FeedbackCount"></span>)</button>
+        <button type="button" class="filter-chip" data-filter="meetings">Meetings (<span id="MeetingsCount"></span>)</button>
     </div>
 </div>
 
@@ -107,8 +107,8 @@
                 </div>
                 <span class="summary-pill">+4 this month</span>
             </div>
-            <div class="summary-value" >15</div>
-            <div class="summary-label" id="activeEmployees">Total Active Employees</div>
+            <div class="summary-value" id="activeEmployees"></div>
+            <div class="summary-label" id="activeEmployeesLabel">Total Active Employees</div>
             <a
                 href="../../OMAR/ManageEmployeesPage/ManageEmployeesPage.html"
                 class="dashboard-view-btn"
@@ -128,7 +128,7 @@
                 </div>
                 <span class="summary-pill">Requires review</span>
             </div>
-            <div class="summary-value">7</div>
+            <div class="summary-value" id="pendingLeaves"></div>
             <div class="summary-label" id="pendingLeavesLabel">Pending Leave Requests</div>
             <a
                 href="../../Amneh/HR/leaves-hr.html"
@@ -149,8 +149,8 @@
                 </div>
                 <span class="summary-pill">12 due today</span>
             </div>
-            <div class="summary-value">4</div>
-            <div class="summary-label" id="openTasksLabel">Open Department Tasks</div>
+            <div class="summary-value" id="openTasks"></div>
+            <div class="summary-label" id="openTasksLabel">New Department Tasks</div>
             <a
                 href="../../TAREQ/HR%20TASK/HR_TASK.html"
                 class="dashboard-view-btn"
@@ -170,7 +170,7 @@
                 </div>
                 <span class="summary-pill">2 urgent</span>
             </div>
-            <div class="summary-value">2</div>
+            <div class="summary-value" id="employeeFeedback"></div>
             <div class="summary-label" id="employeeFeedbackLabel">Employee Feedbacks Received</div>
             <a
                 href="../../YAQEEN/feedBackHr/feedBackHr.html"
