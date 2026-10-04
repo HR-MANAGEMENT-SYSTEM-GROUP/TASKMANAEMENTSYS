@@ -579,7 +579,70 @@ body {
         grid-template-columns: 1fr;
     }
 }
+.input-error {
+    border-color: #DC2626 !important;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12) !important;
+}
 
+.field-error {
+    margin-top: 6px;
+    color: #DC2626;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.action-popup {
+    position: fixed;
+    top: 22px;
+    right: 22px;
+    z-index: 99999;
+
+    min-width: 260px;
+    max-width: 380px;
+
+    padding: 14px 18px;
+
+    border-radius: 12px;
+
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 800;
+
+    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.18);
+
+    opacity: 0;
+    transform: translateY(-12px);
+    pointer-events: none;
+
+    transition: all 0.25s ease;
+}
+
+.action-popup.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.action-popup.success {
+    background: #16A34A;
+}
+
+.action-popup.error {
+    background: #DC2626;
+}
+
+.action-popup.info {
+    background: #0079F1;
+}.input-error {
+    border-color: #DC2626 !important;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12) !important;
+}
+
+.field-error {
+    margin-top: 6px;
+    color: #DC2626;
+    font-size: 13px;
+    font-weight: 700;
+}
 /* =========================================
    ANIMATIONS
 ========================================= */

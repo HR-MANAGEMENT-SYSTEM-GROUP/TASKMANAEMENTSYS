@@ -273,13 +273,6 @@
 
 
 </div>
-
-
-
-
-
-
-
 <!-- CREATE TASK MODAL -->
 <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
 
@@ -288,20 +281,26 @@
         <div class="modal-content create-task-modal">
 
             <div class="modal-header create-task-header">
+
                 <div>
                     <span class="modal-eyebrow">HR Task Cycle</span>
-                    <h4 class="modal-title">Create Task</h4>
+
+                    <h4 class="modal-title">
+                        Create Task
+                    </h4>
+
                     <p class="modal-subtitle">
                         Fill in the task information and assign it to one or more employees.
                     </p>
                 </div>
 
-                <button 
-                    type="button" 
-                    class="btn-close" 
-                    data-bs-dismiss="modal" 
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
                     aria-label="Close">
                 </button>
+
             </div>
 
             <div class="modal-body create-task-body">
@@ -387,43 +386,47 @@
                         <!-- Employee checkboxes will be loaded here by JavaScript -->
                     </div>
                 </div>
-<!-- Attachments -->
-<div class="form-row attachments-row">
 
-    <div class="form-group">
-        <label>
-            Upload Task File
-        </label>
+                <!-- Attachments -->
+                <div class="form-row attachments-row">
 
-        <label for="taskFile" class="upload-pill-btn">
-            <i class="bi bi-upload"></i>
-            Upload File
-        </label>
+                    <div class="form-group">
+                        <label>
+                            Upload Task File
+                        </label>
 
-        <input
-            type="file"
-            id="taskFile"
-            class="hidden-file-input">
-    </div>
+                        <label for="taskFile" class="upload-pill-btn">
+                            <i class="bi bi-upload"></i>
+                            Upload File
+                        </label>
 
-    <div class="form-group">
-        <label>
-            Upload Task Image
-        </label>
+                        <input
+                            type="file"
+                            id="taskFile"
+                            class="hidden-file-input">
+                    </div>
 
-        <label for="taskImage" class="upload-pill-btn">
-            <i class="bi bi-image"></i>
-            Upload Photo
-        </label>
+                    <div class="form-group">
+                        <label>
+                            Upload Task Image
+                        </label>
 
-        <input
-            type="file"
-            id="taskImage"
-            class="hidden-file-input"
-            accept="image/*">
-    </div>
+                        <label for="taskImage" class="upload-pill-btn">
+                            <i class="bi bi-image"></i>
+                            Upload Photo
+                        </label>
 
-</div>
+                        <input
+                            type="file"
+                            id="taskImage"
+                            class="hidden-file-input"
+                            accept="image/*">
+                    </div>
+
+                </div>
+
+            </div>
+
             <div class="modal-footer create-task-footer">
 
                 <button
@@ -448,10 +451,6 @@
     </div>
 
 </div>
-
-
-
-
 
 
 
@@ -588,79 +587,160 @@
 
 
 </div>
-
-
-
-
-
-
-
-
-<!-- EDIT TASK MODAL -->
-
 <!-- ================= EDIT TASK MODAL ================= -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
 
-<div class="modal fade" id="editModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
 
-    <div class="modal-dialog">
+        <div class="modal-content create-task-modal">
 
-        <div class="modal-content">
+            <div class="modal-header create-task-header">
 
-            <div class="modal-header">
+                <div>
+                    <span class="modal-eyebrow">HR Task Cycle</span>
 
-                <h4>
-                    Edit Task
-                </h4>
+                    <h4 class="modal-title">
+                        Edit Task
+                    </h4>
+
+                    <p class="modal-subtitle">
+                        Update task information, deadline, priority, or assigned employee.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close">
+                </button>
 
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body create-task-body">
 
-                <input
-                    id="editTitle"
-                    class="form-control mb-2">
+                <!-- Edit Task Title -->
+                <div class="form-group">
+                    <label for="editTitle">
+                        Task Title <span class="required">*</span>
+                    </label>
 
-                <textarea
-                    id="editDescription"
-                    class="form-control mb-2"></textarea>
+                    <input
+                        type="text"
+                        id="editTitle"
+                        class="form-control"
+                        placeholder="Enter task title">
+                </div>
 
-                <select
-                    id="editPriority"
-                    class="form-control mb-2">
+                <!-- Edit Task Description -->
+                <div class="form-group">
+                    <label for="editDescription">
+                        Task Description <span class="required">*</span>
+                    </label>
 
-                    <option>High</option>
-                    <option>Medium</option>
-                    <option>Low</option>
+                    <textarea
+                        id="editDescription"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Enter task description"></textarea>
+                </div>
 
-                </select>
+                <!-- Edit Priority -->
+                <div class="form-group">
+                    <label for="editPriority">
+                        Priority <span class="required">*</span>
+                    </label>
 
-                <input
-                    id="editDeadline"
-                    type="datetime-local"
-                    class="form-control mb-2">
+                    <select
+                        id="editPriority"
+                        class="form-control">
 
-                <label>
-                    Assign Employees
-                </label>
+                        <option value="">Select priority</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
 
-                <div id="editEmployeeList"></div>
+                    </select>
+                </div>
 
-                <input
-                    id="editTaskFile"
-                    type="file"
-                    class="form-control mt-2">
+                <!-- Edit Deadline -->
+                <div class="form-group">
+                    <label for="editDeadline">
+                        Deadline <span class="required">*</span>
+                    </label>
 
-                <input
-                    id="editTaskImage"
-                    type="file"
-                    class="form-control mt-2">
+                    <input
+                        id="editDeadline"
+                        type="datetime-local"
+                        class="form-control">
+                </div>
+
+                <!-- Edit Assign Employee -->
+                <div class="form-group">
+                    <label>
+                        Assign Employee <span class="required">*</span>
+                    </label>
+
+                    <div id="editEmployeeList" class="employee-list-box">
+                        <!-- Employee checkbox will be loaded here by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Edit Attachments -->
+                <div class="form-row attachments-row">
+
+                    <div class="form-group">
+                        <label>
+                            Upload Task File
+                        </label>
+
+                        <label for="editTaskFile" class="upload-pill-btn">
+                            <i class="bi bi-upload"></i>
+                            Upload File
+                        </label>
+
+                        <input
+                            type="file"
+                            id="editTaskFile"
+                            class="hidden-file-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Upload Task Image
+                        </label>
+
+                        <label for="editTaskImage" class="upload-pill-btn">
+                            <i class="bi bi-image"></i>
+                            Upload Photo
+                        </label>
+
+                        <input
+                            type="file"
+                            id="editTaskImage"
+                            class="hidden-file-input"
+                            accept="image/*">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer create-task-footer">
 
                 <button
+                    type="button"
+                    class="btn btn-light cancel-create-btn"
+                    data-bs-dismiss="modal"
+                    onclick="clearFieldErrors()">
+                    Cancel
+                </button>
+
+                <button
+                    type="button"
                     onclick="saveEditTask()"
-                    class="btn btn-primary mt-3">
-
-                    Save
-
+                    class="btn btn-primary create-task-btn">
+                    Save Changes
                 </button>
 
             </div>
@@ -670,6 +750,11 @@
     </div>
 
 </div>
+
+
+
+
+
 
 
 <!-- ================= FOOTER ================= -->

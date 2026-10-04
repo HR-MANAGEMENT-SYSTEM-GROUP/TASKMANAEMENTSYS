@@ -356,54 +356,262 @@ function hideModal(modalId) {
 
     const modal =  bootstrap.Modal.getInstance(modalElement);
     if (modal) { modal.hide(); }}
+    /* =========================================================
+   VALIDATION + POPUP HELPERS
+========================================================= */
+
+function showPopup(message, type = "success") {
+
+    let popup = document.getElementById("actionPopup");
+
+    if (!popup) {
+        popup = document.createElement("div");
+        popup.id = "actionPopup";
+        document.body.appendChild(popup);
+    }
+
+    popup.className = `action-popup ${type}`;
+    popup.textContent = message;
+    popup.classList.add("show");
+
+    setTimeout(function () {
+        popup.classList.remove("show");
+    }, 2500);
+}
+
+
+function clearFieldErrors() {
+
+    document.querySelectorAll(".field-error").forEach(function (error) {
+        error.remove();
+    });
+
+    document.querySelectorAll(".input-error").forEach(function (input) {
+        input.classList.remove("input-error");
+    });
+}
+
+
+function setFieldError(elementId, message) {
+
+    const element = document.getElementById(elementId);
+
+    if (!element) {
+        return;
+    }
+
+    element.classList.add("input-error");
+
+    const error = document.createElement("div");
+    error.className = "field-error";
+    error.textContent = message;
+
+    element.insertAdjacentElement("afterend", error);
+}
+
+
+function validateCreateTaskForm() {
+
+    clearFieldErrors();
+
+    let isValid = true;
+
+    const title = document.getElementById("taskTitleInput")?.value.trim() || "";
+    const description = document.getElementById("taskDescriptionInput")?.value.trim() || "";
+    const priority = document.getElementById("taskPriorityInput")?.value || "";
+    const deadlineDate = document.getElementById("deadlineDate")?.value || "";
+    const deadlineTime = document.getElementById("deadlineTime")?.value || "";
+    const selectedEmployees = getSelectedEmployees("employeeList");
+
+    if (title === "") {
+        setFieldError("taskTitleInput", "Task title is required.");
+        isValid = false;
+    }
+
+    if (description === "") {
+        setFieldError("taskDescriptionInput", "Task description is required.");
+        isValid = false;
+    }
+
+    if (priority === "") {
+        setFieldError("taskPriorityInput", "Please select task priority.");
+        isValid = false;
+    }
+
+    if (deadlineDate === "") {
+        setFieldError("deadlineDate", "Deadline date is required.");
+        isValid = false;
+    }
+
+    if (deadlineTime === "") {
+        setFieldError("deadlineTime", "Deadline time is required.");
+        isValid = false;
+    }
+
+    if (selectedEmployees.length === 0) {
+        setFieldError("employeeList", "Please assign at least one employee.");
+        isValid = false;
+    }
+
+    if (deadlineDate !== "" && deadlineTime !== "") {
+        const deadline = new Date(`${deadlineDate}T${deadlineTime}`);
+
+        if (Number.isNaN(deadline.getTime())) {
+            setFieldError("deadlineDate", "Please select a valid deadline.");
+            setFieldError("deadlineTime", "Please select a valid deadline.");
+            isValid = false;
+        } else if (deadline < new Date()) {
+            setFieldError("deadlineDate", "Deadline cannot be in the past.");
+            setFieldError("deadlineTime", "Deadline cannot be in the past.");
+            isValid = false;
+        }
+    }
+
+    return isValid;
+}
+
+
+function validateEditTaskForm() {
+
+    clearFieldErrors();
+
+    let isValid = true;
+
+    const title = getValue("editTitle").trim();
+    const description = getValue("editDescription").trim();
+    const priority = getValue("editPriority");
+    const deadlineValue = getValue("editDeadline");
+    const selectedEmployees = getSelectedEmployees("editEmployeeList");
+
+    if (title === "") {
+        setFieldError("editTitle", "Task title is required.");
+        isValid = false;
+    }
+
+    if (description === "") {
+        setFieldError("editDescription", "Task description is required.");
+        isValid = false;
+    }
+
+    if (priority === "") {
+        setFieldError("editPriority", "Please select task priority.");
+        isValid = false;
+    }
+
+    if (deadlineValue === "") {
+        setFieldError("editDeadline", "Deadline is required.");
+        isValid = false;
+    }
+
+    if (selectedEmployees.length === 0) {
+        setFieldError("editEmployeeList", "Please assign one employee.");
+        isValid = false;
+    }
+
+    if (selectedEmployees.length > 1) {
+        setFieldError("editEmployeeList", "Select one employee only in edit mode.");
+        isValid = false;
+    }
+
+    if (deadlineValue !== "") {
+        const deadline = new Date(deadlineValue);
+
+        if (Number.isNaN(deadline.getTime())) {
+            setFieldError("editDeadline", "Please select a valid deadline.");
+            isValid = false;
+        }
+    }
+
+    return isValid;
+}
 /* =========================================================
    CREATE TASK
 ========================================================= */
-
 function createTask() {
+
+    if (!validateCreateTaskForm()) {
+        showPopup("Please complete the required fields.", "error");
+        return;
+    }
 
     const selectedEmployees = getSelectedEmployees("employeeList");
     const title = document.getElementById("taskTitleInput")?.value.trim() || "";
-    const description =document.getElementById("taskDescriptionInput")?.value.trim() || "";
-    const priority =document.getElementById("taskPriorityInput")?.value || "Medium";
+    const description = document.getElementById("taskDescriptionInput")?.value.trim() || "";
+    const priority = document.getElementById("taskPriorityInput")?.value || "Medium";
     const deadlineDate = document.getElementById("deadlineDate")?.value || "";
-    const deadlineTime =document.getElementById("deadlineTime")?.value || "";
-    const taskFileInput =document.getElementById("taskFile");
-    const taskImageInput =document.getElementById("taskImage");
-
-    if ( title === "" ||description === "" || selectedEmployees.length === 0 || deadlineDate === "" ||deadlineTime === "") 
-    { alert("Please complete task data.");return; }
+    const deadlineTime = document.getElementById("deadlineTime")?.value || "";
+    const taskFileInput = document.getElementById("taskFile");
+    const taskImageInput = document.getElementById("taskImage");
 
     const deadline = new Date(`${deadlineDate}T${deadlineTime}`);
-    if (Number.isNaN(deadline.getTime())) {alert("Please select valid deadline.");  return; }
-    if (deadline < new Date()) {alert("Deadline cannot be in the past."); return; }
 
-    const taskFile = taskFileInput && taskFileInput.files.length > 0  ? taskFileInput.files[0].name : "";
-    const taskImage = taskImageInput && taskImageInput.files.length > 0   ? taskImageInput.files[0].name    : "";
-    const groupId =  generateTaskGroupId();
+    const taskFile = taskFileInput && taskFileInput.files.length > 0
+        ? taskFileInput.files[0].name
+        : "";
+
+    const taskImage = taskImageInput && taskImageInput.files.length > 0
+        ? taskImageInput.files[0].name
+        : "";
+
+    const groupId = generateTaskGroupId();
+
     selectedEmployees.forEach(function (employeeId, index) {
 
         const employee = getEmployeeById(employeeId);
-        const task = { id: generateTaskId(employeeId, index),
- taskGroupId: groupId, groupId: groupId,  title: title,  description: description,   priority: priority,    deadline: deadline.toISOString(),
 
-  employeeId: Number(employeeId), employeeName: employee ? employee.name : "Unknown",   assignedEmployees: [Number(employeeId)],   assignedEmployeeNames: [   employee ? employee.name : "Unknown"   ],
+        const task = {
+            id: generateTaskId(employeeId, index),
+            taskGroupId: groupId,
+            groupId: groupId,
 
- createdBy: Number(currentHRId), createdByHRId: Number(currentHRId),  createdByHRName: getHRName(),   createdByHREmail: currentHR.email || "",
+            title: title,
+            description: description,
+            priority: priority,
+            deadline: deadline.toISOString(),
 
-     createdAt: new Date().toISOString(),   updatedAt: new Date().toISOString(),
+            employeeId: Number(employeeId),
+            employeeName: employee ? employee.name : "Unknown",
+            assignedEmployees: [Number(employeeId)],
+            assignedEmployeeNames: [
+                employee ? employee.name : "Unknown"
+            ],
 
-  status: "New",  taskFile: taskFile,   taskImage: taskImage,
-     submission: null,  hrFeedback: "",  notification: "New task assigned by HR",
+            createdBy: Number(currentHRId),
+            createdByHRId: Number(currentHRId),
+            createdByHRName: getHRName(),
+            createdByHREmail: currentHR.email || "",
 
- history: [  {  message: "Task created by HR.",    hrId: currentHRId,     hrName: getHRName(),     date: new Date().toISOString()  } ]};
- tasks.push(task); });
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+
+            status: "New",
+            taskFile: taskFile,
+            taskImage: taskImage,
+
+            submission: null,
+            hrFeedback: "",
+            notification: "New task assigned by HR",
+
+            history: [
+                {
+                    message: "Task created by HR.",
+                    hrId: currentHRId,
+                    hrName: getHRName(),
+                    date: new Date().toISOString()
+                }
+            ]
+        };
+
+        tasks.push(task);
+    });
 
     saveTasks();
     clearCreateForm();
     refreshPageData();
-    alert("Tasks created successfully.");}
+    hideModal("createModal");
 
+    showPopup("Task created successfully.", "success");
+}
 
 function clearCreateForm() {
 
@@ -539,24 +747,61 @@ function buildTaskActions(task) {
 function viewTask(id) {
 
     selectedTaskId = Number(id);
-    const task =  getTaskById(selectedTaskId);if (!task) {   return; }
+
+    const task = getTaskById(selectedTaskId);
+
+    if (!task) {
+        showPopup("Task not found.", "error");
+        return;
+    }
 
     setHTML("viewTaskTitle", escapeHTML(task.title));
     setHTML("viewTaskDescription", escapeHTML(task.description));
-    setHTML( "viewTaskEmployees", `<b>Employee:</b> ${escapeHTML(task.employeeName || "Unknown")}`);
-    setHTML(   "submittedEmployee",   task.submission     ? escapeHTML(task.submission.employeeName)     : "Not Submitted" );
-    setHTML(  "submittedDate", task.submission    ? formatDateTime(task.submission.date)   : "-");
-    setHTML(   "submittedSolution", task.submission   ? escapeHTML(task.submission.solution || "No Solution")   : "No Solution" );
+    setHTML("viewTaskEmployees", `<b>Employee:</b> ${escapeHTML(task.employeeName || "Unknown")}`);
+
+    setHTML(
+        "submittedEmployee",
+        task.submission ? escapeHTML(task.submission.employeeName) : "Not Submitted"
+    );
+
+    setHTML(
+        "submittedDate",
+        task.submission ? formatDateTime(task.submission.date) : "-"
+    );
+
+    setHTML(
+        "submittedSolution",
+        task.submission ? escapeHTML(task.submission.solution || "No Solution") : "No Solution"
+    );
+
     setHTML("taskCreatedDate", formatDateTime(task.createdAt));
     setHTML("taskUpdatedDate", formatDateTime(task.updatedAt));
-    setHTML(  "submittedFile",  task.submission?.file || "No File" );
-    setHTML(   "submittedImage",  task.submission?.image || "No Image" );
+    setHTML("submittedFile", task.submission?.file || "No File");
+    setHTML("submittedImage", task.submission?.image || "No Image");
 
     const feedbackInput = document.getElementById("hrFeedback");
-    if (feedbackInput) {  feedbackInput.value = task.hrFeedback || "";}
 
-    const modal =    bootstrap.Modal.getOrCreateInstance(   document.getElementById("viewTaskModal")  );
-    modal.show();}
+    if (feedbackInput) {
+        feedbackInput.value = task.hrFeedback || "";
+    }
+
+    const modalElement = document.getElementById("viewTaskModal");
+
+    if (!modalElement) {
+        showPopup("View modal not found. Check id='viewTaskModal'.", "error");
+        console.error("Missing modal: viewTaskModal");
+        return;
+    }
+
+    if (!window.bootstrap) {
+        showPopup("Bootstrap is not loaded.", "error");
+        console.error("Bootstrap JS is not loaded.");
+        return;
+    }
+
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+    modal.show();
+}
 
 
 function hasValidSubmission(task) {
@@ -604,64 +849,141 @@ function requestChanges() {
    EDIT TASK - SINGLE CARD ONLY
 ========================================================= */
 
-function openEdit(id) { selectedTaskId = Number(id);
+function openEdit(id) {
 
-    const task =  getTaskById(selectedTaskId);
-    if (!task) { alert("Task not found");return; }
+    selectedTaskId = Number(id);
+
+    const task = getTaskById(selectedTaskId);
+
+    if (!task) {
+        showPopup("Task not found.", "error");
+        return;
+    }
+
     setValue("editTitle", task.title);
     setValue("editDescription", task.description);
     setValue("editPriority", task.priority);
     setValue("editDeadline", toDateTimeLocal(task.deadline));
 
-    const selectedIds = [  Number(task.employeeId)  ];
-    renderEmployeeMultiSelect( "editEmployeeList",  selectedIds,  "editEmp" );
-    const modal =  bootstrap.Modal.getOrCreateInstance(    document.getElementById("editModal") ); modal.show();}
+    const selectedIds = [Number(task.employeeId)];
 
+    renderEmployeeMultiSelect("editEmployeeList", selectedIds, "editEmp");
 
-function saveEditTask() {
+    const modalElement = document.getElementById("editModal");
 
-    const task =   getTaskById(selectedTaskId);
-
-    if (!task) { return; }
-
-    const title = getValue("editTitle").trim();
-    const description = getValue("editDescription").trim();
-    const priority =getValue("editPriority");
-    const deadlineValue =getValue("editDeadline");
-    const selectedEmployees =getSelectedEmployees("editEmployeeList");
-
-    if ( title === "" ||  description === "" ||selectedEmployees.length === 0)
-         { alert("Please complete task data and select employee."); return;}
-
-    if (selectedEmployees.length > 1) {    alert("In edit mode, select one employee only.");  return; }
-
-    const selectedEmployeeId =  Number(selectedEmployees[0]);
-    const deadline =  new Date(deadlineValue);
-
-    if (Number.isNaN(deadline.getTime())) {   alert("Please select valid deadline.");   return;}
-
-    const oldEmployeeId =  Number(task.employeeId);
-    const groupId =  task.taskGroupId || task.groupId || task.id;
-    const duplicateTask = tasks.find(function (item) {
-
-            const itemGroupId =
-                item.taskGroupId || item.groupId || item.id;
-
-            return (
-                Number(item.id) !== Number(task.id) &&
-                Number(itemGroupId) === Number(groupId) &&
-                Number(item.employeeId) === selectedEmployeeId
-            );
-
-        });
-
-    if (duplicateTask) {
-        alert("This employee already has a card for this task.");
+    if (!modalElement) {
+        showPopup("Edit modal not found. Check id='editModal'.", "error");
+        console.error("Missing modal: editModal");
         return;
     }
 
-    const employee =
-        getEmployeeById(selectedEmployeeId);
+    if (!window.bootstrap) {
+        showPopup("Bootstrap is not loaded.", "error");
+        console.error("Bootstrap JS is not loaded.");
+        return;
+    }
+
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+    modal.show();
+}
+function validateEditTaskForm() {
+
+    clearFieldErrors();
+
+    let isValid = true;
+
+    const title = getValue("editTitle").trim();
+    const description = getValue("editDescription").trim();
+    const priority = getValue("editPriority");
+    const deadlineValue = getValue("editDeadline");
+    const selectedEmployees = getSelectedEmployees("editEmployeeList");
+
+    if (title === "") {
+        setFieldError("editTitle", "Task title is required.");
+        isValid = false;
+    }
+
+    if (description === "") {
+        setFieldError("editDescription", "Task description is required.");
+        isValid = false;
+    }
+
+    if (priority === "") {
+        setFieldError("editPriority", "Please select task priority.");
+        isValid = false;
+    }
+
+    if (deadlineValue === "") {
+        setFieldError("editDeadline", "Deadline is required.");
+        isValid = false;
+    }
+
+    if (selectedEmployees.length === 0) {
+        setFieldError("editEmployeeList", "Please assign one employee.");
+        isValid = false;
+    }
+
+    if (selectedEmployees.length > 1) {
+        setFieldError("editEmployeeList", "Select one employee only in edit mode.");
+        isValid = false;
+    }
+
+    if (deadlineValue !== "") {
+        const deadline = new Date(deadlineValue);
+
+        if (Number.isNaN(deadline.getTime())) {
+            setFieldError("editDeadline", "Please select a valid deadline.");
+            isValid = false;
+        }
+    }
+
+    return isValid;
+}
+function saveEditTask() {
+
+    const task = getTaskById(selectedTaskId);
+    
+
+    if (!task) {
+        showPopup("Task not found.", "error");
+        return;
+    }
+
+    if (!validateEditTaskForm()) {
+        showPopup("Please complete the required fields.", "error");
+        return;
+    }
+
+    const title = getValue("editTitle").trim();
+    const description = getValue("editDescription").trim();
+    const priority = getValue("editPriority");
+    const deadlineValue = getValue("editDeadline");
+    const selectedEmployees = getSelectedEmployees("editEmployeeList");
+
+    const selectedEmployeeId = Number(selectedEmployees[0]);
+    const deadline = new Date(deadlineValue);
+
+    const oldEmployeeId = Number(task.employeeId);
+    const groupId = task.taskGroupId || task.groupId || task.id;
+
+    const duplicateTask = tasks.find(function (item) {
+
+        const itemGroupId = item.taskGroupId || item.groupId || item.id;
+
+        return (
+            Number(item.id) !== Number(task.id) &&
+            Number(itemGroupId) === Number(groupId) &&
+            Number(item.employeeId) === selectedEmployeeId
+        );
+    });
+
+    if (duplicateTask) {
+        setFieldError("editEmployeeList", "This employee already has this task.");
+        showPopup("This employee already has a card for this task.", "error");
+        return;
+    }
+
+    const employee = getEmployeeById(selectedEmployeeId);
 
     task.title = title;
     task.description = description;
@@ -681,22 +1003,19 @@ function saveEditTask() {
     task.notification = "Task updated by HR";
 
     if (oldEmployeeId !== selectedEmployeeId) {
-
         task.status = "New";
         task.submission = null;
         task.hrFeedback = "";
         task.previousStatus = "";
         task.notification = "Task reassigned by HR";
-
     }
 
     saveTasks();
     refreshPageData();
-
     hideModal("editModal");
 
+    showPopup("Task updated successfully.", "success");
 }
-
 
 /* =========================================================
    Delete Task
@@ -708,7 +1027,7 @@ function deleteTask(id) {
     const task = getTaskById(id);
 
     if (!task) {
-        alert("Task not found.");
+        showPopup("Task not found.", "error");
         return;
     }
 
@@ -717,6 +1036,7 @@ function deleteTask(id) {
     );
 
     if (!confirmDelete) {
+        showPopup("Delete cancelled.", "info");
         return;
     }
 
@@ -727,7 +1047,7 @@ function deleteTask(id) {
     saveTasks();
     refreshPageData();
 
-    alert("Task deleted successfully.");
+    showPopup("Task deleted successfully.", "success");
 }
 function resetCreateTaskForm() {
 
