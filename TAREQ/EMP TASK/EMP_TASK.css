@@ -1,8 +1,8 @@
 /* =========================================================
-   EMP TASK PAGE - STYLE (clean version)
+   EMP TASK PAGE — FINAL CLEAN RESPONSIVE CSS
+   Copy / Paste full file
 ========================================================= */
 
-/* ---------- 1) Colors and fonts ---------- */
 :root {
     --primary: #0179F1;
     --primary-dark: #005BB5;
@@ -37,8 +37,34 @@
     --shadow-lg: 0 18px 44px rgba(23, 32, 51, 0.12);
 }
 
+/* Dark mode support */
+:root[data-theme="dark"] body.employee-tasks,
+body.employee-tasks.dark-mode {
+    --bg: #0E1626;
+    --surface: #121C2E;
+    --surface-soft: #162238;
 
-/* ---------- 2) Global ---------- */
+    --ink: #FFFFFF;
+    --hdr-ink: #FFFFFF;
+    --body: #CBD5E1;
+    --muted: #94A3B8;
+
+    --line: rgba(255, 255, 255, 0.14);
+    --tint: rgba(59, 158, 255, 0.14);
+
+    --glass: rgba(255, 255, 255, 0.08);
+    --glass-line: rgba(255, 255, 255, 0.16);
+    --glass-text: #CBD5E1;
+
+    --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.25);
+    --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.32);
+    --shadow-lg: 0 18px 44px rgba(0, 0, 0, 0.42);
+}
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
 *,
 *::before,
 *::after {
@@ -53,11 +79,13 @@ body.employee-tasks {
     margin: 0;
     padding: 0;
     min-height: 100vh;
+
     font-family: var(--text);
     color: var(--ink);
     background:
         radial-gradient(circle at top left, rgba(var(--accent-rgb), 0.08), transparent 34%),
         var(--bg);
+
     line-height: 1.6;
     overflow-x: hidden;
 }
@@ -78,7 +106,10 @@ body.employee-tasks {
     cursor: pointer;
 }
 
-/* Page width */
+/* =========================================================
+   PAGE LAYOUT
+========================================================= */
+
 body.employee-tasks main.page,
 .employee-tasks .page {
     width: min(1200px, calc(100% - clamp(28px, 5vw, 96px)));
@@ -86,19 +117,131 @@ body.employee-tasks main.page,
     margin: 48px auto 80px;
 }
 
+/* =========================================================
+   HEADER
+========================================================= */
 
-/* ---------- 3) Navbar buttons ---------- */
+.employee-tasks .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 32px;
+    padding: 0 0 40px;
+
+    animation: fadeUp 0.55s ease both;
+}
+
+.employee-tasks .page-header>div {
+    max-width: 760px;
+}
+
+.employee-tasks .page-eyebrow {
+    display: inline-flex;
+    align-items: center;
+
+    margin-bottom: 12px;
+    padding: 6px 12px;
+
+    border-radius: 999px;
+    border: 1px solid var(--glass-line);
+    background: var(--glass);
+
+    color: var(--accent-d);
+
+    font-family: var(--head);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.employee-tasks h1 {
+    margin: 0 0 14px;
+
+    font-family: var(--head);
+    font-size: clamp(34px, 3.4vw, 54px);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+
+    color: var(--hdr-ink);
+}
+
+.employee-tasks .subtitle {
+    max-width: 700px;
+    margin: 0;
+
+    color: var(--glass-text);
+
+    font-size: 15px;
+    line-height: 1.75;
+}
+
+/* =========================================================
+   STATUS CARDS
+========================================================= */
+
+.employee-tasks .meeting-shortcuts {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+
+    margin: 0 0 44px;
+
+    animation: fadeUp 0.65s ease both;
+}
+
+.employee-tasks .shortcut-card.status-card {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+
+    min-width: 0;
+    min-height: 76px;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 16px 18px;
+
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+
+    box-shadow: var(--shadow-sm);
+
+    user-select: none;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+/* =========================================================
+   Navbar Compact Buttons Like Meetings Page
+========================================================= */
+
 .journey-header .header-btn {
     height: 35px !important;
     min-height: 30px !important;
+
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
+
     padding: 0 26px !important;
+
     border-radius: 6px !important;
+
     font-size: 13px !important;
     font-weight: 800 !important;
     letter-spacing: 0.08em !important;
+
     line-height: 1 !important;
     white-space: nowrap !important;
 }
@@ -106,6 +249,7 @@ body.employee-tasks main.page,
 .journey-header .theme-toggle {
     height: 42px !important;
     padding: 0 18px !important;
+
     font-size: 12px !important;
     font-weight: 800 !important;
 }
@@ -119,94 +263,16 @@ body.employee-tasks main.page,
     font-weight: 800 !important;
 }
 
-
-/* ---------- 4) Page header ---------- */
-.employee-tasks .page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 32px;
-    padding: 0 0 40px;
-    animation: fadeUp 0.55s ease both;
-}
-
-.employee-tasks .page-header > div {
-    max-width: 760px;
-}
-
-.employee-tasks .page-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    margin-bottom: 12px;
-    padding: 6px 12px;
-    border-radius: 999px;
-    border: 1px solid var(--glass-line);
-    background: var(--glass);
-    color: var(--accent-d);
-    font-family: var(--head);
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-}
-
-.employee-tasks h1 {
-    margin: 0 0 14px;
-    font-family: var(--head);
-    font-size: clamp(34px, 3.4vw, 54px);
-    font-weight: 800;
-    line-height: 1.12;
-    letter-spacing: -0.035em;
-    color: var(--hdr-ink);
-}
-
-.employee-tasks .subtitle {
-    max-width: 700px;
-    margin: 0;
-    color: var(--glass-text);
-    font-size: 15px;
-    line-height: 1.75;
-}
-
-
-/* ---------- 5) Status cards (top) ---------- */
-.employee-tasks .meeting-shortcuts {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 18px;
-    margin: 0 0 44px;
-    animation: fadeUp 0.65s ease both;
-}
-
-.employee-tasks .shortcut-card.status-card {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-    min-width: 0;
-    min-height: 76px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 16px 18px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    box-shadow: var(--shadow-sm);
-    user-select: none;
-    transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease,
-        border-color 0.25s ease;
-}
-
-/* Rotating border */
+/* rotating border */
 .employee-tasks .shortcut-card.status-card::before {
     content: "";
+
     position: absolute;
     inset: -2px;
+
     border-radius: 18px;
     padding: 2px;
+
     background: conic-gradient(from 0deg,
             transparent 0deg,
             transparent 45deg,
@@ -215,18 +281,21 @@ body.employee-tasks main.page,
             var(--status-color) 150deg,
             transparent 220deg,
             transparent 360deg);
+
     -webkit-mask:
         linear-gradient(#fff 0 0) content-box,
         linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
+
     animation: spinBorder 3s linear infinite;
+
     opacity: 0.85;
     pointer-events: none;
     z-index: 0;
 }
 
-.employee-tasks .shortcut-card.status-card > * {
+.employee-tasks .shortcut-card.status-card>* {
     position: relative;
     z-index: 2;
 }
@@ -243,24 +312,41 @@ body.employee-tasks main.page,
     animation-duration: 1.2s;
 }
 
-/* Card colors */
-.employee-tasks .status-total { --status-color: #0179F1; }
-.employee-tasks .status-new { --status-color: #F59E0B; }
-.employee-tasks .status-submitted { --status-color: #7C3AED; }
-.employee-tasks .status-completed { --status-color: #16A34A; }
+.employee-tasks .status-total {
+    --status-color: #0179F1;
+}
+
+.employee-tasks .status-new {
+    --status-color: #F59E0B;
+}
+
+.employee-tasks .status-submitted {
+    --status-color: #7C3AED;
+}
+
+.employee-tasks .status-completed {
+    --status-color: #16A34A;
+}
 
 .employee-tasks .shortcut-icon {
     width: 42px;
     height: 42px;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     flex-shrink: 0;
+
     border-radius: 12px;
+
     background: color-mix(in srgb, var(--status-color) 13%, white);
     color: var(--status-color);
+
     border: 1px solid color-mix(in srgb, var(--status-color) 25%, white);
+
     font-size: 19px;
+
     transition:
         transform 0.25s ease,
         background-color 0.25s ease,
@@ -277,23 +363,30 @@ body.employee-tasks main.page,
 
 .employee-tasks .shortcut-info small {
     display: block;
+
     margin-bottom: 2px;
+
     color: var(--body);
+
     font-family: var(--head);
     font-size: 9px;
     font-weight: 800;
     line-height: 1.5;
+
     letter-spacing: 0.12em;
     text-transform: uppercase;
 }
 
 .employee-tasks .shortcut-info strong {
     display: block;
+
     color: var(--ink);
+
     font-family: var(--head);
     font-size: 15px;
     font-weight: 800;
     line-height: 1.3;
+
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -301,16 +394,22 @@ body.employee-tasks main.page,
 
 .employee-tasks .shortcut-number {
     margin-left: auto;
+
     min-width: 38px;
     padding: 6px 11px;
+
     border-radius: 10px;
+
     background: color-mix(in srgb, var(--status-color) 13%, white);
     color: var(--status-color);
+
     font-family: var(--head);
     font-size: 21px;
     font-weight: 800;
     line-height: 1;
+
     text-align: center;
+
     transition: transform 0.25s ease;
 }
 
@@ -318,12 +417,15 @@ body.employee-tasks main.page,
     transform: scale(1.06);
 }
 
+/* =========================================================
+   SECTION
+========================================================= */
 
-/* ---------- 6) Section title ---------- */
 .employee-tasks .section {
     width: 100%;
     scroll-margin-top: 25px;
     margin-bottom: 44px;
+
     animation: fadeUp 0.75s ease both;
 }
 
@@ -331,31 +433,40 @@ body.employee-tasks main.page,
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 18px;
     margin-bottom: 18px;
 }
 
 .employee-tasks h2 {
     margin: 0;
+
     color: var(--hdr-ink);
+
     font-family: var(--head);
     font-size: 24px;
     font-weight: 800;
     line-height: 1.3;
+
     letter-spacing: -0.02em;
 }
 
 .employee-tasks .section-number {
     display: inline-block;
+
     margin-right: 8px;
+
     color: var(--accent);
+
     font-size: 14px;
     vertical-align: middle;
 }
 
 .employee-tasks .section-header p {
     margin: 7px 0 0 30px;
+
     color: var(--glass-text);
+
     font-size: 13px;
 }
 
@@ -363,31 +474,45 @@ body.employee-tasks main.page,
     display: inline-flex;
     align-items: center;
     gap: 7px;
+
     flex-shrink: 0;
+
     padding: 7px 13px;
+
     border-radius: 999px;
+
     background: var(--glass);
     border: 1px solid var(--glass-line);
+
     color: var(--glass-text);
+
     font-family: var(--head);
     font-size: 11px;
     font-weight: 800;
     line-height: 1.5;
 }
 
+/* =========================================================
+   FILTERS
+========================================================= */
 
-/* ---------- 7) Filters ---------- */
 .employee-tasks .task-filters-card {
     width: 100%;
+
     display: grid;
     grid-template-columns: repeat(2, minmax(240px, 1fr));
     gap: 20px;
+
     padding: 18px 22px;
-    margin-bottom: 28px;
+
     background: var(--surface);
+
     border: 1px solid var(--line);
     border-radius: 16px;
+
     box-shadow: var(--shadow-sm);
+
+    margin-bottom: 28px;
 }
 
 .employee-tasks .filter-group {
@@ -398,8 +523,11 @@ body.employee-tasks main.page,
     display: flex;
     align-items: center;
     gap: 6px;
+
     margin-bottom: 7px;
+
     color: var(--ink);
+
     font-family: var(--head);
     font-size: 12px;
     font-weight: 700;
@@ -409,13 +537,19 @@ body.employee-tasks main.page,
 .employee-tasks .custom-select {
     width: 100%;
     min-height: 42px;
-    padding: 10px 14px;
+
     border: 1px solid var(--line);
     border-radius: 10px;
+
     background-color: var(--surface-soft);
     color: var(--ink);
+
     font-size: 13px;
+
+    padding: 10px 14px;
+
     outline: none;
+
     transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease,
@@ -428,51 +562,69 @@ body.employee-tasks main.page,
     background-color: var(--surface);
 }
 
+/* =========================================================
+   BOARD
+========================================================= */
 
-/* ---------- 8) Board and columns ---------- */
 .employee-tasks .board-wrapper {
     width: 100%;
+
     background: transparent;
     border: none;
     box-shadow: none;
+
     padding: 0;
     overflow: visible;
 }
 
 .employee-tasks .task-board {
     width: 100%;
+
     display: grid;
     grid-template-columns: repeat(4, minmax(220px, 1fr));
     gap: 18px;
     align-items: stretch;
 }
 
+/* =========================================================
+   TRELLO COLUMNS
+========================================================= */
+
 .employee-tasks .trello-column {
     position: relative;
     overflow: hidden;
     isolation: isolate;
+
     min-width: 0;
     min-height: 540px;
     height: auto;
+
     padding: 16px;
+
     border: none;
     border-radius: 18px;
+
     background: var(--surface-soft);
+
     box-shadow:
         0 2px 8px rgba(23, 32, 51, 0.04),
         0 12px 28px rgba(1, 121, 241, 0.08);
+
     transition:
         transform 0.25s ease,
         box-shadow 0.25s ease;
 }
 
-/* Rotating border */
+/* rotating border */
 .employee-tasks .trello-column::before {
     content: "";
+
     position: absolute;
     inset: -2px;
+
     border-radius: 20px;
     padding: 2px;
+
     background: conic-gradient(from 0deg,
             transparent 0deg,
             transparent 45deg,
@@ -481,28 +633,35 @@ body.employee-tasks main.page,
             var(--column-color) 150deg,
             transparent 220deg,
             transparent 360deg);
+
     -webkit-mask:
         linear-gradient(#ffffff 0 0) content-box,
         linear-gradient(#ffffff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
+
     animation: trelloColumnSpin 3s linear infinite;
+
     opacity: 0.85;
     pointer-events: none;
     z-index: 0;
 }
 
-/* Inner surface */
+/* inner surface */
 .employee-tasks .trello-column::after {
     content: "";
+
     position: absolute;
     inset: 2px;
+
     border-radius: 16px;
+
     background: var(--surface-soft);
+
     z-index: 1;
 }
 
-.employee-tasks .trello-column > * {
+.employee-tasks .trello-column>* {
     position: relative;
     z-index: 2;
 }
@@ -518,13 +677,22 @@ body.employee-tasks main.page,
     animation-duration: 1.2s;
 }
 
-/* Column colors */
-.employee-tasks .column-new { --column-color: #F59E0B; }
-.employee-tasks .column-progress { --column-color: #0179F1; }
-.employee-tasks .column-submitted { --column-color: #7C3AED; }
-.employee-tasks .column-completed { --column-color: #10B981; }
+.employee-tasks .column-new {
+    --column-color: #F59E0B;
+}
 
-/* While dragging a card over the column */
+.employee-tasks .column-progress {
+    --column-color: #0179F1;
+}
+
+.employee-tasks .column-submitted {
+    --column-color: #7C3AED;
+}
+
+.employee-tasks .column-completed {
+    --column-color: #10B981;
+}
+
 .employee-tasks .trello-column.drag-over {
     background: #EFF6FF;
     box-shadow:
@@ -536,9 +704,12 @@ body.employee-tasks main.page,
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 10px;
+
     margin-bottom: 14px;
     padding-bottom: 12px;
+
     border-bottom: 1px solid var(--line);
 }
 
@@ -546,25 +717,33 @@ body.employee-tasks main.page,
     display: flex;
     align-items: center;
     gap: 8px;
+
     min-width: 0;
 }
 
 .employee-tasks .trello-dot {
     width: 9px;
     height: 9px;
+
     border-radius: 50%;
+
     background: var(--column-color, var(--accent));
+
     flex-shrink: 0;
 }
 
 .employee-tasks .trello-column-title {
     margin: 0;
+
     color: var(--ink);
+
     font-family: var(--head);
     font-size: 14px;
     font-weight: 800;
     line-height: 1.3;
+
     letter-spacing: -0.01em;
+
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -573,29 +752,40 @@ body.employee-tasks main.page,
 .employee-tasks .trello-count {
     min-width: 24px;
     height: 24px;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     padding: 0 8px;
+
     border-radius: 999px;
+
     background: var(--surface);
     border: 1px solid var(--line);
+
     color: var(--body);
+
     font-family: var(--head);
     font-size: 11px;
     font-weight: 800;
     line-height: 1;
+
     flex-shrink: 0;
 }
 
 .employee-tasks .trello-cards {
     display: flex;
     flex-direction: column;
+
     gap: 12px;
+
     min-height: 380px;
     max-height: 600px;
+
     overflow-y: auto;
     overflow-x: hidden;
+
     padding-right: 2px;
 }
 
@@ -610,32 +800,49 @@ body.employee-tasks main.page,
 
 .employee-tasks .empty-column {
     min-height: 145px;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     text-align: center;
+
     padding: 24px 16px;
+
     border: 1px dashed #CBD5E1;
     border-radius: 12px;
+
     background: var(--surface);
+
     color: var(--body);
+
     font-size: 13px;
     font-weight: 500;
 }
 
+/* =========================================================
+   TASK CARDS
+========================================================= */
 
-/* ---------- 9) Task cards ---------- */
 .employee-tasks .trello-task-card {
     position: relative;
+
     padding: 15px;
+
     background: var(--surface);
+
     border: 1px solid var(--line);
     border-left: 5px solid var(--task-color, var(--accent));
+
     border-radius: 14px;
+
     box-shadow: var(--shadow-sm);
+
     cursor: grab;
     user-select: none;
+
     animation: cardIn 0.35s ease both;
+
     transition:
         transform 0.2s ease,
         box-shadow 0.2s ease,
@@ -659,59 +866,101 @@ body.employee-tasks main.page,
     opacity: 0.86;
 }
 
-/* Left border color of the card (class comes from JS) */
 .employee-tasks .status-new,
-.employee-tasks .status-pending { --task-color: #F59E0B; }
-.employee-tasks .status-in-progress { --task-color: #0179F1; }
-.employee-tasks .status-submitted { --task-color: #7C3AED; }
-.employee-tasks .status-completed { --task-color: #10B981; }
+.employee-tasks .status-pending {
+    --task-color: #F59E0B;
+}
+
+.employee-tasks .status-in-progress {
+    --task-color: #0179F1;
+}
+
+.employee-tasks .status-submitted {
+    --task-color: #7C3AED;
+}
+
+.employee-tasks .status-completed {
+    --task-color: #10B981;
+}
+
 .employee-tasks .status-not-complete,
-.employee-tasks .status-time-out { --task-color: #EF4444; }
-.employee-tasks .status-blocked { --task-color: #64748B; }
+.employee-tasks .status-time-out {
+    --task-color: #EF4444;
+}
+
+.employee-tasks .status-blocked {
+    --task-color: #64748B;
+}
 
 .employee-tasks .task-card-top {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+
     gap: 10px;
+
     margin-bottom: 8px;
 }
 
 .employee-tasks .trello-task-card h5 {
     margin: 0;
+
     color: var(--ink);
+
     font-family: var(--head);
     font-size: 14px;
     font-weight: 800;
     line-height: 1.35;
+
     word-break: break-word;
 }
 
 .employee-tasks .task-priority {
     padding: 3px 8px;
+
     border-radius: 999px;
+
     font-family: var(--head);
     font-size: 10px;
     font-weight: 800;
     line-height: 1.3;
+
     text-transform: uppercase;
     white-space: nowrap;
+
     flex-shrink: 0;
 }
 
-.employee-tasks .task-priority.high { background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; }
-.employee-tasks .task-priority.medium { background: #FEF3C7; color: #D97706; border: 1px solid #FDE68A; }
-.employee-tasks .task-priority.low { background: #DCFCE7; color: #16A34A; border: 1px solid #BBF7D0; }
+.employee-tasks .task-priority.high {
+    background: #FEE2E2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+}
 
-/* Description: maximum 3 lines */
+.employee-tasks .task-priority.medium {
+    background: #FEF3C7;
+    color: #D97706;
+    border: 1px solid #FDE68A;
+}
+
+.employee-tasks .task-priority.low {
+    background: #DCFCE7;
+    color: #16A34A;
+    border: 1px solid #BBF7D0;
+}
+
 .employee-tasks .trello-task-card p {
     margin: 0 0 12px;
+
     color: var(--body);
+
     font-size: 12px;
     line-height: 1.55;
+
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+
     overflow: hidden;
 }
 
@@ -719,9 +968,13 @@ body.employee-tasks main.page,
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 8px;
+
     padding-top: 10px;
+
     border-top: 1px solid var(--line);
+
     font-size: 11px;
 }
 
@@ -729,10 +982,14 @@ body.employee-tasks main.page,
     display: inline-flex;
     align-items: center;
     gap: 4px;
+
     min-width: 0;
+
     color: var(--body);
+
     font-size: 11px;
     font-weight: 500;
+
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -742,31 +999,42 @@ body.employee-tasks main.page,
     display: inline-flex;
     align-items: center;
     gap: 4px;
+
     flex-shrink: 0;
+
     padding: 3px 8px;
+
     border-radius: 999px;
+
     background: var(--tint);
     color: var(--accent-d);
+
     font-size: 10px;
     font-weight: 800;
+
     white-space: nowrap;
 }
 
 .employee-tasks .task-card-actions {
     display: flex;
     gap: 8px;
+
     margin-top: 12px;
 }
 
 .employee-tasks .btn-start-task,
 .employee-tasks .btn-view-task {
     flex: 1;
+
     min-height: 32px;
+
     border-radius: 8px;
+
     font-family: var(--head);
     font-size: 12px;
     font-weight: 700;
     line-height: 1;
+
     transition:
         background-color 0.15s ease,
         color 0.15s ease,
@@ -801,8 +1069,10 @@ body.employee-tasks main.page,
     border-color: var(--accent);
 }
 
+/* =========================================================
+   MODAL
+========================================================= */
 
-/* ---------- 10) Task modal ---------- */
 .modal-backdrop.show {
     opacity: 0.55 !important;
     background-color: #0E1626 !important;
@@ -816,8 +1086,11 @@ body.employee-tasks main.page,
 .employee-tasks .modal-box {
     border: 1px solid var(--line) !important;
     border-radius: 18px !important;
+
     background: var(--surface) !important;
+
     box-shadow: 0 24px 70px rgba(0, 0, 0, 0.18) !important;
+
     padding: 24px 28px !important;
 }
 
@@ -825,50 +1098,67 @@ body.employee-tasks main.page,
     display: flex !important;
     align-items: flex-start !important;
     justify-content: space-between !important;
+
     padding: 0 0 20px !important;
+
     border-bottom: 1px solid var(--line) !important;
+
     margin-bottom: 20px !important;
 }
 
 .employee-tasks .modal-eyebrow {
     margin-bottom: 6px;
+
     color: var(--accent-d);
+
     font-family: var(--head);
     font-size: 10px;
     font-weight: 800;
     line-height: 1.5;
+
     letter-spacing: 0.12em;
     text-transform: uppercase;
 }
 
 .employee-tasks .modal-title {
     margin: 0 0 4px !important;
+
     color: var(--ink) !important;
+
     font-family: var(--head);
     font-size: 24px !important;
     font-weight: 800 !important;
     line-height: 1.3 !important;
+
     letter-spacing: -0.02em !important;
 }
 
 .employee-tasks .modal-subtitle {
     margin: 0;
+
     color: var(--body);
+
     font-size: 13px;
 }
 
 .employee-tasks .close-button {
     width: 32px !important;
     height: 32px !important;
+
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+
     flex-shrink: 0;
+
     border: 1px solid var(--line) !important;
     border-radius: 9px !important;
+
     background: var(--surface-soft) !important;
     color: var(--body) !important;
+
     opacity: 1 !important;
+
     transition: all 0.15s ease !important;
 }
 
@@ -883,16 +1173,21 @@ body.employee-tasks main.page,
 
 .employee-tasks .task-detail-hero {
     background: var(--surface-soft);
+
     border: 1px solid var(--line);
     border-radius: 14px;
+
     padding: 18px;
+
     margin-bottom: 18px;
 }
 
 .employee-tasks .task-info-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+
     gap: 14px;
+
     margin-bottom: 18px;
 }
 
@@ -900,11 +1195,16 @@ body.employee-tasks main.page,
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 12px;
+
     padding: 10px 14px;
+
     background: var(--surface);
+
     border: 1px solid var(--line);
     border-radius: 10px;
+
     font-size: 12px;
 }
 
@@ -915,22 +1215,30 @@ body.employee-tasks main.page,
 
 .employee-tasks .task-info-item .info-val {
     color: var(--ink);
+
     font-family: var(--head);
     font-weight: 800;
+
     text-align: right;
 }
 
 .employee-tasks #hrFeedback .alert {
     margin-bottom: 18px;
+
     border-radius: 10px;
+
     font-size: 13px;
+
     padding: 12px 14px;
 }
 
 .employee-tasks .form-group label {
     display: block;
+
     margin-bottom: 7px;
+
     color: var(--ink);
+
     font-size: 12px;
     font-weight: 700;
 }
@@ -938,17 +1246,23 @@ body.employee-tasks main.page,
 .employee-tasks .form-row {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+
     gap: 16px;
 }
 
 .employee-tasks .form-control {
     width: 100%;
+
     border: 1px solid var(--line) !important;
     border-radius: 10px !important;
+
     background-color: var(--surface-soft) !important;
     color: var(--ink) !important;
+
     font-size: 13px !important;
+
     padding: 10px 12px !important;
+
     transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease,
@@ -964,19 +1278,26 @@ body.employee-tasks main.page,
 .employee-tasks .modal-actions {
     display: flex;
     justify-content: flex-end;
+
     gap: 10px;
+
     padding-top: 20px;
     margin-top: 20px;
+
     border-top: 1px solid var(--line);
 }
 
 .employee-tasks .cancel-button,
 .employee-tasks .save-button {
     min-height: 40px;
+
     border-radius: 10px !important;
+
     padding: 10px 18px !important;
+
     font-size: 13px !important;
     font-weight: 700 !important;
+
     transition:
         background-color 0.15s ease,
         color 0.15s ease,
@@ -1005,6 +1326,7 @@ body.employee-tasks main.page,
     align-items: center;
     justify-content: center;
     gap: 6px;
+
     border: 1px solid var(--accent) !important;
     background: var(--accent) !important;
     color: #ffffff !important;
@@ -1014,31 +1336,53 @@ body.employee-tasks main.page,
     background: var(--accent-hover) !important;
 }
 
+/* =========================================================
+   ANIMATIONS
+========================================================= */
 
-/* ---------- 11) Animations ---------- */
 @keyframes spinBorder {
-    100% { transform: rotate(360deg); }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes trelloColumnSpin {
-    100% { transform: rotate(360deg); }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes cardIn {
-    from { opacity: 0; transform: translateY(10px) scale(0.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
-
-/* ---------- 12) Responsive ---------- */
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
 /* Large laptops */
 @media (max-width: 1500px) {
+
     body.employee-tasks main.page,
     .employee-tasks .page {
         width: calc(100% - 72px);
@@ -1061,6 +1405,7 @@ body.employee-tasks main.page,
 
 /* Small laptops / landscape tablets */
 @media (max-width: 1200px) {
+
     body.employee-tasks main.page,
     .employee-tasks .page {
         width: calc(100% - 56px);
@@ -1088,6 +1433,7 @@ body.employee-tasks main.page,
 
 /* Tablets */
 @media (max-width: 992px) {
+
     body.employee-tasks main.page,
     .employee-tasks .page {
         width: calc(100% - 40px);
@@ -1119,10 +1465,15 @@ body.employee-tasks main.page,
 
 /* Mobile */
 @media (max-width: 768px) {
+
     body.employee-tasks main.page,
     .employee-tasks .page {
         width: calc(100% - 28px);
         margin: 24px auto 44px;
+    }
+
+    .employee-tasks h1 {
+        font-size: 34px;
     }
 
     .employee-tasks .subtitle {
@@ -1185,6 +1536,7 @@ body.employee-tasks main.page,
 
 /* Small phones */
 @media (max-width: 480px) {
+
     body.employee-tasks main.page,
     .employee-tasks .page {
         width: calc(100% - 20px);
@@ -1229,7 +1581,7 @@ body.employee-tasks main.page,
     }
 }
 
-/* Users who do not want animations */
+/* Stop animation for users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
@@ -1243,96 +1595,60 @@ body.employee-tasks main.page,
     }
 }
 
-
-/* ---------- 13) Dark theme ----------
-   Works with both: html[data-theme="dark"] and body.dark-mode */
-
-/* Dark colors (variables) */
+/* ================= DARK THEME OVERRIDES ================= */
 :root[data-theme="dark"] body.employee-tasks,
 body.dark-mode.employee-tasks,
 body.dark-mode {
     --bg: #0B1120;
-    --surface: #121C2E;
-    --surface-soft: #162238;
-
     --ink: #F8FAFC;
     --hdr-ink: #F8FAFC;
     --body: #94A3B8;
-    --muted: #94A3B8;
-
+    --glass-text: #94A3B8;
     --line: #334155;
     --tint: rgba(1, 121, 241, 0.15);
-
     --glass: rgba(19, 30, 53, 0.85);
     --glass-line: rgba(51, 65, 85, 0.8);
-    --glass-text: #94A3B8;
-
     --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-    --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.25);
-    --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.32);
-    --shadow-lg: 0 18px 44px rgba(0, 0, 0, 0.42);
-
     background-color: #0B1120 !important;
     color: #F8FAFC !important;
 }
 
-/* Cards: dark blue background + border */
 :root[data-theme="dark"] .employee-tasks .shortcut-card.status-card,
-body.dark-mode .employee-tasks .shortcut-card.status-card,
-:root[data-theme="dark"] .employee-tasks .task-filters-card,
-body.dark-mode .employee-tasks .task-filters-card,
-:root[data-theme="dark"] .employee-tasks .task-info-item,
-body.dark-mode .employee-tasks .task-info-item {
+body.dark-mode .employee-tasks .shortcut-card.status-card {
     background: #131E35 !important;
     border-color: #334155 !important;
 }
 
-/* White text */
 :root[data-theme="dark"] .employee-tasks .shortcut-info strong,
-body.dark-mode .employee-tasks .shortcut-info strong,
-:root[data-theme="dark"] .employee-tasks .filter-group label,
-body.dark-mode .employee-tasks .filter-group label,
-:root[data-theme="dark"] .employee-tasks .trello-column-title,
-body.dark-mode .employee-tasks .trello-column-title,
-:root[data-theme="dark"] .employee-tasks .trello-task-card h5,
-body.dark-mode .employee-tasks .trello-task-card h5,
-:root[data-theme="dark"] .employee-tasks .modal-title,
-body.dark-mode .employee-tasks .modal-title,
-:root[data-theme="dark"] .employee-tasks .task-info-item .info-val,
-body.dark-mode .employee-tasks .task-info-item .info-val,
-:root[data-theme="dark"] .employee-tasks .form-group label,
-body.dark-mode .employee-tasks .form-group label {
+body.dark-mode .employee-tasks .shortcut-info strong {
     color: #F8FAFC !important;
 }
 
-/* Gray text */
 :root[data-theme="dark"] .employee-tasks .shortcut-info small,
-body.dark-mode .employee-tasks .shortcut-info small,
-:root[data-theme="dark"] .employee-tasks .trello-task-card p,
-body.dark-mode .employee-tasks .trello-task-card p,
-:root[data-theme="dark"] .employee-tasks .task-deadline,
-body.dark-mode .employee-tasks .task-deadline,
-:root[data-theme="dark"] .employee-tasks .modal-subtitle,
-body.dark-mode .employee-tasks .modal-subtitle,
-:root[data-theme="dark"] .employee-tasks .task-info-item strong,
-body.dark-mode .employee-tasks .task-info-item strong {
+body.dark-mode .employee-tasks .shortcut-info small {
     color: #94A3B8 !important;
 }
 
-/* Select and inputs */
+:root[data-theme="dark"] .employee-tasks .task-filters-card,
+body.dark-mode .employee-tasks .task-filters-card {
+    background: #131E35 !important;
+    border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .filter-group label,
+body.dark-mode .employee-tasks .filter-group label {
+    color: #F8FAFC !important;
+}
+
 :root[data-theme="dark"] .employee-tasks .custom-select,
-body.dark-mode .employee-tasks .custom-select,
-:root[data-theme="dark"] .employee-tasks .form-control,
-body.dark-mode .employee-tasks .form-control {
+body.dark-mode .employee-tasks .custom-select {
     background-color: #0F172A !important;
     border-color: #334155 !important;
     color: #F8FAFC !important;
 }
 
 :root[data-theme="dark"] .employee-tasks .custom-select:focus,
-body.dark-mode .employee-tasks .custom-select:focus,
-:root[data-theme="dark"] .employee-tasks .form-control:focus,
-body.dark-mode .employee-tasks .form-control:focus {
+body.dark-mode .employee-tasks .custom-select:focus {
     background-color: #131E35 !important;
     border-color: var(--accent) !important;
 }
@@ -1343,19 +1659,24 @@ body.dark-mode .employee-tasks .custom-select option {
     color: #F8FAFC;
 }
 
-/* Columns */
 :root[data-theme="dark"] .employee-tasks .trello-column,
-body.dark-mode .employee-tasks .trello-column,
+body.dark-mode .employee-tasks .trello-column {
+    background: #131E35 !important;
+}
+
 :root[data-theme="dark"] .employee-tasks .trello-column::after,
 body.dark-mode .employee-tasks .trello-column::after {
     background: #131E35 !important;
 }
 
 :root[data-theme="dark"] .employee-tasks .trello-column-header,
-body.dark-mode .employee-tasks .trello-column-header,
-:root[data-theme="dark"] .employee-tasks .modal-header,
-body.dark-mode .employee-tasks .modal-header {
+body.dark-mode .employee-tasks .trello-column-header {
     border-bottom-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .trello-column-title,
+body.dark-mode .employee-tasks .trello-column-title {
+    color: #F8FAFC !important;
 }
 
 :root[data-theme="dark"] .employee-tasks .trello-count,
@@ -1365,14 +1686,6 @@ body.dark-mode .employee-tasks .trello-count {
     color: #94A3B8 !important;
 }
 
-:root[data-theme="dark"] .employee-tasks .empty-column,
-body.dark-mode .employee-tasks .empty-column {
-    background: #0F172A !important;
-    border-color: #334155 !important;
-    color: #94A3B8 !important;
-}
-
-/* Task cards */
 :root[data-theme="dark"] .employee-tasks .trello-task-card,
 body.dark-mode .employee-tasks .trello-task-card {
     background: #0F172A !important;
@@ -1387,17 +1700,53 @@ body.dark-mode .employee-tasks .trello-task-card:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45) !important;
 }
 
+:root[data-theme="dark"] .employee-tasks .trello-task-card h5,
+body.dark-mode .employee-tasks .trello-task-card h5 {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .trello-task-card p,
+body.dark-mode .employee-tasks .trello-task-card p {
+    color: #94A3B8 !important;
+}
+
 :root[data-theme="dark"] .employee-tasks .task-card-meta,
 body.dark-mode .employee-tasks .task-card-meta {
     border-top-color: #1E293B !important;
 }
 
-/* Modal */
+:root[data-theme="dark"] .employee-tasks .task-deadline,
+body.dark-mode .employee-tasks .task-deadline {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .empty-column,
+body.dark-mode .employee-tasks .empty-column {
+    background: #0F172A !important;
+    border-color: #334155 !important;
+    color: #94A3B8 !important;
+}
+
 :root[data-theme="dark"] .employee-tasks .modal-box,
 body.dark-mode .employee-tasks .modal-box {
     background: #131E35 !important;
     border-color: #334155 !important;
     box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5) !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .modal-header,
+body.dark-mode .employee-tasks .modal-header {
+    border-bottom-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .modal-title,
+body.dark-mode .employee-tasks .modal-title {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .modal-subtitle,
+body.dark-mode .employee-tasks .modal-subtitle {
+    color: #94A3B8 !important;
 }
 
 :root[data-theme="dark"] .employee-tasks .close-button,
@@ -1417,6 +1766,40 @@ body.dark-mode .employee-tasks .close-button:hover {
 body.dark-mode .employee-tasks .task-detail-hero {
     background: #0F172A !important;
     border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .task-info-item,
+body.dark-mode .employee-tasks .task-info-item {
+    background: #131E35 !important;
+    border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .task-info-item strong,
+body.dark-mode .employee-tasks .task-info-item strong {
+    color: #94A3B8 !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .task-info-item .info-val,
+body.dark-mode .employee-tasks .task-info-item .info-val {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .form-group label,
+body.dark-mode .employee-tasks .form-group label {
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .form-control,
+body.dark-mode .employee-tasks .form-control {
+    background-color: #0F172A !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+:root[data-theme="dark"] .employee-tasks .form-control:focus,
+body.dark-mode .employee-tasks .form-control:focus {
+    background-color: #131E35 !important;
+    border-color: var(--accent) !important;
 }
 
 :root[data-theme="dark"] .employee-tasks .cancel-button,

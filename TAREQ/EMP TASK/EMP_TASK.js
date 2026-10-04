@@ -1,61 +1,31 @@
 // EMP_TASK.js
 // MASAR Employee Task Management (simple version)
 
-/* =========================================================
-   1) VARIABLES
-========================================================= */
-let tasks = [];
-let currentUser = null;
-let currentEmployeeId = null;
-let selectedTaskId = null;
-let draggedTaskId = null;
-let lastTasksSnapshot = "";
+/*  1) VARIABLES */
+let tasks = [];   // بخزن كل التاسكات الي بجيبها من local storage
+let currentUser = null; //يخزن بيانات الموظف الحالي من local storage
+let currentEmployeeId = null; // يخزن رقم الموظف الحالي من بيانات المستخدم
+let selectedTaskId = null; // يخزن رقم التاسك التي تم فتحها عند نفس الموضف   
+let draggedTaskId = null; // يخزن رقم التاسك الي غير حالتها سحبها عند  الموظف
+let lastTasksSnapshot = ""; // يخزن اخر نسخة من التاسكات الي تم حفظها في local storage    
+const EMPLOYEE_LOGIN_PAGE = "/GAITH/login.html";//استخدمناه عشان لو الموظف مش عامل login، نرجعه على login page.
 
-const EMPLOYEE_LOGIN_PAGE = "/GAITH/login.html";
-
-// The 4 columns of the board
-const boardColumns = [
-    {
-        title: "New / Pending",
-        dropStatus: "Pending",
-        className: "column-new",
-        statuses: ["New", "Pending", "Not Complete", "Blocked", "Time Out"]
-    },
-    {
-        title: "In Progress",
-        dropStatus: "In Progress",
-        className: "column-progress",
-        statuses: ["In Progress"]
-    },
-    {
-        title: "Submitted",
-        dropStatus: "Submitted",
-        className: "column-submitted",
-        statuses: ["Submitted"]
-    },
-    {
-        title: "Completed",
-        dropStatus: "Completed",
-        className: "column-completed",
-        statuses: ["Completed"]
-    }
+// The 4 columns of the board 
+const boardColumns = [ // برسم ال 4 اعمدة بدل ما اكتب بال html
+    {   title: "New / Pending",  dropStatus: "Pending",  className: "column-new", statuses: ["New", "Pending", "Not Complete", "Time Out"] },
+    { title: "In Progress",  dropStatus: "In Progress", className: "column-progress",  statuses: ["In Progress"] },
+    {   title: "Submitted", dropStatus: "Submitted",  className: "column-submitted",  statuses: ["Submitted"] },
+    {  title: "Completed",  dropStatus: "Completed",   className: "column-completed",  statuses: ["Completed"]   }
 ];
 
 
-/* =========================================================
-   2) FUNCTIONS
-========================================================= */
+/*  2) FUNCTIONS */
 
 /* ---------- Login user ---------- */
+function getCurrentUser() { //هاي الفنكشن بتجيب بيانات المستخدم الحالي من localStorage
+    try {   return JSON.parse(localStorage.getItem("currentUser"));}  
+     catch (error) {   return null; }} //لأنه ممكن البيانات الموجودة في localStorage تكون خربانة أو مش JSON صحيح
 
-// Get the logged in user from localStorage
-function getCurrentUser() {
-    try {
-        return JSON.parse(localStorage.getItem("currentUser"));
-    } catch (error) {
-        return null;
-    }
-}
 
 // Only employees can open this page
 function validateEmployeeAccess() {
@@ -76,82 +46,66 @@ function validateEmployeeAccess() {
     return true;
 }
 
-// User name (first value that exists)
+// هاي الفنكشن بترجع اسم المستخدم اللي رح نعرضه بالصفحة
 function getUserDisplayName() {
-    return currentUser.name ||
-           currentUser.fullName ||
-           `${currentUser.firstName || ""} ${currentUser.lastName || ""}`.trim() ||
-           currentUser.username ||
-           currentUser.email ||
-           "User";
-}
+    return currentUser.name ||   currentUser.fullName || 
+     `${currentUser.firstName || ""} ${currentUser.lastName || ""}`//هذا ببني اسم كامل من first name و last name.
+    .trim() ||  currentUser.username ||    currentUser.email ||    "User";}
 
-// Is this id the current employee?
+// هاي الفنكشن بتفحص هل الـ id اللي وصلها هو نفس ID الموظف الحالي
 function isMe(id) {
     return Number(id) === Number(currentEmployeeId);
 }
 
 
-/* ---------- Local Storage ---------- */
+/*  Local Storage  */
 
-// Read tasks from localStorage
+// بتقرأ المهام من localStorage
 function getTasksFromStorage() {
-    try {
-        return JSON.parse(localStorage.getItem("tasks")) || [];
-    } catch (error) {
-        return [];
-    }
-}
+    try {   return JSON.parse(localStorage.getItem("tasks")) || [];  }    catch (error) {   return []; }}
 
 // Save tasks and tell other pages
 function saveTasks() {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    lastTasksSnapshot = localStorage.getItem("tasks") || "[]";
+    localStorage.setItem("tasks", JSON.stringify(tasks)); //نحولها إلى String
+    lastTasksSnapshot = localStorage.getItem("tasks") || "[]"; //بحدّث آخر نسخة محفوظة من المهام
     window.dispatchEvent(new Event("tasksUpdated"));
 }
 
-// Load tasks and redraw the page
+// بتحمل المهام من localStorage، وبعدها بتحدث كل الصفحة
 function loadTasks() {
     tasks = getTasksFromStorage();
-    applyTimeoutStatus();
-    lastTasksSnapshot = localStorage.getItem("tasks") || "[]";
-    loadEmployeeFilters();
-    displayTasks();
-    updateEmployeeDashboard();
+    applyTimeoutStatus(); // بتشيك إذا في مهام انتهت مواعيدها وبتغير حالتها إلى "Time Out"
+    lastTasksSnapshot = localStorage.getItem("tasks") || "[]"; // بتحدّث آخر نسخة محفوظة من المهام
+    loadEmployeeFilters(); //بتحدث dropdown الخاص بفلترة المهام
+    displayTasks(); //بتعرض المهام على الصفحة
+    updateEmployeeDashboard();//بتحدّث لوحة المعلومات الخاصة بالموظف
 }
 
-// If the deadline passed, change status to "Time Out"
+// بتشيك إذا في مهام انتهت مواعيدها وبتغير حالتها إلى "Time Out"
 function applyTimeoutStatus() {
     let changed = false;
 
-    for (const task of tasks) {
-        if (isDeadlinePassed(task)) {
+    for (const task of tasks) {//بتمر على كل task داخل Array المهام
+        if (!["Submitted", "Completed"].includes(task.status) && isDeadlinePassed(task))  { 
             task.status = "Time Out";
-            task.updatedAt = getNow();
+            task.updatedAt = getNow(); // بتحدّث وقت آخر تعديل
             task.notification = "Task reached deadline and became Time Out";
-            pushTaskHistory(task, "System changed task status to Time Out because the deadline passed.");
-            changed = true;
-        }
-    }
-
-    if (changed) {
-        saveTasks();
-    }
-}
+            pushTaskHistory(task, "System changed task status to Time Out because the deadline passed."); //بتسجل في history إن النظام غير الحالة بسبب انتهاء الموعد
+changed = true;   }}     if (changed) {   saveTasks(); }}
 
 // Reload tasks when they change in HR page or in another tab
-function setupStorageSync() {
+function setupStorageSync() { //هاي الفنكشن مسؤولة عن مزامنة البيانات. يعني لو HR عدّل task من صفحة HR، صفحة الموظف تحدث حالها
     window.addEventListener("storage", function (event) {
         if (event.key === "tasks") {
             loadTasks();
         }
     });
 
-    // Check every 1.5 seconds (not while the modal is open or a card is dragged)
+    //بفحص كل 1.5 ثانية إذا tasks تغيرت
     setInterval(function () {
-        const currentSnapshot = localStorage.getItem("tasks") || "[]";
-        const modal = document.getElementById("taskModal");
-        const modalIsOpen = modal ? modal.classList.contains("show") : false;
+        const currentSnapshot = localStorage.getItem("tasks") || "[]";  //بجيب النسخة الحالية
+        const modal = document.getElementById("taskModal"); //بشيك إذا modal مفتوح
+        const modalIsOpen = modal ? modal.classList.contains("show") : false; //لو مفتوح، ما بدنا نعمل reload للمهام
 
         if (currentSnapshot !== lastTasksSnapshot && !modalIsOpen && !draggedTaskId) {
             loadTasks();
@@ -160,100 +114,55 @@ function setupStorageSync() {
 }
 
 
-/* ---------- Task helpers ---------- */
+/*  Task helpers  */
 
 function getNow() {
     return new Date().toISOString();
 }
 
-function normalizeStatus(status) {
-    if (!status) {
-        return "Pending";
-    }
-    return String(status).trim();
-}
+function normalizeStatus(status) { //الفنكشن بتنظف حالة التاسك لو ما في الو حالة التاسك
+    if (!status) {  return "Pending"; }  return String(status).trim();}
 
 function normalizePriority(priority) {
-    if (!priority) {
-        return "Medium";
-    }
-    return String(priority).trim();
-}
+    if (!priority) {   return "Medium"; }    return String(priority).trim();}
 
 // Protect the page from HTML code inside text
 function escapeHTML(value) {
-    if (value === null || value === undefined) {
-        return "";
-    }
+    if (value === null || value === undefined) {  return "";  }
 
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-}
+    return String(value) // اي كود HTML داخل النص رح يتحول إلى رموز آمنة، عشان ما يفسد الصفحة أو يعمل مشاكل أمان
+.replaceAll("&", "&amp;") .replaceAll("<", "&lt;") .replaceAll(">", "&gt;") .replaceAll('"', "&quot;") .replaceAll("'", "&#039;");}
 
 // "Time Out" -> "status-time-out" (used as css class)
-function getStatusClass(status) {
-    return "status-" + normalizeStatus(status).toLowerCase().replaceAll(" ", "-");
-}
-
-function getPriorityClass(priority) {
-    return normalizePriority(priority).toLowerCase().replaceAll(" ", "-");
-}
+function getStatusClass(status) {  return "status-" + normalizeStatus(status).toLowerCase().replaceAll(" ", "-"); //ما يفضل يكون فيه spaces، فبحول Time Out إلى time-out
+    }
+function getPriorityClass(priority) { return normalizePriority(priority).toLowerCase().replaceAll(" ", "-");}
 
 // The deadline can be saved in different names, take the first one that exists
 function getTaskDeadlineValue(task) {
-    if (task.deadline) {
-        return task.deadline;
-    }
+    if (task.deadline) {  return task.deadline;  }
+    if (task.deadlineDate && task.deadlineTime) {   return `${task.deadlineDate}T${task.deadlineTime}`;   }
+    if (task.deadlineDate) {  return task.deadlineDate; }
+    if (task.dueDate) {  return task.dueDate;  }   return "";}
 
-    if (task.deadlineDate && task.deadlineTime) {
-        return `${task.deadlineDate}T${task.deadlineTime}`;
-    }
-
-    if (task.deadlineDate) {
-        return task.deadlineDate;
-    }
-
-    if (task.dueDate) {
-        return task.dueDate;
-    }
-
-    return "";
-}
-
-function formatDeadline(task) {
+function formatDeadline(task) {//بتجهز deadline عشان ينعرض للمستخدم بشكل مفهوم
     const deadlineValue = getTaskDeadlineValue(task);
 
-    if (!deadlineValue) {
-        return "No deadline";
-    }
-
+    if (!deadlineValue) {    return "No deadline";   }
     const date = new Date(deadlineValue);
-
-    if (isNaN(date.getTime())) {
-        return escapeHTML(deadlineValue);
-    }
-
-    return date.toLocaleString();
-}
+    if (isNaN(date.getTime())) {  return escapeHTML(deadlineValue);  }
+   return date.toLocaleString();}
 
 // Is the deadline passed? (finished tasks are ignored)
-function isDeadlinePassed(task) {
+function isDeadlinePassed(task) {//بتفحص هل deadline انتهى
     const status = normalizeStatus(task.status);
-    const ignoredStatuses = ["Submitted", "Completed", "Blocked", "Time Out"];
+    const ignoredStatuses = ["Submitted", "Completed", "Time Out"];//بتتجاهل الحالات
 
-    if (ignoredStatuses.includes(status)) {
-        return false;
-    }
+    if (ignoredStatuses.includes(status)) {   return false;   }
 
     const deadlineValue = getTaskDeadlineValue(task);
 
-    if (!deadlineValue) {
-        return false;
-    }
+    if (!deadlineValue) {  return false;  }
 
     // (an invalid date gives false here)
     return new Date() > new Date(deadlineValue);
@@ -261,47 +170,22 @@ function isDeadlinePassed(task) {
 
 // Is this task for the current employee?
 function isTaskAssignedToCurrentEmployee(task) {
-    if (!task) {
-        return false;
-    }
+    if (!task) {  return false;  }
 
     if (Array.isArray(task.assignedEmployees)) {
         for (const id of task.assignedEmployees) {
-            if (isMe(id)) {
-                return true;
-            }
-        }
-    }
+            if (isMe(id)) {   return true;  } }  }
 
-    if (task.employeeId && isMe(task.employeeId)) {
-        return true;
-    }
+    if (task.employeeId && isMe(task.employeeId)) {   return true;  }
 
-    if (task.assignedEmployeeId && isMe(task.assignedEmployeeId)) {
-        return true;
-    }
+    if (task.assignedEmployeeId && isMe(task.assignedEmployeeId)) {    return true;  }  return false;}
 
-    return false;
-}
+// My tasks ( hidden)
+function getMyTasks() {  return tasks.filter(function (task) {   return isTaskAssignedToCurrentEmployee(task); });}
 
-// My tasks (blocked tasks are hidden)
-function getMyTasks() {
-    return tasks.filter(function (task) {
-        return isTaskAssignedToCurrentEmployee(task) && normalizeStatus(task.status) !== "Blocked";
-    });
-}
-
-function getTaskById(taskId) {
-    return tasks.find(function (task) {
-        return Number(task.id) === Number(taskId);
-    });
-}
-
+function getTaskById(taskId) {   return tasks.find(function (task) {      return Number(task.id) === Number(taskId);  });}
 // Does the task have a solution, a file or an image?
-function hasValidSubmission(task) {
-    if (!task || !task.submission) {
-        return false;
-    }
+function hasValidSubmission(task) { if (!task || !task.submission) {     return false; }
 
     const solution = String(task.submission.solution || "").trim();
     const file = String(task.submission.file || "").trim();
@@ -312,19 +196,12 @@ function hasValidSubmission(task) {
 
 // Add a line to the task history
 function pushTaskHistory(task, message) {
-    if (!Array.isArray(task.history)) {
-        task.history = [];
-    }
+    if (!Array.isArray(task.history)) {   task.history = [];  }
 
-    task.history.push({
-        message: message,
-        employeeId: currentEmployeeId,
-        employeeName: getUserDisplayName(),
-        date: getNow()
-    });
-}
+    task.history.push({   message: message,   employeeId: currentEmployeeId,   employeeName: getUserDisplayName()
+        ,   date: getNow() });}
 
-// Set the status + common fields, used by all employee actions
+// Set the status + common fields, used by all employee actions بتضيف سجل جديد داخل history الخاص بالمهمة
 function setEmployeeUpdate(task, newStatus, notification) {
     task.status = newStatus;
     task.updatedAt = getNow();
@@ -334,57 +211,28 @@ function setEmployeeUpdate(task, newStatus, notification) {
 }
 
 
-/* ---------- Small utilities ---------- */
+/*  Small utilities  */
 
-function setText(id, value) {
-    const element = document.getElementById(id);
+function setText(id, value) {  const element = document.getElementById(id);  if (element) { element.textContent = value;  }}
+//بتحط قيمة داخل input أو textarea أو select.
+function setValue(id, value) {   const element = document.getElementById(id);  if (element) {     element.value = value || "";  }}
 
-    if (element) {
-        element.textContent = value;
-    }
-}
+function getValue(id) {  const element = document.getElementById(id);   return element ? element.value : "";}
 
-function setValue(id, value) {
-    const element = document.getElementById(id);
 
-    if (element) {
-        element.value = value || "";
-    }
-}
-
-function getValue(id) {
-    const element = document.getElementById(id);
-    return element ? element.value : "";
-}
-
-// Name of the first selected file in a file input
-function getFileName(id) {
-    const input = document.getElementById(id);
-    return input && input.files.length > 0 ? input.files[0].name : "";
-}
+function getFileName(id) {//بتجيب اسم أول ملف اختاره المستخدم من input نوعه
+    const input = document.getElementById(id);   return input && input.files.length > 0 ? input.files[0].name : "";}
 
 function showModal(modalId) {
     const modalElement = document.getElementById(modalId);
 
-    if (modalElement && window.bootstrap) {
-        bootstrap.Modal.getOrCreateInstance(modalElement).show();
-    }
-}
+    if (modalElement && window.bootstrap) {   bootstrap.Modal.getOrCreateInstance(modalElement).show();  }}
 
 function hideModal(modalId) {
     const modalElement = document.getElementById(modalId);
 
-    if (modalElement && window.bootstrap) {
-        const modal = bootstrap.Modal.getInstance(modalElement);
-
-        if (modal) {
-            modal.hide();
-        }
-    }
-}
-
-
-/* ---------- Filters ---------- */
+    if (modalElement && window.bootstrap) {   const modal = bootstrap.Modal.getInstance(modalElement); if (modal) {     modal.hide();  } }}
+/*  Filters  */
 
 // Fill the status filter and add events
 function setupFilters() {
@@ -413,7 +261,6 @@ function setupFilters() {
         });
     }
 }
-
 // Fill the "task" filter with my tasks
 function loadEmployeeFilters() {
     const taskFilter = document.getElementById("employeeTaskFilter");
@@ -438,7 +285,6 @@ function loadEmployeeFilters() {
         }
     }
 }
-
 // My tasks after applying the two filters
 function getFilteredTasks() {
     let myTasks = getMyTasks();
@@ -467,10 +313,10 @@ function getFilteredTasks() {
 }
 
 
-/* ---------- Sort tasks (priority, deadline, newest) ---------- */
+
 
 // Smaller number = shown first
-function getPriorityWeight(priority) {
+function getPriorityWeight(priority) {//بتحوّل priority إلى رقم
     const value = normalizePriority(priority).toLowerCase();
 
     if (value === "high") { return 1; }
@@ -480,7 +326,7 @@ function getPriorityWeight(priority) {
     return 4;
 }
 
-function getDeadlineTime(task) {
+function getDeadlineTime(task) {//هاي بتحوّل deadline إلى رقم timestamp.
     // (empty text gives an invalid date)
     const deadlineDate = new Date(getTaskDeadlineValue(task));
 
@@ -526,9 +372,7 @@ function sortTasksByPriorityAndDeadline(firstTask, secondTask) {
 function displayTasks() {
     const board = document.getElementById("taskBoard");
 
-    if (!board) {
-        return;
-    }
+    if (!board) {  return;}
 
     const myTasks = getFilteredTasks();
     let boardHTML = "";
@@ -596,18 +440,15 @@ function buildCardButtons(task) {
     let buttons = "";
 
     if (status === "New" || status === "Pending" || status === "Not Complete") {
-        buttons += `<button type="button" class="btn-start-task" onclick="event.stopPropagation(); startTask(${task.id})">Start</button>`;
-    }
-
+        buttons += `<button type="button" class="btn-start-task" onclick="event.stopPropagation(); startTask(${task.id})">Start</button>`;}
     buttons += `<button type="button" class="btn-view-task" onclick="event.stopPropagation(); openTask(${task.id})">View</button>`;
 
-    return buttons;
-}
+    return buttons;}
 
-// Locked tasks cannot be moved or started
+// Locked tasks cannot be moved or started ما بقدر احركها التاسك بالحالات هاي
 function isTaskLocked(task) {
     const status = normalizeStatus(task.status);
-    return status === "Blocked" || status === "Time Out" || status === "Completed";
+    return   status === "Time Out" || status === "Completed";
 }
 
 
@@ -728,21 +569,13 @@ function startTask(taskId) {
 
     const status = normalizeStatus(task.status);
 
-    if (isTaskLocked(task)) {
-        alert("This task cannot be started.");
-        return;
-    }
+    if (isTaskLocked(task)) {  alert("This task cannot be started.");    return;}
 
-    if (status !== "New" && status !== "Pending" && status !== "Not Complete") {
-        alert("This task cannot be started now.");
-        return;
-    }
+    if (status !== "New" && status !== "Pending" && status !== "Not Complete") {   alert("This task cannot be started now.");   return; }
 
     setEmployeeUpdate(task, "In Progress", "Task started by Employee");
     task.startedAt = getNow();
-
     pushTaskHistory(task, "Employee started the task and moved it to In Progress.");
-
     saveTasks();
     loadTasks();
 }
@@ -752,13 +585,9 @@ function openTask(taskId) {
     selectedTaskId = Number(taskId);
 
     const task = getTaskById(selectedTaskId);
-
-    if (!task) {
-        return;
-    }
+    if (!task) {  return;  }
 
     const status = normalizeStatus(task.status);
-
     setText("taskTitle", task.title || "");
     setText("taskDescription", task.description || "");
     setText("taskPriority", normalizePriority(task.priority));
@@ -766,14 +595,9 @@ function openTask(taskId) {
     setText("taskStatus", status);
 
     const feedbackBox = document.getElementById("hrFeedback");
-    if (feedbackBox) {
-        feedbackBox.innerHTML = buildFeedbackHTML(task);
-    }
-
+    if (feedbackBox) {  feedbackBox.innerHTML = buildFeedbackHTML(task); }
     // Fill the solution fields
-    setValue("solutionText", task.submission ? task.submission.solution : "");
-    setValue("solutionFile", "");
-    setValue("solutionImage", "");
+    setValue("solutionText", task.submission ? task.submission.solution : ""); setValue("solutionFile", "");  setValue("solutionImage", "");
 
     // The employee can submit only in these two statuses
     const canSubmit = status === "In Progress" || status === "Not Complete";
@@ -799,51 +623,30 @@ function buildFeedbackHTML(task) {
     const status = normalizeStatus(task.status);
 
     if (status === "Completed") {
-        return `<div class="alert alert-success">✅ Task completed by HR. Editing is disabled.</div>`;
-    }
-
-    if (status === "Blocked") {
-        return `<div class="alert alert-dark">🚫 Task blocked by HR. Editing is disabled.</div>`;
-    }
+        return `<div class="alert alert-success">✅ Task completed by HR. Editing is disabled.</div>`; }
 
     if (status === "Time Out") {
-        return `<div class="alert alert-danger">⏰ Task deadline passed. Please contact HR to extend the deadline.</div>`;
-    }
+        return `<div class="alert alert-danger">⏰ Task deadline passed. Please contact HR to extend the deadline.</div>`;  }
 
     if (status === "Submitted") {
-        return `<div class="alert alert-info">📩 Task submitted and waiting for HR review.</div>`;
-    }
+        return `<div class="alert alert-info">📩 Task submitted and waiting for HR review.</div>`; }
 
     if (task.hrFeedback) {
-        return `<div class="alert alert-warning"><b>HR Feedback:</b><br>${escapeHTML(task.hrFeedback)}</div>`;
-    }
+        return `<div class="alert alert-warning"><b>HR Feedback:</b><br>${escapeHTML(task.hrFeedback)}</div>`; }
 
     if (status === "New" || status === "Pending") {
-        return `<div class="alert alert-primary">Start the task first, then you can submit your solution.</div>`;
-    }
-
-    return "";
-}
+        return `<div class="alert alert-primary">Start the task first, then you can submit your solution.</div>`; }  return "";}
 
 // Send the solution to HR
 function submitTask() {
-    const task = getTaskById(selectedTaskId);
-
-    if (!task) {
-        return;
-    }
+    const task = getTaskById(selectedTaskId);   if (!task) {  return; }
 
     const status = normalizeStatus(task.status);
 
-    if (status === "Completed" || status === "Blocked" || status === "Time Out") {
-        alert("You cannot submit this task.");
-        return;
-    }
+    if (status === "Completed" || status === "Time Out") {
+        alert("You cannot submit this task.");   return;   }
 
-    if (status !== "In Progress" && status !== "Not Complete") {
-        alert("Please start the task first.");
-        return;
-    }
+    if (status !== "In Progress" && status !== "Not Complete") {    alert("Please start the task first.");   return; }
 
     // New file/image, or the old one if no new file was selected
     const oldSubmission = task.submission || {};
@@ -855,16 +658,10 @@ function submitTask() {
         alert("Add solution text, file, or image before submitting.");
         return;
     }
-
-    task.submission = {
-        employeeId: Number(currentEmployeeId),
-        employeeName: getUserDisplayName(),
-        employeeEmail: currentUser.email || "",
-        solution: solution,
-        file: finalFile,
-        image: finalImage,
-        date: getNow(),
-        displayDate: new Date().toLocaleString()
+//بعمل اوبجيكت خاص بالتسليم وبيحط فيه بيانات الموظف الحالي + الحل + الملف + الصورة + التاريخ
+    task.submission = {   employeeId: Number(currentEmployeeId),   employeeName: getUserDisplayName()
+        ,   employeeEmail: currentUser.email || "",   solution: solution,
+        file: finalFile,  image: finalImage,  date: getNow(),  displayDate: new Date().toLocaleString()
     };
 
     setEmployeeUpdate(task, "Submitted", "Task submitted by Employee");
@@ -907,41 +704,27 @@ function updateEmployeeDashboard() {
 function setCounter(id, value) {
     const element = document.getElementById(id);
 
-    if (!element) {
-        return;
-    }
+    if (!element) {    return;  }
 
     const oldValue = Number(element.dataset.value || element.textContent || 0);
 
-    if (oldValue === value) {
-        element.textContent = value;
-        element.dataset.value = value;
-        return;
-    }
+    if (oldValue === value) {   element.textContent = value;    element.dataset.value = value;    return; }
 
     animateCounter(element, oldValue, value);
 }
 
 // Count from the old number to the new number in 600ms
 function animateCounter(element, startValue, endValue) {
-    const duration = 600;
-    const startTime = performance.now();
+    const duration = 600;  const startTime = performance.now();
 
-    function update(currentTime) {
-        const progress = Math.min((currentTime - startTime) / duration, 1);
+    function update(currentTime) {   const progress = Math.min((currentTime - startTime) / duration, 1);
 
         element.textContent = Math.floor(startValue + (endValue - startValue) * progress);
 
-        if (progress < 1) {
-            requestAnimationFrame(update);
-        } else {
-            element.textContent = endValue;
-            element.dataset.value = endValue;
-        }
-    }
+        if (progress < 1) {     requestAnimationFrame(update);} 
+        else {     element.textContent = endValue;      element.dataset.value = endValue;    }  }
 
-    requestAnimationFrame(update);
-}
+    requestAnimationFrame(update);}
 
 
 /* ---------- Navbar + footer + dark mode ---------- */
