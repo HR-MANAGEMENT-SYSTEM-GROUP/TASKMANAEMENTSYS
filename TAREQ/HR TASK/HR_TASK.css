@@ -643,6 +643,141 @@ body {
     font-size: 13px;
     font-weight: 700;
 }
+/* =========================================================
+   Custom Confirm Popup
+========================================================= */
+
+.custom-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(6px);
+}
+
+.custom-confirm-overlay.show {
+    display: flex;
+}
+
+.custom-confirm-box {
+    width: min(420px, calc(100% - 32px));
+    padding: 34px 30px 28px;
+    border-radius: 22px;
+    background: #FFFFFF;
+    color: #172033;
+    text-align: center;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.28);
+    animation: popupScale 0.25s ease;
+}
+
+.custom-confirm-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: #E8F3FF;
+    color: #0079F1;
+    font-size: 30px;
+}
+
+.custom-confirm-icon.danger {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+.custom-confirm-icon.warning {
+    background: #FEF3C7;
+    color: #D97706;
+}
+
+.custom-confirm-icon.success {
+    background: #DCFCE7;
+    color: #16A34A;
+}
+
+.custom-confirm-box h3 {
+    margin: 0 0 10px;
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.custom-confirm-box p {
+    margin: 0;
+    color: #64748B;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.custom-confirm-actions {
+    margin-top: 26px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.custom-confirm-cancel,
+.custom-confirm-ok {
+    min-width: 120px;
+    min-height: 44px;
+
+    border: none;
+    border-radius: 12px;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.custom-confirm-cancel {
+    background: #F1F5F9;
+    color: #334155;
+}
+
+.custom-confirm-cancel:hover {
+    background: #E2E8F0;
+}
+
+.custom-confirm-ok {
+    background: #0079F1;
+    color: #FFFFFF;
+}
+
+.custom-confirm-ok:hover {
+    background: #005BB5;
+    transform: translateY(-1px);
+}
+
+.custom-confirm-ok.danger {
+    background: #DC2626;
+}
+
+.custom-confirm-ok.danger:hover {
+    background: #B91C1C;
+}
+
+@keyframes popupScale {
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
 /* =========================================
    ANIMATIONS
 ========================================= */
