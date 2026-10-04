@@ -1100,3 +1100,124 @@ input, button, select, textarea {
   color: #94A3B8;
 }
 
+/* ==========================================================================
+   ROLE-BASED SHELL INTEGRATION (HR SIDEBAR VS EMPLOYEE NAVBAR & FOOTER)
+   ========================================================================== */
+
+/* Defaults & Hide Old Custom Navbar */
+.profile-navbar {
+  display: none !important;
+}
+
+#hrSidebar {
+  display: none;
+}
+
+#navbar-placeholder,
+.journey-header,
+#footer-placeholder,
+.journey-footer-container {
+  display: block;
+}
+
+.profile-content-wrapper {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* --------------------------------------------------------------------------
+   HR PROFILE MODE (Shared Sidebar Active, Employee Nav/Footer Hidden)
+   -------------------------------------------------------------------------- */
+html.role-hr #hrSidebar,
+body.is-hr-profile #hrSidebar {
+  display: flex !important;
+}
+
+html.role-hr #navbar-placeholder,
+html.role-hr .journey-header,
+html.role-hr #footer-placeholder,
+html.role-hr .journey-footer-container,
+body.is-hr-profile #navbar-placeholder,
+body.is-hr-profile .journey-header,
+body.is-hr-profile #footer-placeholder,
+body.is-hr-profile .journey-footer-container,
+html.role-hr .profile-navbar,
+body.is-hr-profile .profile-navbar {
+  display: none !important;
+}
+
+html.role-hr .profile-content-wrapper,
+body.is-hr-profile .profile-content-wrapper,
+body.is-hr-profile .hr-with-sidebar-content {
+  margin-left: 300px !important;
+  min-height: 100vh;
+  padding: 24px 32px 60px !important;
+  box-sizing: border-box;
+  transition: margin-left 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  width: calc(100% - 300px) !important;
+}
+
+body.sidebar-collapsed .profile-content-wrapper,
+body.is-hr-profile.sidebar-collapsed .profile-content-wrapper,
+body.is-hr-profile.sidebar-collapsed .hr-with-sidebar-content {
+  margin-left: 110px !important;
+  width: calc(100% - 110px) !important;
+}
+
+@media (max-width: 991.98px) {
+  html.role-hr .profile-content-wrapper,
+  body.is-hr-profile .profile-content-wrapper,
+  body.is-hr-profile .hr-with-sidebar-content {
+    margin-left: 92px !important;
+    width: calc(100% - 92px) !important;
+    padding: 16px 20px 40px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  html.role-hr .profile-content-wrapper,
+  body.is-hr-profile .profile-content-wrapper,
+  body.is-hr-profile .hr-with-sidebar-content {
+    margin-left: 80px !important;
+    width: calc(100% - 80px) !important;
+    padding: 14px 14px 30px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   EMPLOYEE PROFILE MODE (Shared Navbar & Footer Active, Sidebar Hidden)
+   -------------------------------------------------------------------------- */
+html.role-employee #hrSidebar,
+body.is-employee-profile #hrSidebar {
+  display: none !important;
+}
+
+html.role-employee .profile-navbar,
+body.is-employee-profile .profile-navbar {
+  display: none !important;
+}
+
+html.role-employee .profile-content-wrapper,
+body.is-employee-profile .profile-content-wrapper {
+  margin-left: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+html.role-employee #navbar-placeholder,
+html.role-employee .journey-header,
+html.role-employee #footer-placeholder,
+html.role-employee .journey-footer-container,
+body.is-employee-profile #navbar-placeholder,
+body.is-employee-profile .journey-header,
+body.is-employee-profile #footer-placeholder,
+body.is-employee-profile .journey-footer-container {
+  display: block;
+}
+
+/* Ensure Employee Navbar is flex as designed */
+html.role-employee .journey-header,
+body.is-employee-profile .journey-header {
+  display: flex !important;
+}
+

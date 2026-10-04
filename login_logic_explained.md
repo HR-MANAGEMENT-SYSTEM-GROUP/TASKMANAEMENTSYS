@@ -271,17 +271,22 @@ if (user.status === "Blocked") {
 
 **In baby terms:** Even if we found you, if you've been put in **time-out** (blocked by HR) 🚫, you can't come in.
 
-#### Check 4: Is the password correct? (Lines 76–80)
+#### Check 4: First login reset or verify password? (Lines 77–86)
 
 ```js
-if (passInput.value !== correctPass) {
+if (user.id > 1000 && !user.passwordReset) {
+  let p1 = prompt("First login: Enter new password:"), p2 = prompt("Confirm password:");
+  if (!/^[A-Za-z0-9@#$%^&*!]{8,}$/.test(p1 || "") || p1 !== p2) return alert("Password must be at least 8 characters and match.");
+  user.password = p1; user.passwordReset = true;
+  localStorage.setItem("Employees", JSON.stringify((JSON.parse(localStorage.getItem("Employees")) || []).map(e => e.id === user.id ? user : e)));
+} else if (passInput.value !== correctPass) {
   passErr.textContent = "Invalid credentials or role.";
   passErr.style.display = "block";
   return;  // STOP
 }
 ```
 
-**In baby terms:** Is the secret word you typed the same as the one we have on file? No? ❌ Wrong password.
+**In baby terms:** If you are a brand new employee that Omar just created, the system asks you to set and confirm your own strong password (8+ characters with letters, numbers, and symbols) on your first login. Once set, your new password is saved, and on every future login it simply checks your password as usual! 🔐
 
 #### ✅ ALL CHECKS PASSED! (Lines 82–86)
 

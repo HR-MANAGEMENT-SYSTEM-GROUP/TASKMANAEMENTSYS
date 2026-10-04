@@ -74,7 +74,12 @@ document.getElementById("hrLoginForm").onsubmit = (e) => {
     passErr.style.display = "block";
     return;
   }
-  if (passInput.value !== correctPass) {
+  if (user.id > 1000 && !user.passwordReset) {
+    let p1 = prompt("First login: Enter new password:"), p2 = prompt("Confirm password:");
+    if (!/^[A-Za-z0-9@#$%^&*!]{8,}$/.test(p1 || "") || p1 !== p2) return alert("Password must be at least 8 characters and match.");
+    user.password = p1; user.passwordReset = true;
+    localStorage.setItem("Employees", JSON.stringify((JSON.parse(localStorage.getItem("Employees")) || []).map(e => e.id === user.id ? user : e)));
+  } else if (passInput.value !== correctPass) {
     passErr.textContent = "Invalid credentials or role.";
     passErr.style.display = "block";
     return;

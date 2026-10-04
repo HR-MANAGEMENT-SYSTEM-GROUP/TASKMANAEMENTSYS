@@ -120,17 +120,17 @@
   // ============================================================================
   async function initProfile() {
     const storedUserStr = localStorage.getItem('currentUser');
-    if (!storedUserStr) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const requestedRole = urlParams.get('role'); // e.g. ?role=hr
+
+    if (!storedUserStr && !requestedRole) {
       window.location.href = '../login.html';
       return;
     }
     sessionStorage.removeItem('logged_out');
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const requestedRole = urlParams.get('role'); // e.g. ?role=hr
-
     try {
-      currentUser = JSON.parse(storedUserStr);
+      if (storedUserStr) currentUser = JSON.parse(storedUserStr);
     } catch (err) {
       console.error('Failed to parse currentUser from localStorage:', err);
     }
@@ -200,6 +200,47 @@
   // ============================================================================
   function configureRolePermissions(role) {
     const isHR = role === 'hr';
+
+    // 0. Toggle role classes on root and body
+    document.documentElement.classList.toggle('role-hr', isHR);
+    document.documentElement.classList.toggle('role-employee', !isHR);
+    document.body.classList.toggle('is-hr-profile', isHR);
+    document.body.classList.toggle('is-employee-profile', !isHR);
+    document.body.classList.toggle('hr-sidebar-page', isHR);
+
+    document.title = isHR ? 'HR Administrator Profile — Masar HR' : 'Employee Profile — Masar HR';
+
+    const contentWrapper = document.getElementById('profileContentWrapper');
+    if (contentWrapper) {
+      contentWrapper.classList.toggle('hr-with-sidebar-content', isHR);
+    }
+
+    const hrSidebarContainer = document.getElementById('hrSidebar');
+    if (hrSidebarContainer) {
+      hrSidebarContainer.style.display = isHR ? 'flex' : 'none';
+      if (isHR && (!hrSidebarContainer.children || hrSidebarContainer.children.length === 0)) {
+        if (typeof window.loadHRSidebar === 'function') {
+          window.loadHRSidebar();
+        }
+      }
+    }
+
+    const navPlaceholder = document.getElementById('navbar-placeholder');
+    if (navPlaceholder) {
+      navPlaceholder.style.display = isHR ? 'none' : 'block';
+    }
+    const footPlaceholder = document.getElementById('footer-placeholder');
+    if (footPlaceholder) {
+      footPlaceholder.style.display = isHR ? 'none' : 'block';
+    }
+    const employeeHeader = document.querySelector('.journey-header');
+    if (employeeHeader) {
+      employeeHeader.style.display = isHR ? 'none' : 'flex';
+    }
+    const employeeFooter = document.querySelector('.journey-footer-container');
+    if (employeeFooter) {
+      employeeFooter.style.display = isHR ? 'none' : 'block';
+    }
 
     // 1. Page Header & Breadcrumb
     const pageTitle = document.getElementById('profilePageTitle');
@@ -402,10 +443,13 @@
       }
     });
 
-    // Navigation Dropdown
+    // Navigation Dropdown & Shared Navbar
     if (navUserName) navUserName.textContent = name;
     if (navDropdownName) navDropdownName.textContent = name;
     if (navDropdownEmail) navDropdownEmail.textContent = email;
+
+    const sharedUserName = document.getElementById('userName');
+    if (sharedUserName) sharedUserName.textContent = name;
   }
 
   function populateForm(user) {
@@ -496,6 +540,8 @@
       if (cardFullName) cardFullName.textContent = val;
       if (navUserName) navUserName.textContent = val;
       if (navDropdownName) navDropdownName.textContent = val;
+      const sharedUserName = document.getElementById('userName');
+      if (sharedUserName) sharedUserName.textContent = val;
       updateDirtyState();
     });
   }
