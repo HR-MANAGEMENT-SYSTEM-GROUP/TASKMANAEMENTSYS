@@ -25,7 +25,7 @@
             <p class="subtitle">Your meetings, all in one place. Respond to invitations, join your team, or start a conversation with HR.</p>
         </div>
 
-        <button type="button" class="request-button" onclick="showRequestForm()">
+        <button type="button" class="request-button" onclick="openForm()">
             <i class="bi bi-plus-lg" aria-hidden="true"></i> Request Meeting
         </button>
     </header>
@@ -87,7 +87,7 @@
                 <h2 id="requestFormTitle">Request Meeting</h2>
                 <p>Send a meeting request to the HR Manager.</p>
             </div>
-            <button class="close-button" type="button" onclick="hideRequestForm()" aria-label="Close meeting request">&times;</button>
+            <button class="close-button" type="button" onclick="closeForm()" aria-label="Close meeting request">&times;</button>
         </div>
 
         <form id="requestMeetingForm">
@@ -114,8 +114,8 @@
             </div>
 
             <div class="form-buttons">
-                <button class="cancel-button" type="button" onclick="hideRequestForm()">Cancel</button>
-                <button class="save-button" type="submit">Send Request</button>
+                <button class="cancel-button" type="button" onclick="closeForm()">Cancel</button>
+                <button id="sendRequestButton" class="save-button" type="submit">Send Request</button>
             </div>
         </form>
 

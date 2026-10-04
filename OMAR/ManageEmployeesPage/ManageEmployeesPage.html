@@ -75,7 +75,7 @@
                 </select>
             </div>
         </div>
-        <button type="button" class="add-button" onclick="showForm()"><i class="bi bi-plus-lg" aria-hidden="true"></i> Add Employee</button>
+        <button type="button" class="add-button" onclick="openForm()"><i class="bi bi-plus-lg" aria-hidden="true"></i> Add Employee</button>
     </div>
 
     <!-- Employee List -->
@@ -119,7 +119,7 @@
                 <h2 id="formTitle">New Employee</h2>
                 <p>Add or update employee information.</p>
             </div>
-            <button type="button" class="close-button" onclick="hideForm()" aria-label="Close employee form">×</button>
+            <button type="button" class="close-button" onclick="closeForm()" aria-label="Close employee form">×</button>
         </div>
 
         <form id="form">
@@ -180,7 +180,7 @@
             </div>
 
             <div class="form-buttons">
-                <button type="button" class="cancel-button" onclick="hideForm()">Cancel</button>
+                <button type="button" class="cancel-button" onclick="closeForm()">Cancel</button>
                 <button type="submit" id="saveButton" class="save-button">Save Employee</button>
             </div>
         </form>
@@ -196,7 +196,7 @@
                 <h2 id="viewEmployeeName">Employee</h2>
                 <p>Employee account and employment details.</p>
             </div>
-            <button type="button" class="close-button" onclick="closeEmployeeView()" aria-label="Close employee profile">×</button>
+            <button type="button" class="close-button" onclick="closeView()" aria-label="Close employee profile">×</button>
         </div>
 
         <div class="employee-view-grid">

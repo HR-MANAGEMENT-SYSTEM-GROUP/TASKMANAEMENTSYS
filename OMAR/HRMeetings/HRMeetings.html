@@ -26,7 +26,7 @@
             <p class="subtitle">Schedule meetings, review requests, and track employee responses.</p>
         </div>
 
-        <button type="button" class="add-button" onclick="showMeetingForm()">
+        <button type="button" class="add-button" onclick="openForm()">
             <i class="bi bi-plus-lg" aria-hidden="true"></i> Schedule Meeting
         </button>
     </header>
@@ -76,7 +76,7 @@
                 <h2 id="formTitle">Schedule Meeting</h2>
                 <p>Enter the meeting details below.</p>
             </div>
-            <button class="close-button" type="button" onclick="hideMeetingForm()" aria-label="Close meeting form">&times;</button>
+            <button class="close-button" type="button" onclick="closeForm()" aria-label="Close meeting form">&times;</button>
         </div>
 
         <form id="meetingForm">
@@ -101,7 +101,7 @@
                 <label for="participantsButton">Participants</label>
 
                 <div class="participants-dropdown">
-                    <button id="participantsButton" class="participants-button" type="button" onclick="toggleParticipantsDropdown()" aria-controls="participantsMenu">
+                    <button id="participantsButton" class="participants-button" type="button" onclick="showMenu()" aria-controls="participantsMenu">
                         <span id="participantsText">Select participants</span>
                         <i class="bi bi-chevron-down" aria-hidden="true"></i>
                     </button>
@@ -131,7 +131,7 @@
             </div>
 
             <div class="form-buttons">
-                <button class="cancel-button" type="button" onclick="hideMeetingForm()">Cancel</button>
+                <button class="cancel-button" type="button" onclick="closeForm()">Cancel</button>
                 <button id="saveMeetingButton" class="save-button" type="submit">Schedule Meeting</button>
             </div>
         </form>
@@ -150,7 +150,7 @@
                 <h2 id="viewMeetingTitle">Meeting Details</h2>
                 <p>Meeting information and participant responses.</p>
             </div>
-            <button class="close-button" type="button" onclick="closeMeetingView()" aria-label="Close meeting details">&times;</button>
+            <button class="close-button" type="button" onclick="closeView()" aria-label="Close meeting details">&times;</button>
         </div>
 
         <div class="view-grid">
@@ -180,7 +180,7 @@
         </div>
 
         <div class="view-buttons">
-            <button class="cancel-button" type="button" onclick="closeMeetingView()">Close</button>
+            <button class="cancel-button" type="button" onclick="closeView()">Close</button>
         </div>
 
     </div>
@@ -197,7 +197,7 @@
                 <h2 id="viewRequestTitle">Meeting Request</h2>
                 <p>Review the employee request and send a response.</p>
             </div>
-            <button class="close-button" type="button" onclick="closeRequestView()" aria-label="Close employee request">&times;</button>
+            <button class="close-button" type="button" onclick="closeReq()" aria-label="Close employee request">&times;</button>
         </div>
 
         <div class="view-grid">
@@ -230,8 +230,8 @@
         </div>
 
         <div class="request-actions">
-            <button class="reject-button" type="button" onclick="respondToCurrentRequest('Rejected')">Reject</button>
-            <button class="accept-button" type="button" onclick="respondToCurrentRequest('Accepted')">Accept</button>
+            <button class="reject-button" type="button" onclick="replyReq('Rejected')">Reject</button>
+            <button class="accept-button" type="button" onclick="replyReq('Accepted')">Accept</button>
         </div>
 
     </div>

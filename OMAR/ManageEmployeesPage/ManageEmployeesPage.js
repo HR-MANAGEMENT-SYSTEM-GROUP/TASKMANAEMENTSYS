@@ -1,181 +1,173 @@
 let Employees = [];
-let editingId = null;
-const DEFAULT_EMPLOYEE_PASSWORD = "Abc@12";
-
-let container = document.getElementById("container");
+let editId = null;
+let defaultPassword = "Abc@12";
+let fields = ["name", "email", "phone", "department", "position", "status", "joiningDate"];
 let form = document.getElementById("form");
 let modal = document.getElementById("employeeForm");
 let search = document.getElementById("search");
-let departmentFilter = document.getElementById("departmentFilter");
-let employeeFields = ["name", "email", "phone", "department", "position", "status", "joiningDate"];
+let dept = document.getElementById("departmentFilter");
 
-//بجيب الموظفين من local اذا ما فيه بجيب من الجيسون
-function loadEmployees() {
+// قراءة الموظفين من local أو من ملف JSON إذا ما فيه بيانات محفوظة.
+async function loadData() {
+    let users = null;
     try {
-        let saved = JSON.parse(localStorage.getItem("Employees"));
-        if (Array.isArray(saved)) {
-            Employees = saved.filter(employee => employee.role === "employee");
-            displayEmployees(Employees);
-            updateSummary();
-            return;
-        }
+        users = JSON.parse(localStorage.getItem("Employees"));
     } catch (error) {
         console.error("Unable to read saved employees:", error);
     }
-
-    fetch("../../jsonFiles/Users.json")
-        .then(response => {
+    try {
+        if (!Array.isArray(users)) {
+            let response = await fetch("../../jsonFiles/Users.json");
             if (!response.ok) throw new Error("Users.json could not be loaded");
-            return response.json();
-        })
-        .then(data => {
-            Employees = data.filter(employee => employee.role === "employee");
-            displayEmployees(Employees);
-            updateSummary();
-        })
-        .catch(error => console.error("Users.json Error:", error));
-}
-
-//حفظ التعديلات في localStorage 
-function saveEmployees() {
-    localStorage.setItem("Employees", JSON.stringify(Employees));
-    updateSummary();
-    applyFilters();
-}
-
-function displayEmployees(list) {
-    container.innerHTML = "";
-    for (let employee of list) {
-        let statusClass = "status-inactive";
-        if (employee.status === "Active") statusClass = "status-active";
-        if (employee.status === "Blocked") statusClass = "status-blocked";
-        let blockText = employee.status === "Blocked" ? "Unblock" : "Block";
-
-        container.innerHTML += `
-            <tr>
-                <td class="employee-name">${employee.name}</td>
-                <td>${employee.email}</td>
-                <td>${employee.department}</td>
-                <td>${employee.position}</td>
-                <td><span class="status ${statusClass}">${employee.status}</span></td>
-                <td><div class="actions">
-                    <button class="view-button" onclick="viewEmployee(${employee.id})">View</button>
-                    <button class="edit-button" onclick="editEmployee(${employee.id})">Edit</button>
-                    <button class="block-button" onclick="toggleBlock(${employee.id})">${blockText}</button>
-                </div></td>
-            </tr>`;
+            users = await response.json();
+        }
+        Employees = users.filter(function (user) {
+            return user.role === "employee";
+        });
+        displayEmp();
+        countEmp();
+    } catch (error) {
+        console.error("Unable to load employees:", error);
     }
 }
-//بتحدث الاحصئيات
-function updateSummary() {
-    let departments = [];
-    for (let employee of Employees) {
-        if (employee.department && !departments.includes(employee.department)) {
-            departments.push(employee.department);
-        }
+function getEmp(id) {
+    for (let emp of Employees) {
+        if (emp.id === id) return emp;
+    }
+    return null;
+}
+function saveData() {
+    localStorage.setItem("Employees", JSON.stringify(Employees));
+    countEmp();
+    displayEmp();
+}
+
+// البحث والفلترة، ثم عرض الموظفين في الجدول.
+function displayEmp() {
+    let text = search.value.toLowerCase().trim();
+    let list = Employees.filter(function (emp) {
+        let matchName = emp.name.toLowerCase().includes(text) || emp.email.toLowerCase().includes(text);
+        let matchDept = dept.value === "" || emp.department === dept.value;
+        return matchName && matchDept;
+    });
+    let box = document.getElementById("container");
+    box.innerHTML = "";
+    for (let emp of list) {
+        let color = "status-inactive";
+        if (emp.status === "Active") color = "status-active";
+        if (emp.status === "Blocked") color = "status-blocked";
+        let text = "Block";
+        if (emp.status === "Blocked") text = "Unblock";
+        let row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="employee-name">${emp.name}</td>
+            <td>${emp.email}</td><td>${emp.department}</td><td>${emp.position}</td>
+            <td><span class="status ${color}">${emp.status}</span></td>
+            <td><div class="actions">
+                <button class="view-button" onclick="viewEmp(${emp.id})">View</button>
+                <button class="edit-button" onclick="editEmp(${emp.id})">Edit</button>
+                <button class="block-button" onclick="blockEmp(${emp.id})">${text}</button>
+            </div></td>`;
+        box.appendChild(row);
+    }
+}
+//بعرض الاحصائيات 
+function countEmp() {
+    let depts = [];
+    let active = 0;
+    let blocked = 0;
+    for (let emp of Employees) {
+        if (emp.department && !depts.includes(emp.department)) depts.push(emp.department);
+        if (emp.status === "Active") active++;
+        if (emp.status === "Blocked") blocked++;
     }
     document.getElementById("totalEmployees").textContent = Employees.length;
-    document.getElementById("activeEmployees").textContent = Employees.filter(employee => employee.status === "Active").length;
-    document.getElementById("blockedEmployees").textContent = Employees.filter(employee => employee.status === "Blocked").length;
-    document.getElementById("totalDepartments").textContent = departments.length;
+    document.getElementById("activeEmployees").textContent = active;
+    document.getElementById("blockedEmployees").textContent = blocked;
+    document.getElementById("totalDepartments").textContent = depts.length;
 }
 
-//بس اكبس add emp بتفتح 
-function showForm() {
-    editingId = null;
+// فتح  نموذج الموظف.
+function openForm() {
+    editId = null;
     form.reset();
     document.getElementById("newEmployeePasswordGroup").hidden = false;
-    document.getElementById("newEmployeePassword").value = DEFAULT_EMPLOYEE_PASSWORD;
+    document.getElementById("newEmployeePassword").value = defaultPassword;
     document.getElementById("formTitle").textContent = "New Employee";
     document.getElementById("saveButton").textContent = "Save Employee";
     modal.hidden = false;
 }
-
-function hideForm() {
+function closeForm() {
     modal.hidden = true;
     form.reset();
-    editingId = null;
+    editId = null;
 }
-
-//لما بدي اعمل ادد او ابديت
-form.addEventListener("submit", event => {
+function saveEmp(event) {
     event.preventDefault();
-    const isNewEmployee = editingId === null;
-    let employee = Employees.find(employee => employee.id === editingId);
-    if (isNewEmployee) {
-        employee = { id: Date.now(), role: "employee", password: DEFAULT_EMPLOYEE_PASSWORD, profilePicture: "" };
-        Employees.push(employee);
+    let isNew = editId === null;
+    let emp = getEmp(editId);
+    if (isNew) {
+        emp = { id: Date.now(), role: "employee", password: defaultPassword, profilePicture: "" };
+        Employees.push(emp);
     }
-    if (!employee) return;
-    for (let field of employeeFields) {
-        employee[field] = document.getElementById(field).value;
-    }
-    saveEmployees();
-    hideForm();
-    if (isNewEmployee) {
-        alert("Employee added successfully.");
-    }
-});
-//بجيب معلومات الموظف وبجهزها للابديت
-function editEmployee(id) {
-    let employee = Employees.find(employee => employee.id === id);
-    if (!employee) return;
-    editingId = id;
-    for (let field of employeeFields) {
-        document.getElementById(field).value = employee[field] || "";
-    }
-    document.getElementById("joiningDate").value = formatDateForInput(employee.joiningDate);
+    if (!emp) return;
+    for (let field of fields) emp[field] = document.getElementById(field).value;
+    saveData();
+    closeForm();
+    if (isNew) alert("Employee added successfully.");
+}
+//بجهز البيانات للتعديل
+function editEmp(id) {
+    let emp = getEmp(id);
+    if (!emp) return;
+    editId = id;
+    for (let field of fields) document.getElementById(field).value = emp[field] || "";
+    document.getElementById("joiningDate").value = showDate(emp.joiningDate);
     document.getElementById("newEmployeePasswordGroup").hidden = true;
     document.getElementById("formTitle").textContent = "Edit Employee";
     document.getElementById("saveButton").textContent = "Update Employee";
     modal.hidden = false;
 }
 
-function viewEmployee(id) {
-    let employee = Employees.find(employee => employee.id === id);
-    if (!employee) return;
-    document.getElementById("viewEmployeeName").textContent = employee.name;
-    document.getElementById("viewEmail").textContent = employee.email || "-";
-    document.getElementById("viewPhone").textContent = employee.phone || "-";
-    document.getElementById("viewDepartment").textContent = employee.department || "-";
-    document.getElementById("viewPosition").textContent = employee.position || "-";
-    document.getElementById("viewJoiningDate").textContent = employee.joiningDate || "-";
-    document.getElementById("viewStatus").textContent = employee.status || "-";
-    document.getElementById("viewDepartmentCard").textContent = employee.department || "-";
-    document.getElementById("viewPositionCard").textContent = employee.position || "-";
+// عرض بيانات الموظف وحظر حسابه أو فك الحظر.
+function viewEmp(id) {
+    let emp = getEmp(id);
+    if (!emp) return;
+    document.getElementById("viewEmployeeName").textContent = emp.name;
+    document.getElementById("viewEmail").textContent = emp.email || "-";
+    document.getElementById("viewPhone").textContent = emp.phone || "-";
+    document.getElementById("viewDepartment").textContent = emp.department || "-";
+    document.getElementById("viewPosition").textContent = emp.position || "-";
+    document.getElementById("viewJoiningDate").textContent = emp.joiningDate || "-";
+    document.getElementById("viewStatus").textContent = emp.status || "-";
+    document.getElementById("viewDepartmentCard").textContent = emp.department || "-";
+    document.getElementById("viewPositionCard").textContent = emp.position || "-";
     document.getElementById("viewEmployeeModal").hidden = false;
 }
-
-function closeEmployeeView() {
+function closeView() {
     document.getElementById("viewEmployeeModal").hidden = true;
 }
-
-function toggleBlock(id) {
-    let employee = Employees.find(employee => employee.id === id);
-    if (!employee) return;
-    if (employee.status !== "Blocked" && !confirm("Are you sure you want to block this employee?")) return;
-    employee.status = employee.status === "Blocked" ? "Active" : "Blocked";
-    saveEmployees();
+function blockEmp(id) {
+    let emp = getEmp(id);
+    if (!emp) return;
+    if (emp.status === "Blocked") {
+        emp.status = "Active";
+    } else {
+        if (!confirm("Are you sure you want to block this employee?")) return;
+        emp.status = "Blocked";
+    }
+    saveData();
 }
-//date
-function formatDateForInput(date) {
+
+// تحويل التاريخ القديم لصيغة حقل التاريخ.
+function showDate(date) {
     if (!date) return "";
     if (date.includes("-")) return date;
     let parts = date.split("/");
     if (parts.length !== 3) return "";
     return `${parts[2]}-${parts[0].padStart(2, "0")}-${parts[1].padStart(2, "0")}`;
 }
-//search and dep filter
-function applyFilters() {
-    let text = search.value.toLowerCase().trim();
-    let department = departmentFilter.value;
-    let filtered = Employees.filter(employee =>
-        (employee.name.toLowerCase().includes(text) || employee.email.toLowerCase().includes(text)) &&
-        (department === "" || employee.department === department)
-    );
-    displayEmployees(filtered);
-}
-
-search.addEventListener("input", applyFilters);
-departmentFilter.addEventListener("change", applyFilters);
-document.addEventListener("DOMContentLoaded", loadEmployees);
+form.addEventListener("submit", saveEmp);
+search.addEventListener("input", displayEmp);
+dept.addEventListener("change", displayEmp);
+document.addEventListener("DOMContentLoaded", loadData);

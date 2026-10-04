@@ -1,416 +1,334 @@
-let Meetings = JSON.parse(localStorage.getItem("Meetings")) || [];
+let Meetings = [];
 let Employees = [];
-let editingMeetingId = null;
-let currentRequestId = null;
+let editId = null;
+let reqId = null;
 
-let meetingForm = document.getElementById("meetingForm");
-let meetingModal = document.getElementById("meetingFormContainer");
-let participantsMenu = document.getElementById("participantsMenu");
-let selectAllEmployees = document.getElementById("selectAllEmployees");
-let meetingFields = { title: "meetingTitle", date: "meetingDate", time: "meetingTime", notes: "meetingNotes" };
-/*اول فنكشن بشتغل عندي بجيب اليوزرز من ال json file */
-// بس بجيب ال employees 
-function loadEmployees() {
-    fetch("../../jsonFiles/Users.json")
-        .then(response => response.json())
-        .then(data => {
-            Employees = data.filter(user => user.role === "employee");
-            startPage();
-        })
-        .catch(error => console.error("Error loading Users.json:", error));
+let form = document.getElementById("meetingForm");
+let menu = document.getElementById("participantsMenu");
+let allEmp = document.getElementById("selectAllEmployees");
+
+//بتجيب الاجتماعات من local والموظفين من ملف JSON وبتعرضهم
+async function loadData() {
+    try {
+        let saved = JSON.parse(localStorage.getItem("Meetings"));
+        if (Array.isArray(saved)) Meetings = saved;
+    } catch (error) {
+        console.error("Unable to read meetings:", error);
+    }
+    try {
+        let response = await fetch("../../jsonFiles/Users.json");
+        if (!response.ok) throw new Error("Users.json could not be loaded");
+        let users = await response.json();
+        if (!Array.isArray(users)) throw new Error("Invalid user directory");
+        Employees = users.filter(function (user) {
+            return user.role === "employee";
+        });
+        displayEmp();
+        displayMeet();
+    } catch (error) {
+        console.error("Error loading Users.json:", error);
+    }
 }
-//بجيب ال meeting req والميتنج تاعت ال HR
-function startPage() {
-    displayParticipantOptions();
-    displayMeetingRequests();
-    displayMeetings();
+// بجيب الميتنج
+function getMeet(id) {
+    for (let meet of Meetings) {
+        if (meet.id === id) return meet;
+    }
+    return null;
 }
-//حفظ ال meetings في ال local storage
-function saveMeetings() {
+//بجيب الموظف
+function getEmp(id) {
+    for (let emp of Employees) {
+        if (emp.id === id) return emp;
+    }
+    return null;
+}
+
+//بحفظ الميتنج بال local 
+function saveData() {
     localStorage.setItem("Meetings", JSON.stringify(Meetings));
-}
-// هون بجيب كل ال employees وال departments وبحطهم في ال dropdown list
-function displayParticipantOptions() {
-    let employeesBox = document.getElementById("employeesCheckboxes");
-    let departmentsBox = document.getElementById("departmentsCheckboxes");
-    let departments = ["IT", "Marketing", "Finance", "Operations", "Sales"];
-
-    employeesBox.innerHTML = "";
-    departmentsBox.innerHTML = "";
-
-    Employees.forEach(employee => {
-        employeesBox.innerHTML += `
-            <label class="participant-option">
-                <input type="checkbox" class="employee-option"
-                    value="${employee.id}" onchange="updateSelection()">
-                <span>${employee.name}</span>
-            </label>`;
-    });
-
-    departments.forEach(department => {
-        departmentsBox.innerHTML += `
-            <label class="participant-option">
-                <input type="checkbox" class="department-option"
-                    value="${department}" onchange="selectDepartment(this)">
-                <span>${department}</span>
-            </label>`;
-    });
-}
-//عشان افتح واسكر ال dropdown
-function toggleParticipantsDropdown() {
-    participantsMenu.hidden = !participantsMenu.hidden;
-}
-/*لما اكبس على all employee بال dropdown list عشان يصيرو كلهم checked*/ 
-selectAllEmployees.addEventListener("change", function () {
-    document.querySelectorAll(".employee-option, .department-option").forEach(box => {
-        box.checked = this.checked;
-    });
-
-    updateParticipantsText();
-});
-//هون لما اكبس على قسم معين بال الليست بعمل تشيك على الموظفين
-function selectDepartment(departmentBox) {
-    document.querySelectorAll(".employee-option").forEach(box => {
-        let employee = Employees.find(user => user.id == box.value);
-
-        if (employee.department === departmentBox.value) {
-            box.checked = departmentBox.checked;
-        }
-    });
-
-    updateSelection();
+    displayMeet();
 }
 
-// هون في حال اخترت كل الموظفين بال القسم بعمل تيشك على القسم 
-function updateSelection() {
-    let selected = getSelectedEmployees();
-
-    selectAllEmployees.checked = Employees.length > 0 && selected.length === Employees.length;
-
-    document.querySelectorAll(".department-option").forEach(departmentBox => {
-        let departmentEmployees = Employees.filter(
-            employee => employee.department === departmentBox.value
-        );
-
-        departmentBox.checked = departmentEmployees.length > 0 &&
-            departmentEmployees.every(employee => selected.includes(employee.id));
-    });
-
-    updateParticipantsText();
+// عرض الموظفين والأقسام .
+function displayEmp() {
+    let empBox = document.getElementById("employeesCheckboxes");
+    let deptBox = document.getElementById("departmentsCheckboxes");
+    let depts = ["IT", "Marketing", "Finance", "Operations", "Sales"];
+    empBox.innerHTML = "";
+    deptBox.innerHTML = "";
+    for (let emp of Employees) {
+        empBox.innerHTML += `<label class="participant-option">
+            <input type="checkbox" class="employee-option" value="${emp.id}" onchange="checkEmp()">
+            <span>${emp.name}</span></label>`;
+    }
+    for (let dept of depts) {
+        deptBox.innerHTML += `<label class="participant-option">
+            <input type="checkbox" class="department-option" value="${dept}" onchange="selectDept(this)">
+            <span>${dept}</span></label>`;
+    }
 }
-// بجيب كل الموظفين الي اخترتهم بالليست 
-function getSelectedEmployees() {
-    return Array.from(document.querySelectorAll(".employee-option:checked"), box => Number(box.value));
+//dropdown list
+function showMenu() {
+    menu.hidden = !menu.hidden;
 }
-//هون عشان اعرض الموظفين بال Participants
-function updateParticipantsText() {
-    let selected = getSelectedEmployees();
-    let text = document.getElementById("participantsText");
-
-    text.textContent = selected.length
-        ? selected.length + " participants selected"
-        : "Select participants";
+//بتجيب الايدي للموظفين
+function getIds() {
+    let ids = [];
+    for (let box of document.querySelectorAll(".employee-option:checked")) {
+        ids.push(Number(box.value));
+    }
+    return ids;
 }
-// عشان لما يعمل uncheck
-function clearParticipants() {
-    document.querySelectorAll(".employee-option, .department-option").forEach(box => {
-        box.checked = false;
-    });
-
-    selectAllEmployees.checked = false;
-    updateParticipantsText();
+//بجيب كل الموظفين بالقسم الي اخترته 
+function selectDept(dept) {
+    for (let box of document.querySelectorAll(".employee-option")) {
+        let emp = getEmp(Number(box.value));
+        if (emp && emp.department === dept.value) box.checked = dept.checked;
+    }
+    checkEmp();
 }
 
-//لما اضغط على schedule meeting بتفتح 
-function showMeetingForm() {
-    editingMeetingId = null;
-    meetingForm.reset();
-    clearParticipants();
+//تحديث عدد الموظفين الي اخترتهم
+function checkEmp() {
+    let ids = getIds();
+    allEmp.checked = Employees.length > 0 && ids.length === Employees.length;
+    for (let box of document.querySelectorAll(".department-option")) {
+        let deptEmp = Employees.filter(function (emp) {
+            return emp.department === box.value;
+        });
+        let selected = deptEmp.filter(function (emp) {
+            return ids.includes(emp.id);
+        });
+        box.checked = deptEmp.length > 0 && selected.length === deptEmp.length;
+    }
+    document.getElementById("participantsText").textContent = "Select participants";
+    if (ids.length > 0) document.getElementById("participantsText").textContent = ids.length + " participants selected";
+}
+
+// لما بدي اعمل ميتنج جديد + بتجهز البيانات وبتخلي الفورم فاضي
+function openForm() {
+    editId = null;
+    form.reset();
+    checkEmp();
     document.getElementById("formTitle").textContent = "Schedule Meeting";
     document.getElementById("saveMeetingButton").textContent = "Schedule Meeting";
-    meetingModal.hidden = false;
+    document.getElementById("meetingFormContainer").hidden = false;
 }
-//عشان اسكر ال schedule meeting
-function hideMeetingForm() {
-    meetingModal.hidden = true;
-    participantsMenu.hidden = true;
-    editingMeetingId = null;
+function closeForm() {
+    document.getElementById("meetingFormContainer").hidden = true;
+    menu.hidden = true;
+    editId = null;
 }
 
-// هون بعمل كذا شغله اول اشي في حال ما اختار موظف ببعثله اليرت 
-//ثاني اشي في حال بدي اعمل ابديت على ميتنج معين 
-//اذا لا فا انا هون بكون بعمل ميتنج 
-//واخر اشي بعمل save طبعا 
-function saveMeeting(event) {
+function editMeet(id) {
+    let meet = getMeet(id);
+    if (!meet || meet.createdBy !== "HR") return;
+    openForm();
+    editId = id;
+    document.getElementById("meetingTitle").value = meet.title || "";
+    document.getElementById("meetingDate").value = meet.date || "";
+    document.getElementById("meetingTime").value = meet.time || "";
+    document.getElementById("meetingNotes").value = meet.notes || "";
+    for (let box of document.querySelectorAll(".employee-option")) {
+        box.checked = meet.participants.includes(Number(box.value));
+    }
+    checkEmp();
+    document.getElementById("formTitle").textContent = "Edit Meeting";
+    document.getElementById("saveMeetingButton").textContent = "Save Changes";
+}
+
+//هون بخزن قيم الميتنج
+function saveMeet(event) {
     event.preventDefault();
-
-    let participants = getSelectedEmployees();
-
-    if (participants.length === 0) {
+    let ids = getIds();
+    if (ids.length === 0) {
         alert("Please select at least one employee.");
         return;
     }
-
-    let meeting = Meetings.find(item => item.id === editingMeetingId);
-    if (editingMeetingId === null) {
+    let meet = getMeet(editId);
+    if (editId === null) {
         let id = Date.now();
-        meeting = { id: id, createdBy: "HR", status: "Scheduled", responses: [], roomName: "HRMeeting_" + id };
-        Meetings.push(meeting);
+        meet = { id: id, createdBy: "HR", status: "Scheduled", responses: [], roomName: "HRMeeting_" + id };
+        Meetings.push(meet);
     }
-    for (let field in meetingFields) {
-        meeting[field] = document.getElementById(meetingFields[field]).value.trim();
-    }
-    meeting.participants = participants;
-
-    saveMeetings();
-    hideMeetingForm();
-    displayMeetings();
+    if (!meet) return;
+    meet.title = document.getElementById("meetingTitle").value.trim();
+    meet.date = document.getElementById("meetingDate").value;
+    meet.time = document.getElementById("meetingTime").value;
+    meet.notes = document.getElementById("meetingNotes").value.trim();
+    meet.participants = ids;
+    saveData();
+    closeForm();
 }
-
-meetingForm.addEventListener("submit", saveMeeting);
-
-//وقت ما اعدل على الميتنق ال HR
-function editMeeting(id) {
-    let meeting = Meetings.find(item => item.id === id);
-
-    if (!meeting || meeting.createdBy !== "HR") return;
-
-    editingMeetingId = id;
-    for (let field in meetingFields) {
-        document.getElementById(meetingFields[field]).value = meeting[field] || "";
-    }
-
-    clearParticipants();
-    document.querySelectorAll(".employee-option").forEach(box => {
-        box.checked = meeting.participants.includes(Number(box.value));
-    });
-    updateSelection();
-
-    document.getElementById("formTitle").textContent = "Edit Meeting";
-    document.getElementById("saveMeetingButton").textContent = "Save Changes";
-    meetingModal.hidden = false;
-}
-// لما بدي احذف ميتنج
-function deleteMeeting(id) {
+function deleteMeet(id) {
     if (!confirm("Are you sure you want to delete this meeting?")) return;
-
-    Meetings = Meetings.filter(meeting => meeting.id !== id);
-    saveMeetings();
-    displayMeetings();
-}
-
-// هون بعرض كل الميتنجات الي انا عاملها او الي الموظف قبلها
-function displayMeetings() {
-    let container = document.getElementById("meetingsContainer");
-    let scheduled = Meetings.filter(meeting =>
-        meeting.createdBy === "HR" ||
-        (meeting.createdBy === "Employee" && meeting.status === "Accepted")
-    );
-
-    container.innerHTML = scheduled.length ? "" : `<p class="empty-message">No scheduled meetings.</p>`;
-
-    scheduled.forEach(meeting => {
-        let employeeRequest = meeting.createdBy === "Employee";
-        let status = employeeRequest ? "Accepted" : "Upcoming";
-        let count = meeting.participants.length;
-
-        let details = `
-            <p class="meeting-info"><strong>Participants</strong><span>${count}</span></p>
-            ${meeting.notes ? `<div class="notes-preview">${meeting.notes}</div>` : ""}`;
-        let actions = `
-            <button class="join-button" onclick="joinMeeting(${meeting.id})">Join Meeting</button>
-            <button class="view-button" onclick="viewMeeting(${meeting.id})">View</button>
-            ${employeeRequest ? "" : `
-                <button class="edit-button" onclick="editMeeting(${meeting.id})">Edit</button>
-                <button class="delete-button" onclick="deleteMeeting(${meeting.id})">Delete</button>`}`;
-        container.innerHTML += meetingCard(meeting, status, details, actions);
+    Meetings = Meetings.filter(function (meet) {
+        return meet.id !== id;
     });
+    saveData();
 }
-// لما اكبس على join meeting بفتح ال zoom meeting
-function joinMeeting(id) {
-    let meeting = Meetings.find(item => item.id === id);
-    if (!meeting) return;
 
-    if (!meeting.roomName) {
-        meeting.roomName = "HRMeeting_" + meeting.id;
-        saveMeetings();
+// عرض الطلبات المعلقة والاجتماعات المجدولة.
+function displayMeet() {
+    let reqBox = document.getElementById("meetingRequests");
+    let meetBox = document.getElementById("meetingsContainer");
+    reqBox.innerHTML = "";
+    meetBox.innerHTML = "";
+    for (let meet of Meetings) {
+        if (meet.createdBy === "Employee" && meet.status === "Pending") {
+            let emp = getEmp(meet.requestedBy);
+            let name = "Employee";
+            if (emp) name = emp.name;
+            let info = `<p class="meeting-info"><strong>Employee</strong><span>${name}</span></p>`;
+            let buttons = `<button class="view-button" onclick="viewReq(${meet.id})">Review Request</button>`;
+            reqBox.appendChild(card(meet, "Pending", info, buttons));
+        }
+        if (meet.createdBy === "HR" || (meet.createdBy === "Employee" && meet.status === "Accepted")) {
+            let status = "Accepted";
+            let info = `<p class="meeting-info"><strong>Participants</strong><span>${meet.participants.length}</span></p>`;
+            if (meet.notes) info += `<div class="notes-preview">${meet.notes}</div>`;
+            let buttons = `
+                <button class="join-button" onclick="joinMeet(${meet.id})">Join Meeting</button>
+                <button class="view-button" onclick="viewMeet(${meet.id})">View</button>`;
+            if (meet.createdBy === "HR") {
+                status = "Upcoming";
+                buttons += `
+                    <button class="edit-button" onclick="editMeet(${meet.id})">Edit</button>
+                    <button class="delete-button" onclick="deleteMeet(${meet.id})">Delete</button>`;
+            }
+            meetBox.appendChild(card(meet, status, info, buttons));
+        }
     }
-    window.location.href = "../meetingzoom/meetingzoom.html?room=" + encodeURIComponent(meeting.roomName);
+    if (reqBox.innerHTML === "") reqBox.innerHTML = '<p class="empty-message">No pending meeting requests.</p>';
+    if (meetBox.innerHTML === "") meetBox.innerHTML = '<p class="empty-message">No scheduled meetings.</p>';
+}
+function card(meet, status, info, buttons) {
+    let box = document.createElement("div");
+    box.className = "meeting-card";
+    box.innerHTML = `
+        <div class="meeting-card-header">
+            <h3>${meet.title}</h3><span class="status status-${status.toLowerCase()}">${status}</span>
+        </div>
+        <div class="meeting-details">
+            <p class="meeting-info"><strong>Date</strong><span>${showDate(meet.date)}</span></p>
+            <p class="meeting-info"><strong>Time</strong><span>${showTime(meet.time)}</span></p>
+            ${info}
+        </div>
+        <div class="card-actions">${buttons}</div>`;
+    return box;
+}
+function joinMeet(id) {
+    let meet = getMeet(id);
+    if (!meet) return;
+    if (!meet.roomName) {
+        meet.roomName = "HRMeeting_" + meet.id;
+        saveData();
+    }
+    window.location.href = "../meetingzoom/meetingzoom.html?room=" + encodeURIComponent(meet.roomName);
 }
 
-//بجيب الميتنق وبعرض معلوماته
-function viewMeeting(id) {
-    let meeting = Meetings.find(item => item.id === id);
-    if (!meeting) return;
-
-    document.getElementById("viewMeetingTitle").textContent = meeting.title;
-    document.getElementById("viewMeetingDate").textContent = formatDate(meeting.date);
-    document.getElementById("viewMeetingTime").textContent = formatTime(meeting.time);
-    document.getElementById("viewMeetingNotes").textContent = meeting.notes || "No notes";
-
-    displayViewParticipants(meeting);
-    displayViewResponses(meeting);
+// عرض تفاصيل الاجتماع وردود المشاركين.
+function viewMeet(id) {
+    let meet = getMeet(id);
+    if (!meet) return;
+    document.getElementById("viewMeetingTitle").textContent = meet.title;
+    document.getElementById("viewMeetingDate").textContent = showDate(meet.date);
+    document.getElementById("viewMeetingTime").textContent = showTime(meet.time);
+    document.getElementById("viewMeetingNotes").textContent = meet.notes || "No notes";
+    let empBox = document.getElementById("viewMeetingParticipants");
+    let replyBox = document.getElementById("viewMeetingResponses");
+    empBox.innerHTML = "";
+    replyBox.innerHTML = "";
+    for (let id of meet.participants) {
+        let emp = getEmp(id);
+        if (!emp) continue;
+        empBox.innerHTML += `<div class="view-participant"><div>
+            <div class="participant-name">${emp.name}</div>
+            <div class="participant-department">${emp.department || emp.position || ""}</div>
+        </div></div>`;
+        if (meet.createdBy === "HR") {
+            let replies = (meet.responses || []).filter(function (reply) {
+                return reply.employeeId === id;
+            });
+            let reply = replies[0] || { status: "Pending", message: "" };
+            replyBox.innerHTML += replyCard(emp.name, reply.status, reply.message);
+        }
+    }
+    if (meet.createdBy === "Employee") replyBox.innerHTML = replyCard("HR Response", meet.status, meet.hrMessage);
     document.getElementById("viewMeetingModal").hidden = false;
 }
-//لما اكبس على view ميتنق بعرض الموظفين واقسامهم
-function displayViewParticipants(meeting) {
-    let container = document.getElementById("viewMeetingParticipants");
-    container.innerHTML = "";
-
-    meeting.participants.forEach(id => {
-        let person = Employees.find(user => user.id === id);
-        if (!person) return;
-
-        container.innerHTML += `
-            <div class="view-participant">
-                <div>
-                    <div class="participant-name">${person.name}</div>
-                    <div class="participant-department">${person.department || person.position || ""}</div>
-                </div>
-            </div>`;
-    });
+function replyCard(name, status, message) {
+    let text = "";
+    if (message) text = `<p class="response-message">${message}</p>`;
+    let color = "status-pending";
+    if (status === "Accepted") color = "status-accepted";
+    if (status === "Rejected") color = "status-rejected";
+    return `<div class="response-item">
+        <div class="response-header"><strong>${name}</strong><span class="status ${color}">${status}</span></div>
+        ${text}</div>`;
 }
-//احفظ بيانات الفيو
-function displayViewResponses(meeting) {
-    let container = document.getElementById("viewMeetingResponses");
-    container.innerHTML = "";
-
-    if (meeting.createdBy === "Employee") {
-        container.innerHTML = responseCard("HR Response", meeting.status, meeting.hrMessage);
-        return;
-    }
-
-    meeting.participants.forEach(id => {
-        let employee = Employees.find(user => user.id === id);
-        if (!employee) return;
-
-        let response = (meeting.responses || []).find(item => item.employeeId === id) || { status: "Pending", message: "" };
-        container.innerHTML += responseCard(employee.name, response.status, response.message);
-    });
-}
-
-//هون لما اعمل للردود دسيبلاي على الشاشه 
-function responseCard(name, status, message) {
-    return `
-        <div class="response-item">
-            <div class="response-header">
-                <strong>${name}</strong>
-                <span class="status ${getStatusClass(status)}">${status}</span>
-            </div>
-            ${message ? `<p class="response-message">${message}</p>` : ""}
-        </div>`;
-}
-
-function closeMeetingView() {
+function closeView() {
     document.getElementById("viewMeetingModal").hidden = true;
 }
 
-// مراجعة طلب الموظف وقبوله أو رفضه.
-function displayMeetingRequests() {
-    let container = document.getElementById("meetingRequests");
-    let requests = Meetings.filter(meeting =>
-        meeting.createdBy === "Employee" && meeting.status === "Pending"
-    );
-
-    container.innerHTML = requests.length ? "" : `<p class="empty-message">No pending meeting requests.</p>`;
-
-    requests.forEach(request => {
-        let employee = Employees.find(user => user.id === request.requestedBy);
-
-        let details = `<p class="meeting-info"><strong>Employee</strong><span>${employee ? employee.name : "Employee"}</span></p>`;
-        let actions = `<button class="view-button" onclick="viewRequest(${request.id})">Review Request</button>`;
-        container.innerHTML += meetingCard(request, "Pending", details, actions);
-    });
-}
-
-function meetingCard(meeting, status, details, actions) {
-    return `
-        <div class="meeting-card">
-            <div class="meeting-card-header">
-                <h3>${meeting.title}</h3>
-                <span class="status status-${status.toLowerCase()}">${status}</span>
-            </div>
-            <div class="meeting-details">
-                <p class="meeting-info"><strong>Date</strong><span>${formatDate(meeting.date)}</span></p>
-                <p class="meeting-info"><strong>Time</strong><span>${formatTime(meeting.time)}</span></p>
-                ${details}
-            </div>
-            <div class="card-actions">${actions}</div>
-        </div>`;
-}
-// هون بعرض كل الريكوست وبحفظ ال id 
-function viewRequest(id) {
-    let request = Meetings.find(item => item.id === id);
-    if (!request) return;
-
-    currentRequestId = id;
-    let employee = Employees.find(user => user.id === request.requestedBy);
-
-    document.getElementById("viewRequestTitle").textContent = request.title;
-    document.getElementById("viewRequestEmployee").textContent = employee ? employee.name : "Employee";
-    document.getElementById("viewRequestDate").textContent = formatDate(request.date);
-    document.getElementById("viewRequestTime").textContent = formatTime(request.time);
-    document.getElementById("viewRequestStatus").textContent = request.status;
-    document.getElementById("viewRequestNotes").textContent = request.notes || "No notes";
-    document.getElementById("requestResponseMessage").value = request.hrMessage || "";
+// عرض طلب الموظف .
+function viewReq(id) {
+    let req = getMeet(id);
+    if (!req) return;
+    reqId = id;
+    let emp = getEmp(req.requestedBy);
+    let name = "Employee";
+    if (emp) name = emp.name;
+    document.getElementById("viewRequestTitle").textContent = req.title;
+    document.getElementById("viewRequestEmployee").textContent = name;
+    document.getElementById("viewRequestDate").textContent = showDate(req.date);
+    document.getElementById("viewRequestTime").textContent = showTime(req.time);
+    document.getElementById("viewRequestStatus").textContent = req.status;
+    document.getElementById("viewRequestNotes").textContent = req.notes || "No notes";
+    document.getElementById("requestResponseMessage").value = req.hrMessage || "";
     document.getElementById("viewRequestModal").hidden = false;
 }
-// هون بغيرلي الحاله حسب اذا انقبل او نرفض
-function respondToCurrentRequest(status) {
-    let request = Meetings.find(item => item.id === currentRequestId);
-    if (!request) return;
+function replyReq(status) {
+    let req = getMeet(reqId);
+    if (!req) return;
     if (status === "Rejected" && !confirm("Are you sure you want to reject this meeting request?")) return;
-
-    request.status = status;
-    request.hrMessage = document.getElementById("requestResponseMessage").value.trim();
-
-    if (!request.roomName) {
-        request.roomName = "EmployeeMeeting_" + request.id;
-    }
-
-    saveMeetings();
-    closeRequestView();
-    displayMeetingRequests();
-    displayMeetings();
+    req.status = status;
+    req.hrMessage = document.getElementById("requestResponseMessage").value.trim();
+    if (!req.roomName) req.roomName = "EmployeeMeeting_" + req.id;
+    saveData();
+    closeReq();
 }
-//لما اسكر ريكوست
-function closeRequestView() {
+function closeReq() {
     document.getElementById("viewRequestModal").hidden = true;
-    currentRequestId = null;
+    reqId = null;
 }
-//css
-function getStatusClass(status) {
-    if (status === "Accepted") return "status-accepted";
-    if (status === "Rejected") return "status-rejected";
-    return "status-pending";
-}
-//date
-function formatDate(date) {
-    if (!date) return "-";
 
+// تنسيق التاريخ والوقت للعرض فقط، بدون تغيير القيم المحفوظة.
+function showDate(date) {
+    if (!date) return "-";
     let parts = date.split("-");
     let value = new Date(parts[0], parts[1] - 1, parts[2]);
-
     return value.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
-//time
-function formatTime(time) {
+function showTime(time) {
     if (!time) return "-";
-
     let parts = time.split(":");
     let hour = Number(parts[0]);
-    let period = hour >= 12 ? "PM" : "AM";
-
-    hour = hour % 12 || 12;
+    let period = "AM";
+    if (hour >= 12) period = "PM";
+    if (hour > 12) hour -= 12;
+    if (hour === 0) hour = 12;
     return hour + ":" + parts[1] + " " + period;
 }
-//لما اكبس اي مكان برا بسكر الدروب ليست
+
+form.addEventListener("submit", saveMeet);
+allEmp.addEventListener("change", function () {
+    for (let box of document.querySelectorAll(".employee-option")) box.checked = this.checked;
+    checkEmp();
+});
 document.addEventListener("click", function (event) {
     let dropdown = document.querySelector(".participants-dropdown");
-
-    if (dropdown && !dropdown.contains(event.target)) {
-        participantsMenu.hidden = true;
-    }
+    if (dropdown && !dropdown.contains(event.target)) menu.hidden = true;
 });
-//init
-loadEmployees();
+loadData();
