@@ -450,6 +450,11 @@
 
     const sharedUserName = document.getElementById('userName');
     if (sharedUserName) sharedUserName.textContent = name;
+
+    const navAuth = document.getElementById('navAuth');
+    const navUser = document.getElementById('navUser');
+    if (navAuth) navAuth.classList.add('hidden');
+    if (navUser) navUser.classList.remove('hidden');
   }
 
   function populateForm(user) {
