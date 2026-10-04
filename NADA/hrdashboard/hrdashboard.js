@@ -1,119 +1,125 @@
-document.addEventListener('DOMContentLoaded', () => {
+//------------------- جلب البيانات من localStorage -------------------
+const Employees = JSON.parse(localStorage.getItem("Employees")) || [];
+const Leaves = JSON.parse(localStorage.getItem("all_leave_requests")) || [];
+const Tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+const Feedbacks = JSON.parse(localStorage.getItem("feedbacks")) || [];
+const Meetings = JSON.parse(localStorage.getItem("Meetings")) || [];
 
-  // 1.عرض تاريخ اليوم  (مثال: Oct 2, 2026)
-  const dateElem = document.getElementById('currentDateDisplay');
+//------------------- عرض الإحصائيات -------------------
+document.addEventListener("DOMContentLoaded", () => {
+  // عرض تاريخ اليوم
+  const dateElem = document.getElementById("currentDateDisplay");
   if (dateElem) {
-    const options = { month: 'short', day: 'numeric', year: 'numeric' };
-    dateElem.textContent = new Date().toLocaleDateString('en-US', options);
+    const options = { month: "short", day: "numeric", year: "numeric" };
+    dateElem.textContent = new Date().toLocaleDateString("en-US", options);
   }
 
-  // 2. جلب جميع عناصر الصفحة والمتغيرات الأساسية للتحكم بالفلترة والبحث
-  const searchInput = document.getElementById('dashboardSearch');
-  const filterChips = document.querySelectorAll('.filter-chip');
+  // إحصائيات عامة
+  document.getElementById("activeEmployees").textContent =
+    Employees.filter(e => e.status === "Active").length;
+  document.getElementById("pendingLeaves").textContent =
+    Leaves.filter(l => l.status === "Pending").length;
+  document.getElementById("openTasks").textContent =
+    Tasks.filter(t => t.status === "New").length;
+  document.getElementById("employeeFeedback").textContent = Feedbacks.length;
 
-  const summaryCardsRow = document.getElementById('summaryCardsRow');
-  const summaryCards = document.querySelectorAll('.summary-item');
-  const cardsNotice = document.getElementById('cardsEmptyNotice');
+  document.getElementById("LeavesCount").textContent = Leaves.length;
+  document.getElementById("TasksCount").textContent = Tasks.length;
+  document.getElementById("MeetingsCount").textContent = Meetings.length;
+  document.getElementById("FeedbackCount").textContent = Feedbacks.length;
 
-  const leavesSection = document.getElementById('leavesSection');
-  const tableRows = document.querySelectorAll('#leavesTableBody .table-data-row');
-  const tableNotice = document.getElementById('tableEmptyNotice');
+  // عرض الإجازات
+  displayLeaves(Leaves);
 
-  const meetingsSection = document.getElementById('meetingsSection');
-  const meetingItems = document.querySelectorAll('#meetingsList .meeting-item');
-  const meetingsNotice = document.getElementById('meetingsEmptyNotice');
-
-  let currentFilter = 'all';
-  let currentSearchQuery = '';
-
-      document.getElementById("activeEmployees").textContent = Employees.filter(employee => employee.status === "Active").length;
-
-
-  // 3. دالة الفلترة والبحث الرئيسية: تتحكم في ظهور الكروت، الأقسام، والجداول
-  function applyFilters() {
-
-    // أ) فلترة كروت الملخص (Summary Cards)
-    if (currentFilter === 'meetings') {
-      if (summaryCardsRow) summaryCardsRow.style.display = 'none';
-      if (cardsNotice) cardsNotice.classList.add('d-none');
-    } else {
-      if (summaryCardsRow) summaryCardsRow.style.display = '';
-
-      let visibleCards = 0;
-      summaryCards.forEach(card => {
-        const module = card.getAttribute('data-module');
-        const text = card.textContent.toLowerCase();
-
-        const matchesFilter = (currentFilter === 'all' || currentFilter === module);
-        const matchesSearch = (!currentSearchQuery || text.includes(currentSearchQuery));
-
-        if (matchesFilter && matchesSearch) {
-          card.style.display = '';
-          visibleCards++;
-        } else {
-          card.style.display = 'none';
-        }
-      });
-
-      // إظهار تنبيه "لا توجد نتائج" إذا لم يتبقَ أي كرت
-      if (cardsNotice) cardsNotice.classList.toggle('d-none', visibleCards > 0);
-    }
-
-    // ب) التحكم في عرض وتوزيع الأقسام (Leaves & Meetings) حسب الفلتر المختار
-    if (currentFilter === 'all') {
-      if (leavesSection) { leavesSection.style.display = ''; leavesSection.className = 'col-lg-7'; }
-      if (meetingsSection) { meetingsSection.style.display = ''; meetingsSection.className = 'col-lg-5'; }
-    } else if (currentFilter === 'leaves') {
-      if (leavesSection) { leavesSection.style.display = ''; leavesSection.className = 'col-12'; }
-      if (meetingsSection) { meetingsSection.style.display = 'none'; }
-    } else if (currentFilter === 'meetings') {
-      if (leavesSection) { leavesSection.style.display = 'none'; }
-      if (meetingsSection) { meetingsSection.style.display = ''; meetingsSection.className = 'col-12'; }
-    } else {
-      if (leavesSection) leavesSection.style.display = 'none';
-      if (meetingsSection) meetingsSection.style.display = 'none';
-    }
-
-    // ج) البحث داخل جدول الإجازات (Leaves Table) إذا كان القسم معروضاً
-    if (leavesSection && leavesSection.style.display !== 'none') {
-      let visibleRows = 0;
-      tableRows.forEach(row => {
-        const matches = !currentSearchQuery || row.textContent.toLowerCase().includes(currentSearchQuery);
-        row.style.display = matches ? '' : 'none';
-        if (matches) visibleRows++;
-      });
-      if (tableNotice) tableNotice.classList.toggle('d-none', visibleRows > 0);
-    }
-
-    // د) البحث داخل قائمة الاجتماعات (Meetings List) إذا كان القسم معروضاً
-    if (meetingsSection && meetingsSection.style.display !== 'none') {
-      let visibleMeetings = 0;
-      meetingItems.forEach(item => {
-        const matches = !currentSearchQuery || item.textContent.toLowerCase().includes(currentSearchQuery);
-        item.style.display = matches ? '' : 'none';
-        if (matches) visibleMeetings++;
-      });
-      if (meetingsNotice) meetingsNotice.classList.toggle('d-none', visibleMeetings > 0);
-    }
-  }
-
-  // 4. حدث البحث: يتحدث تلقائياً مع كل حرف يُكتب في صندوق البحث
-  if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
-      currentSearchQuery = e.target.value.trim().toLowerCase();
-      applyFilters();
-    });
-  }
-
-  // 5. حدث أزرار الفلترة: تبديل التاب النشط وتطبيق الفلتر فوراً
-  filterChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      filterChips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-
-      currentFilter = chip.getAttribute('data-filter');
-      applyFilters();
-    });
-  });
-
+  // عرض الاجتماعات
+  displayMeetings(Meetings);
 });
+
+//------------------- دوال عرض الإجازات -------------------
+function displayLeaves(list) {
+  const output = document.getElementById("leavesTableBody");
+  output.innerHTML = "";
+
+  if (!list.length) {
+    output.innerHTML = `
+      <tr><td colspan="3" class="text-center">No leave requests submitted yet.</td></tr>
+    `;
+    return;
+  }
+
+  list.forEach(leave => {
+    output.innerHTML += `
+      <tr class="table-data-row">
+        <td>
+          <div class="emp-profile-cell">
+            <span class="emp-avatar">${leave.employeeInitials || "--"}</span>
+            <div class="emp-details">
+              <span class="emp-name">${leave.employeeName}</span>
+              <span class="emp-role">${leave.employeeRole}</span>
+            </div>
+          </div>
+        </td>
+        <td>
+          <span class="leave-type-badge">
+            <i class="bi ${getLeaveIcon(leave.leaveType)}"></i>
+            ${leave.leaveType} &middot; ${leave.duration || "N/A"}
+          </span>
+        </td>
+        <td>
+          <span class="status-badge ${getStatusClass(leave.status)}">
+            <i class="bi ${getStatusIcon(leave.status)}"></i>
+            ${leave.status}
+          </span>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+function getLeaveIcon(type) {
+  switch (type?.toLowerCase()) {
+    case "annual": return "bi-sun";
+    case "sick": return "bi-hospital";
+    case "personal": return "bi-briefcase";
+    case "remote": return "bi-house-door";
+    default: return "bi-calendar2-range";
+  }
+}
+function getStatusClass(status) {
+  return status?.toLowerCase() === "approved" ? "badge-approved" : "badge-pending";
+}
+function getStatusIcon(status) {
+  return status?.toLowerCase() === "approved" ? "bi-check-circle-fill" : "bi-hourglass-bottom";
+}
+
+//------------------- دوال عرض الاجتماعات -------------------
+function displayMeetings(list) {
+  const output = document.getElementById("meetingsList");
+  output.innerHTML = "";
+
+  if (!list.length) {
+    document.getElementById("meetingsEmptyNotice").classList.remove("d-none");
+    return;
+  }
+  document.getElementById("meetingsEmptyNotice").classList.add("d-none");
+
+  list.forEach(m => {
+    output.innerHTML += `
+      <div class="meeting-item">
+        <div class="meeting-date-box">
+          <span class="meeting-date-month">${m.month}</span>
+          <span class="meeting-date-day">${m.day}</span>
+        </div>
+        <div class="meeting-info">
+          <div class="meeting-title">${m.title}</div>
+          <div class="meeting-meta">
+            <span><i class="bi bi-clock"></i> ${m.time}</span>
+            <span>&middot;</span>
+            <span><i class="bi bi-geo-alt"></i> ${m.location}</span>
+          </div>
+        </div>
+        <span class="meeting-tag">${m.tag || ""}</span>
+      </div>
+    `;
+  });
+}
