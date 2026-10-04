@@ -378,7 +378,72 @@ function showPopup(message, type = "success") {
         popup.classList.remove("show");
     }, 2500);
 }
+function showConfirmPopup(options) {
 
+    const overlay = document.getElementById("customConfirmOverlay");
+    const icon = document.getElementById("customConfirmIcon");
+    const title = document.getElementById("customConfirmTitle");
+    const message = document.getElementById("customConfirmMessage");
+    const cancelBtn = document.getElementById("customConfirmCancel");
+    const okBtn = document.getElementById("customConfirmOk");
+
+    if (!overlay || !icon || !title || !message || !cancelBtn || !okBtn) {
+        return Promise.resolve(false);
+    }
+
+    title.textContent = options.title || "Are you sure?";
+    message.textContent = options.message || "Please confirm this action.";
+    okBtn.textContent = options.confirmText || "Confirm";
+    cancelBtn.textContent = options.cancelText || "Cancel";
+
+    icon.className = "custom-confirm-icon";
+    okBtn.className = "custom-confirm-ok";
+
+    if (options.type === "danger") {
+        icon.classList.add("danger");
+        okBtn.classList.add("danger");
+        icon.innerHTML = `<i class="bi bi-trash3"></i>`;
+    } else if (options.type === "warning") {
+        icon.classList.add("warning");
+        icon.innerHTML = `<i class="bi bi-exclamation-triangle"></i>`;
+    } else {
+        icon.classList.add("success");
+        icon.innerHTML = `<i class="bi bi-check2-circle"></i>`;
+    }
+
+    overlay.classList.add("show");
+
+    return new Promise(function (resolve) {
+
+        function closePopup(result) {
+            overlay.classList.remove("show");
+
+            okBtn.removeEventListener("click", confirmHandler);
+            cancelBtn.removeEventListener("click", cancelHandler);
+            overlay.removeEventListener("click", overlayHandler);
+
+            resolve(result);
+        }
+
+        function confirmHandler() {
+            closePopup(true);
+        }
+
+        function cancelHandler() {
+            closePopup(false);
+        }
+
+        function overlayHandler(event) {
+            if (event.target === overlay) {
+                closePopup(false);
+            }
+        }
+
+        okBtn.addEventListener("click", confirmHandler);
+        cancelBtn.addEventListener("click", cancelHandler);
+        overlay.addEventListener("click", overlayHandler);
+    });
+}
 
 function clearFieldErrors() {
 
@@ -527,10 +592,23 @@ function validateEditTaskForm() {
 /* =========================================================
    CREATE TASK
 ========================================================= */
-function createTask() {
+  async function createTask() {
 
     if (!validateCreateTaskForm()) {
         showPopup("Please complete the required fields.", "error");
+        return;
+    }
+
+    const confirmCreate = await showConfirmPopup({
+        title: "Create Task?",
+        message: "Are you sure you want to create this task?",
+        confirmText: "Create",
+        cancelText: "Cancel",
+        type: "success"
+    });
+
+    if (!confirmCreate) {
+        showPopup("Create task cancelled.", "info");
         return;
     }
 
@@ -939,10 +1017,9 @@ function validateEditTaskForm() {
 
     return isValid;
 }
-function saveEditTask() {
+async function saveEditTask() {
 
     const task = getTaskById(selectedTaskId);
-    
 
     if (!task) {
         showPopup("Task not found.", "error");
@@ -951,6 +1028,19 @@ function saveEditTask() {
 
     if (!validateEditTaskForm()) {
         showPopup("Please complete the required fields.", "error");
+        return;
+    }
+
+    const confirmEdit = await showConfirmPopup({
+        title: "Save Changes?",
+        message: "Are you sure you want to update this task?",
+        confirmText: "Save",
+        cancelText: "Cancel",
+        type: "warning"
+    });
+
+    if (!confirmEdit) {
+        showPopup("Edit task cancelled.", "info");
         return;
     }
 
@@ -1020,9 +1110,7 @@ function saveEditTask() {
 /* =========================================================
    Delete Task
 ========================================================= */
-
-
-function deleteTask(id) {
+async function deleteTask(id) {
 
     const task = getTaskById(id);
 
@@ -1031,9 +1119,13 @@ function deleteTask(id) {
         return;
     }
 
-    const confirmDelete = confirm(
-        "Are you sure you want to delete this task? This will remove it from HR and employee pages."
-    );
+    const confirmDelete = await showConfirmPopup({
+        title: "Delete Task?",
+        message: "This task will be removed from HR and employee pages.",
+        confirmText: "Delete",
+        cancelText: "Cancel",
+        type: "danger"
+    });
 
     if (!confirmDelete) {
         showPopup("Delete cancelled.", "info");
