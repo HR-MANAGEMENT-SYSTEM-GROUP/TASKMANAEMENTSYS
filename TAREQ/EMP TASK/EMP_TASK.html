@@ -2,39 +2,79 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Tasks</title>
-    <script>try{const t=localStorage.getItem("journey-theme")||localStorage.getItem("theme");if(t==="dark"){document.documentElement.setAttribute("data-theme","dark");}else if(t==="light"){document.documentElement.removeAttribute("data-theme");}}catch(e){}</script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>
+        My Tasks
+    </title>
 
-    <link rel="stylesheet" href="../../Shared/navbar-footer.css">
-    <link rel="stylesheet" href="EMP_TASK.css">
+    <!-- Load saved theme before page appears -->
+    <script>
+        try {
+            const savedTheme = localStorage.getItem("journey-theme") || localStorage.getItem("theme");
+
+            if (savedTheme === "dark") {
+                document.documentElement.setAttribute("data-theme", "dark");
+            } else if (savedTheme === "light") {
+                document.documentElement.removeAttribute("data-theme");
+            }
+        } catch (error) {}
+    </script>
+
+    <!-- Bootstrap CSS -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Shared Navbar And Footer CSS -->
+    <link
+        rel="stylesheet"
+        href="../../Shared/navbar-footer.css">
+
+    <!-- Page CSS -->
+    <link
+        rel="stylesheet"
+        href="EMP_TASK.css">
+
 </head>
 
 <body class="employee-tasks">
 
+    <!-- Navbar -->
     <div id="navbarContainer"></div>
 
+    <!-- Main Page -->
     <main class="page">
 
         <!-- Page Header -->
         <section class="page-header">
+
             <div>
-                <h1>My Tasks.</h1>
+                <h1>
+                    My Tasks.
+                </h1>
+
                 <p class="subtitle">
                     Your workflow, all in one place. Track assigned tasks, update work stages,
                     collaborate with HR, and submit completed solutions.
                 </p>
             </div>
+
         </section>
 
         <!-- Status Cards -->
         <section class="meeting-shortcuts">
 
+            <!-- Total Tasks -->
             <div class="shortcut-card status-card status-total">
+
                 <div class="shortcut-icon">
                     <i class="bi bi-briefcase"></i>
                 </div>
@@ -44,10 +84,15 @@
                     <strong>Total Tasks</strong>
                 </div>
 
-                <div class="shortcut-number" id="empTotalTasks">0</div>
+                <div class="shortcut-number" id="empTotalTasks">
+                    0
+                </div>
+
             </div>
 
+            <!-- New Tasks -->
             <div class="shortcut-card status-card status-new">
+
                 <div class="shortcut-icon">
                     <i class="bi bi-stars"></i>
                 </div>
@@ -57,10 +102,15 @@
                     <strong>New Tasks</strong>
                 </div>
 
-                <div class="shortcut-number" id="empNewTasks">0</div>
+                <div class="shortcut-number" id="empNewTasks">
+                    0
+                </div>
+
             </div>
 
+            <!-- Submitted Tasks -->
             <div class="shortcut-card status-card status-submitted">
+
                 <div class="shortcut-icon">
                     <i class="bi bi-send-check"></i>
                 </div>
@@ -70,10 +120,15 @@
                     <strong>Submitted</strong>
                 </div>
 
-                <div class="shortcut-number" id="empSubmittedTasks">0</div>
+                <div class="shortcut-number" id="empSubmittedTasks">
+                    0
+                </div>
+
             </div>
 
+            <!-- Completed Tasks -->
             <div class="shortcut-card status-card status-completed">
+
                 <div class="shortcut-icon">
                     <i class="bi bi-check2-circle"></i>
                 </div>
@@ -83,7 +138,10 @@
                     <strong>Completed</strong>
                 </div>
 
-                <div class="shortcut-number" id="empCompletedTasks">0</div>
+                <div class="shortcut-number" id="empCompletedTasks">
+                    0
+                </div>
+
             </div>
 
         </section>
@@ -91,7 +149,9 @@
         <!-- Board Section -->
         <section class="section">
 
+            <!-- Section Header -->
             <div class="section-header">
+
                 <div>
                     <h2>
                         <span class="section-number">01</span>
@@ -107,12 +167,15 @@
                     <i class="bi bi-kanban"></i>
                     Workflow Board
                 </span>
+
             </div>
 
             <!-- Filters -->
             <div class="task-filters-card">
 
+                <!-- Status Filter -->
                 <div class="filter-group">
+
                     <label>
                         <i class="bi bi-funnel"></i>
                         Filter By Status
@@ -127,9 +190,12 @@
                         <option value="Not Complete">Not Complete</option>
                         <option value="Time Out">Time Out</option>
                     </select>
+
                 </div>
 
+                <!-- Task Filter -->
                 <div class="filter-group">
+
                     <label>
                         <i class="bi bi-list-task"></i>
                         Filter By Task
@@ -138,6 +204,7 @@
                     <select id="employeeTaskFilter" class="custom-select">
                         <option value="">All Tasks</option>
                     </select>
+
                 </div>
 
             </div>
@@ -151,23 +218,38 @@
 
     </main>
 
-    <!-- Task Modal -->
+    <!-- Task Details Modal -->
     <div class="modal fade" id="taskModal">
+
         <div class="modal-dialog modal-lg modal-dialog-centered">
+
             <div class="modal-content modal-box">
 
+                <!-- Modal Header -->
                 <div class="modal-header">
+
                     <div>
-                        <div class="modal-eyebrow">Task Details</div>
+                        <div class="modal-eyebrow">
+                            Task Details
+                        </div>
+
                         <h4 class="modal-title" id="taskTitle"></h4>
+
                         <p class="modal-subtitle" id="taskDescription"></p>
                     </div>
 
-                    <button class="btn-close close-button" data-bs-dismiss="modal"></button>
+                    <button
+                        type="button"
+                        class="btn-close close-button"
+                        data-bs-dismiss="modal">
+                    </button>
+
                 </div>
 
+                <!-- Modal Body -->
                 <div class="modal-body">
 
+                    <!-- Task Information -->
                     <div class="task-detail-hero">
 
                         <div class="task-info-grid">
@@ -193,42 +275,83 @@
 
                     </div>
 
+                    <!-- Solution Text -->
                     <div class="form-group">
-                        <label>Solution</label>
-                        <textarea id="solutionText" class="form-control mb-3"></textarea>
+
+                        <label for="solutionText">
+                            Solution
+                        </label>
+
+                        <textarea
+                            id="solutionText"
+                            class="form-control mb-3"></textarea>
+
                     </div>
 
+                    <!-- Uploads -->
                     <div class="form-row">
+
                         <div class="form-group">
-                            <label>Upload File</label>
-                            <input type="file" id="solutionFile" class="form-control">
+
+                            <label for="solutionFile">
+                                Upload File
+                            </label>
+
+                            <input
+                                type="file"
+                                id="solutionFile"
+                                class="form-control">
+
                         </div>
 
                         <div class="form-group">
-                            <label>Upload Image</label>
-                            <input type="file" id="solutionImage" class="form-control">
+
+                            <label for="solutionImage">
+                                Upload Image
+                            </label>
+
+                            <input
+                                type="file"
+                                id="solutionImage"
+                                class="form-control"  accept="image/*">
+
                         </div>
+
                     </div>
 
+                    <!-- Modal Buttons -->
                     <div class="modal-actions">
-                        <button class="cancel-button" data-bs-dismiss="modal">
+
+                        <button
+                            type="button"
+                            class="cancel-button"
+                            data-bs-dismiss="modal">
                             Cancel
                         </button>
 
-                        <button onclick="submitTask()" class="save-button" id="submitButton">
+                        <button
+                            type="button"
+                            onclick="submitTask()"
+                            class="save-button"
+                            id="submitButton">
                             <i class="bi bi-send"></i>
                             Submit Task
                         </button>
+
                     </div>
 
                 </div>
 
             </div>
+
         </div>
+
     </div>
 
+    <!-- Footer -->
     <div id="footerContainer"></div>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../Shared/navbar-footer.js"></script>
     <script src="EMP_TASK.js"></script>

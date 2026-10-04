@@ -2,446 +2,703 @@
 <html lang="en">
 
 <head>
-    <script>try{const t=localStorage.getItem("journey-theme")||localStorage.getItem("theme");if(t==="dark"){document.documentElement.setAttribute("data-theme","dark");}else{document.documentElement.removeAttribute("data-theme");}}catch(e){}</script>
-    <meta charset="UTF-8">
 
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>
         CoreLink | HR Portal
     </title>
-<link 
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
-    rel="stylesheet">
 
-<link 
-    rel="stylesheet" 
-    href="HR_TASK.css">
+    <!-- Load saved theme before page appears -->
+    <script>
+        try {
+            const savedTheme = localStorage.getItem("journey-theme") || localStorage.getItem("theme");
 
-<link rel="stylesheet" href="../../Shared/HR-shared.css">
+            if (savedTheme === "dark") {
+                document.documentElement.setAttribute("data-theme", "dark");
+            } else {
+                document.documentElement.removeAttribute("data-theme");
+            }
+        } catch (error) {}
+    </script>
 
-<link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
 
-    <link rel="stylesheet" href="../../Shared/HR-sidebar.css">
+    <!-- Page CSS -->
+    <link
+        rel="stylesheet"
+        href="HR_TASK.css">
+
+    <!-- Shared HR CSS -->
+    <link
+        rel="stylesheet"
+        href="../../Shared/HR-shared.css">
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!-- HR Sidebar CSS -->
+    <link
+        rel="stylesheet"
+        href="../../Shared/HR-sidebar.css">
+
 </head>
 
-
 <body>
-<div id="hrSidebar"></div>
 
-<div class="hr-page-content">
+    <!-- HR Sidebar -->
+    <div id="hrSidebar"></div>
 
-   
+    <!-- Page Content -->
+    <div class="hr-page-content">
 
-<div class="hero hr-task-hero mb-4">
+        <!-- Hero Section -->
+        <div class="hero hr-task-hero mb-4">
 
-    <div class="hero-left">
+            <div class="hero-left">
 
-        <span class="hero-pill">
-            <span class="hero-dot"></span>
-            HR PORTAL · MASAR PLATFORM
-        </span>
+                <span class="hero-pill">
+                    <span class="hero-dot"></span>
+                    HR PORTAL · MASAR PLATFORM
+                </span>
 
-        <h1>
-            HR <span>Task Management</span>
-        </h1>
+                <h1>
+                    HR <span>Task Management</span>
+                </h1>
 
-        <p>
-            Manage employee tasks, review submissions, and track task progress
-            across your organization in real time.
-        </p>
+                <p>
+                    Manage employee tasks, review submissions, and track task progress
+                    across your organization in real time.
+                </p>
 
-    </div>
+            </div>
 
+            <div class="hero-right">
 
-    <div class="hero-right">
+                <div class="hero-status-pill live">
+                    <span></span>
+                    Platform Live
+                </div>
 
-        <div class="hero-status-pill live">
-            <span></span>
-            Platform Live
-        </div>
+                <div class="hero-status-pill">
+                    <i class="bi bi-calendar3"></i>
+                    Oct 1, 2026
+                </div>
 
-        <div class="hero-status-pill">
-            <i class="bi bi-calendar3"></i>
-            Oct 1, 2026
-        </div>
-
-    </div>
-
-</div>
-
-
-    <!-- Dashboard -->
-<div class="row g-4 my-4">
-
-
-<div class="col">
-<div class="stat-card">
-<h6>Total Tasks</h6>
-<h2 id="totalTasks">0</h2>
-</div>
-</div>
-
-
-
-<div class="col">
-<div class="stat-card">
-<h6>New Tasks</h6>
-<h2 id="newTasks">0</h2>
-</div>
-</div>
-
-
-
-<div class="col">
-<div class="stat-card">
-<h6>Submitted</h6>
-<h2 id="submittedTasks">0</h2>
-</div>
-</div>
-
-
-
-<div class="col">
-<div class="stat-card">
-<h6>Completed</h6>
-<h2 id="completedTasks">0</h2>
-</div>
-</div>
-
-
-
-<div class="col">
-<div class="stat-card">
-<h6>Overdue</h6>
-<h2 id="overdueTasks">0</h2>
-</div>
-</div>
-
-
-</div>
-
-
-
-
-
-    <div class="d-flex justify-content-between mb-3">
-
-
-        <h2>
-            Task Management
-        </h2>
-
-
-        <button
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#createModal">
-
-            + Create Task
-
-        </button>
-
-
-    </div>
-
-
-
-
-
-
-
-    <!-- Filters -->
-
-
-    <div class="row mb-4">
-
-
-        <div class="col-md-6">
-
-
-            <label>
-                Filter By Employee
-            </label>
-
-
-            <select 
-                id="employeeFilter"
-                class="form-control">
-
-
-                <option value="">
-                    All Employees
-                </option>
-
-
-            </select>
-
+            </div>
 
         </div>
 
+        <!-- Dashboard Cards -->
+        <div class="row g-4 my-4">
 
+            <div class="col">
+                <div class="stat-card">
+                    <h6>Total Tasks</h6>
+                    <h2 id="totalTasks">0</h2>
+                </div>
+            </div>
 
+            <div class="col">
+                <div class="stat-card">
+                    <h6>New Tasks</h6>
+                    <h2 id="newTasks">0</h2>
+                </div>
+            </div>
 
+            <div class="col">
+                <div class="stat-card">
+                    <h6>Submitted</h6>
+                    <h2 id="submittedTasks">0</h2>
+                </div>
+            </div>
 
-        <div class="col-md-6">
+            <div class="col">
+                <div class="stat-card">
+                    <h6>Completed</h6>
+                    <h2 id="completedTasks">0</h2>
+                </div>
+            </div>
 
-
-            <label>
-                Filter By Task
-            </label>
-
-
-            <select 
-                id="taskFilter"
-                class="form-control">
-
-
-                <option value="">
-                    All Tasks
-                </option>
-
-
-            </select>
-
+            <div class="col">
+                <div class="stat-card">
+                    <h6>Overdue</h6>
+                    <h2 id="overdueTasks">0</h2>
+                </div>
+            </div>
 
         </div>
 
+        <!-- Page Title And Create Button -->
+        <div class="d-flex justify-content-between mb-3">
+
+            <h2>
+                Task Management
+            </h2>
+
+            <button
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#createModal">
+                + Create Task
+            </button>
+
+        </div>
+
+        <!-- Filters -->
+        <div class="row mb-4">
+
+            <div class="col-md-6">
+
+                <label>
+                    Filter By Employee
+                </label>
+
+                <select
+                    id="employeeFilter"
+                    class="form-control">
+
+                    <option value="">
+                        All Employees
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label>
+                    Filter By Task
+                </label>
+
+                <select
+                    id="taskFilter"
+                    class="form-control">
+
+                    <option value="">
+                        All Tasks
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <!-- Tasks Table -->
+        <div class="table-card">
+
+            <table class="table align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Employees</th>
+                        <th>Priority</th>
+                        <th>Deadline</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tasksTable">
+                </tbody>
+
+            </table>
+
+        </div>
 
     </div>
 
+    <!-- Create Task Modal -->
+    <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
 
+        <div class="modal-dialog modal-lg modal-dialog-centered">
 
+            <div class="modal-content create-task-modal">
 
+                <div class="modal-header create-task-header">
 
+                    <div>
+                        <span class="modal-eyebrow">
+                            HR Task Cycle
+                        </span>
 
+                        <h4 class="modal-title">
+                            Create Task
+                        </h4>
 
-    <!-- Tasks Table -->
+                        <p class="modal-subtitle">
+                            Fill in the task information and assign it to one or more employees.
+                        </p>
+                    </div>
 
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                    </button>
 
-    <div class="table-card">
+                </div>
 
+                <div class="modal-body create-task-body">
 
-        <table class="table align-middle">
+                    <!-- Task Title -->
+                    <div class="form-group">
 
+                        <label for="taskTitleInput">
+                            Task Title <span class="required">*</span>
+                        </label>
 
-            <thead>
+                        <input
+                            type="text"
+                            id="taskTitleInput"
+                            class="form-control"
+                            placeholder="Enter task title">
 
-                <tr>
+                    </div>
 
-                    <th>
-                        Task
-                    </th>
+                    <!-- Task Description -->
+                    <div class="form-group">
 
-                    <th>
-                        Employees
-                    </th>
+                        <label for="taskDescriptionInput">
+                            Task Description <span class="required">*</span>
+                        </label>
 
-                    <th>
-                        Priority
-                    </th>
+                        <textarea
+                            id="taskDescriptionInput"
+                            class="form-control"
+                            rows="3"
+                            placeholder="Enter task description"></textarea>
 
-                    <th>
-                        Deadline
-                    </th>
+                    </div>
 
-                    <th>
-                        Status
-                    </th>
+                    <!-- Priority -->
+                    <div class="form-group">
 
-                    <th>
-                        Actions
-                    </th>
+                        <label for="taskPriorityInput">
+                            Priority <span class="required">*</span>
+                        </label>
 
-                </tr>
+                        <select
+                            id="taskPriorityInput"
+                            class="form-control">
 
-            </thead>
+                            <option value="">Select priority</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
 
+                        </select>
 
+                    </div>
 
-            <tbody id="tasksTable">
+                    <!-- Deadline -->
+                    <div class="form-row">
 
-            </tbody>
+                        <div class="form-group">
 
+                            <label for="deadlineDate">
+                                Deadline Date <span class="required">*</span>
+                            </label>
 
-        </table>
+                            <input
+                                type="date"
+                                id="deadlineDate"
+                                class="form-control">
 
+                        </div>
 
-    </div>
+                        <div class="form-group">
 
+                            <label for="deadlineTime">
+                                Deadline Time <span class="required">*</span>
+                            </label>
 
-</div>
-<!-- CREATE TASK MODAL -->
-<div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
+                            <input
+                                type="time"
+                                id="deadlineTime"
+                                class="form-control">
 
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        </div>
 
-        <div class="modal-content create-task-modal">
+                    </div>
 
-            <div class="modal-header create-task-header">
+                    <!-- Assign Employees -->
+                    <div class="form-group">
 
-                <div>
-                    <span class="modal-eyebrow">HR Task Cycle</span>
+                        <label>
+                            Assign Employees <span class="required">*</span>
+                        </label>
 
-                    <h4 class="modal-title">
+                        <div id="employeeList" class="employee-list-box">
+                            <!-- Employee checkboxes will be loaded here by JavaScript -->
+                        </div>
+
+                    </div>
+
+                    <!-- Attachments -->
+                    <div class="form-row attachments-row">
+
+                        <div class="form-group">
+
+                            <label>
+                                Upload Task File
+                            </label>
+
+                            <label for="taskFile" class="upload-pill-btn">
+                                <i class="bi bi-upload"></i>
+                                Upload File
+                            </label>
+
+                            <input
+                                type="file"
+                                id="taskFile"
+                                class="hidden-file-input">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>
+                                Upload Task Image
+                            </label>
+
+                            <label for="taskImage" class="upload-pill-btn">
+                                <i class="bi bi-image"></i>
+                                Upload Photo
+                            </label>
+
+                            <input
+                                type="file"
+                                id="taskImage"
+                                class="hidden-file-input"
+                                accept="image/*">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer create-task-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-light cancel-create-btn"
+                        data-bs-dismiss="modal"
+                        onclick="resetCreateTaskForm()">
+                        Cancel
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="createTask()"
+                        class="btn btn-primary create-task-btn">
                         Create Task
-                    </h4>
+                    </button>
 
-                    <p class="modal-subtitle">
-                        Fill in the task information and assign it to one or more employees.
-                    </p>
                 </div>
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close">
-                </button>
 
             </div>
 
-            <div class="modal-body create-task-body">
+        </div>
 
-                <!-- Task Title -->
-                <div class="form-group">
-                    <label for="taskTitleInput">
-                        Task Title <span class="required">*</span>
-                    </label>
+    </div>
 
-                    <input
-                        type="text"
-                        id="taskTitleInput"
-                        class="form-control"
-                        placeholder="Enter task title">
+    <!-- View Task Modal -->
+    <div class="modal fade" id="viewTaskModal">
+
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4>
+                        Task Submission
+                    </h4>
                 </div>
 
-                <!-- Task Description -->
-                <div class="form-group">
-                    <label for="taskDescriptionInput">
-                        Task Description <span class="required">*</span>
-                    </label>
+                <div class="modal-body">
+
+                    <h3 id="viewTaskTitle"></h3>
+
+                    <p id="viewTaskDescription"></p>
+
+                    <div id="viewTaskEmployees"></div>
+
+                    <hr>
+
+                    <p>
+                        <b>Submitted By:</b>
+                        <span id="submittedEmployee"></span>
+                    </p>
+
+                    <p>
+                        <b>Submitted At:</b>
+                        <span id="submittedDate"></span>
+                    </p>
+
+                    <p>
+                        <b>Created At:</b>
+                        <span id="taskCreatedDate"></span>
+                    </p>
+
+                    <p>
+                        <b>Last Updated:</b>
+                        <span id="taskUpdatedDate"></span>
+                    </p>
+
+                    <div id="submittedSolution"></div>
+
+                    <div id="submittedFile"></div>
+
+                    <div id="submittedImage"></div>
 
                     <textarea
-                        id="taskDescriptionInput"
-                        class="form-control"
-                        rows="3"
-                        placeholder="Enter task description"></textarea>
-                </div>
+                        id="hrFeedback"
+                        class="form-control mt-3"
+                        placeholder="Feedback"></textarea>
 
-                <!-- Priority -->
-                <div class="form-group">
-                    <label for="taskPriorityInput">
-                        Priority <span class="required">*</span>
-                    </label>
+                    <button
+                        onclick="approveTask()"
+                        class="btn btn-success mt-3">
+                        Complete
+                    </button>
 
-                    <select
-                        id="taskPriorityInput"
-                        class="form-control">
-
-                        <option value="">Select priority</option>
-                        <option value="High">High</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Low">Low</option>
-
-                    </select>
-                </div>
-
-                <!-- Deadline -->
-                <div class="form-row">
-
-                    <div class="form-group">
-                        <label for="deadlineDate">
-                            Deadline Date <span class="required">*</span>
-                        </label>
-
-                        <input
-                            type="date"
-                            id="deadlineDate"
-                            class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="deadlineTime">
-                            Deadline Time <span class="required">*</span>
-                        </label>
-
-                        <input
-                            type="time"
-                            id="deadlineTime"
-                            class="form-control">
-                    </div>
-
-                </div>
-
-                <!-- Assign Employees -->
-                <div class="form-group">
-                    <label>
-                        Assign Employees <span class="required">*</span>
-                    </label>
-
-                    <div id="employeeList" class="employee-list-box">
-                        <!-- Employee checkboxes will be loaded here by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Attachments -->
-                <div class="form-row attachments-row">
-
-                    <div class="form-group">
-                        <label>
-                            Upload Task File
-                        </label>
-
-                        <label for="taskFile" class="upload-pill-btn">
-                            <i class="bi bi-upload"></i>
-                            Upload File
-                        </label>
-
-                        <input
-                            type="file"
-                            id="taskFile"
-                            class="hidden-file-input">
-                    </div>
-
-                    <div class="form-group">
-                        <label>
-                            Upload Task Image
-                        </label>
-
-                        <label for="taskImage" class="upload-pill-btn">
-                            <i class="bi bi-image"></i>
-                            Upload Photo
-                        </label>
-
-                        <input
-                            type="file"
-                            id="taskImage"
-                            class="hidden-file-input"
-                            accept="image/*">
-                    </div>
+                    <button
+                        onclick="requestChanges()"
+                        class="btn btn-danger mt-3">
+                        Change Request
+                    </button>
 
                 </div>
 
             </div>
 
-            <div class="modal-footer create-task-footer">
+        </div>
+
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+            <div class="modal-content create-task-modal">
+
+                <div class="modal-header create-task-header">
+
+                    <div>
+                        <span class="modal-eyebrow">
+                            HR Task Cycle
+                        </span>
+
+                        <h4 class="modal-title">
+                            Edit Task
+                        </h4>
+
+                        <p class="modal-subtitle">
+                            Update task information, deadline, priority, or assigned employee.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                    </button>
+
+                </div>
+
+                <div class="modal-body create-task-body">
+
+                    <!-- Edit Task Title -->
+                    <div class="form-group">
+
+                        <label for="editTitle">
+                            Task Title <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editTitle"
+                            class="form-control"
+                            placeholder="Enter task title">
+
+                    </div>
+
+                    <!-- Edit Task Description -->
+                    <div class="form-group">
+
+                        <label for="editDescription">
+                            Task Description <span class="required">*</span>
+                        </label>
+
+                        <textarea
+                            id="editDescription"
+                            class="form-control"
+                            rows="3"
+                            placeholder="Enter task description"></textarea>
+
+                    </div>
+
+                    <!-- Edit Priority -->
+                    <div class="form-group">
+
+                        <label for="editPriority">
+                            Priority <span class="required">*</span>
+                        </label>
+
+                        <select
+                            id="editPriority"
+                            class="form-control">
+
+                            <option value="">Select priority</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- Edit Deadline -->
+                    <div class="form-group">
+
+                        <label for="editDeadline">
+                            Deadline <span class="required">*</span>
+                        </label>
+
+                        <input
+                            id="editDeadline"
+                            type="datetime-local"
+                            class="form-control">
+
+                    </div>
+
+                    <!-- Edit Assign Employee -->
+                    <div class="form-group">
+
+                        <label>
+                            Assign Employee <span class="required">*</span>
+                        </label>
+
+                        <div id="editEmployeeList" class="employee-list-box">
+                            <!-- Employee checkbox will be loaded here by JavaScript -->
+                        </div>
+
+                    </div>
+
+                    <!-- Edit Attachments -->
+                    <div class="form-row attachments-row">
+
+                        <div class="form-group">
+
+                            <label>
+                                Upload Task File
+                            </label>
+
+                            <label for="editTaskFile" class="upload-pill-btn">
+                                <i class="bi bi-upload"></i>
+                                Upload File
+                            </label>
+
+                            <input
+                                type="file"
+                                id="editTaskFile"
+                                class="hidden-file-input">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>
+                                Upload Task Image
+                            </label>
+
+                            <label for="editTaskImage" class="upload-pill-btn">
+                                <i class="bi bi-image"></i>
+                                Upload Photo
+                            </label>
+
+                            <input
+                                type="file"
+                                id="editTaskImage"
+                                class="hidden-file-input"
+                                accept="image/*">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer create-task-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-light cancel-create-btn"
+                        data-bs-dismiss="modal"
+                        onclick="clearFieldErrors()">
+                        Cancel
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="saveEditTask()"
+                        class="btn btn-primary create-task-btn">
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Custom Confirm Popup -->
+    <div id="customConfirmOverlay" class="custom-confirm-overlay">
+
+        <div class="custom-confirm-box">
+
+            <div class="custom-confirm-icon" id="customConfirmIcon">
+                <i class="bi bi-question-lg"></i>
+            </div>
+
+            <h3 id="customConfirmTitle">
+                Are you sure?
+            </h3>
+
+            <p id="customConfirmMessage">
+                Please confirm this action.
+            </p>
+
+            <div class="custom-confirm-actions">
 
                 <button
                     type="button"
-                    class="btn btn-light cancel-create-btn"
-                    data-bs-dismiss="modal"
-                    onclick="resetCreateTaskForm()">
+                    class="custom-confirm-cancel"
+                    id="customConfirmCancel">
                     Cancel
                 </button>
 
                 <button
                     type="button"
-                    onclick="createTask()"
-                    class="btn btn-primary create-task-btn">
-                    Create Task
+                    class="custom-confirm-ok"
+                    id="customConfirmOk">
+                    Confirm
                 </button>
 
             </div>
@@ -450,362 +707,11 @@
 
     </div>
 
-</div>
-
-
-
-<!-- VIEW TASK MODAL -->
-
-
-<div class="modal fade" id="viewTaskModal">
-
-
-    <div class="modal-dialog modal-lg">
-
-
-        <div class="modal-content">
-
-
-            <div class="modal-header">
-
-                <h4>
-                    Task Submission
-                </h4>
-
-            </div>
-
-
-
-            <div class="modal-body">
-
-
-                <h3 id="viewTaskTitle"></h3>
-
-
-                <p id="viewTaskDescription"></p>
-
-
-                <div id="viewTaskEmployees">
-
-                </div>
-
-
-
-                <hr>
-
-
-
-                <p>
-
-                    <b>
-                        Submitted By:
-                    </b>
-
-                    <span id="submittedEmployee"></span>
-
-                </p>
-
-
-
-                <p>
-
-                    <b>
-                        Submitted At:
-                    </b>
-
-                    <span id="submittedDate"></span>
-
-                </p>
-<p>
-<b>Created At:</b>
-<span id="taskCreatedDate"></span>
-</p>
-
-
-<p>
-<b>Last Updated:</b>
-<span id="taskUpdatedDate"></span>
-</p>
-
-
-                <div id="submittedSolution">
-
-                </div>
-
-
-                <div id="submittedFile">
-
-                </div>
-
-
-                <div id="submittedImage">
-
-                </div>
-
-
-
-
-                <textarea
-                    id="hrFeedback"
-                    class="form-control mt-3"
-                    placeholder="Feedback">
-                </textarea>
-
-
-
-
-
-                <button
-                    onclick="approveTask()"
-                    class="btn btn-success mt-3">
-
-                    Complete
-
-                </button>
-
-
-
-
-
-                <button
-                    onclick="requestChanges()"
-                    class="btn btn-danger mt-3">
-
-                    Change Request
-
-                </button>
-
-
-
-            </div>
-
-
-        </div>
-
-
-    </div>
-
-
-</div>
-<!-- ================= EDIT TASK MODAL ================= -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content create-task-modal">
-
-            <div class="modal-header create-task-header">
-
-                <div>
-                    <span class="modal-eyebrow">HR Task Cycle</span>
-
-                    <h4 class="modal-title">
-                        Edit Task
-                    </h4>
-
-                    <p class="modal-subtitle">
-                        Update task information, deadline, priority, or assigned employee.
-                    </p>
-                </div>
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close">
-                </button>
-
-            </div>
-
-            <div class="modal-body create-task-body">
-
-                <!-- Edit Task Title -->
-                <div class="form-group">
-                    <label for="editTitle">
-                        Task Title <span class="required">*</span>
-                    </label>
-
-                    <input
-                        type="text"
-                        id="editTitle"
-                        class="form-control"
-                        placeholder="Enter task title">
-                </div>
-
-                <!-- Edit Task Description -->
-                <div class="form-group">
-                    <label for="editDescription">
-                        Task Description <span class="required">*</span>
-                    </label>
-
-                    <textarea
-                        id="editDescription"
-                        class="form-control"
-                        rows="3"
-                        placeholder="Enter task description"></textarea>
-                </div>
-
-                <!-- Edit Priority -->
-                <div class="form-group">
-                    <label for="editPriority">
-                        Priority <span class="required">*</span>
-                    </label>
-
-                    <select
-                        id="editPriority"
-                        class="form-control">
-
-                        <option value="">Select priority</option>
-                        <option value="High">High</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Low">Low</option>
-
-                    </select>
-                </div>
-
-                <!-- Edit Deadline -->
-                <div class="form-group">
-                    <label for="editDeadline">
-                        Deadline <span class="required">*</span>
-                    </label>
-
-                    <input
-                        id="editDeadline"
-                        type="datetime-local"
-                        class="form-control">
-                </div>
-
-                <!-- Edit Assign Employee -->
-                <div class="form-group">
-                    <label>
-                        Assign Employee <span class="required">*</span>
-                    </label>
-
-                    <div id="editEmployeeList" class="employee-list-box">
-                        <!-- Employee checkbox will be loaded here by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Edit Attachments -->
-                <div class="form-row attachments-row">
-
-                    <div class="form-group">
-                        <label>
-                            Upload Task File
-                        </label>
-
-                        <label for="editTaskFile" class="upload-pill-btn">
-                            <i class="bi bi-upload"></i>
-                            Upload File
-                        </label>
-
-                        <input
-                            type="file"
-                            id="editTaskFile"
-                            class="hidden-file-input">
-                    </div>
-
-                    <div class="form-group">
-                        <label>
-                            Upload Task Image
-                        </label>
-
-                        <label for="editTaskImage" class="upload-pill-btn">
-                            <i class="bi bi-image"></i>
-                            Upload Photo
-                        </label>
-
-                        <input
-                            type="file"
-                            id="editTaskImage"
-                            class="hidden-file-input"
-                            accept="image/*">
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="modal-footer create-task-footer">
-
-                <button
-                    type="button"
-                    class="btn btn-light cancel-create-btn"
-                    data-bs-dismiss="modal"
-                    onclick="clearFieldErrors()">
-                    Cancel
-                </button>
-
-                <button
-                    type="button"
-                    onclick="saveEditTask()"
-                    class="btn btn-primary create-task-btn">
-                    Save Changes
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- Custom Confirm Popup -->
-<div id="customConfirmOverlay" class="custom-confirm-overlay">
-
-    <div class="custom-confirm-box">
-
-        <div class="custom-confirm-icon" id="customConfirmIcon">
-            <i class="bi bi-question-lg"></i>
-        </div>
-
-        <h3 id="customConfirmTitle">
-            Are you sure?
-        </h3>
-
-        <p id="customConfirmMessage">
-            Please confirm this action.
-        </p>
-
-        <div class="custom-confirm-actions">
-
-            <button
-                type="button"
-                class="custom-confirm-cancel"
-                id="customConfirmCancel">
-                Cancel
-            </button>
-
-            <button
-                type="button"
-                class="custom-confirm-ok"
-                id="customConfirmOk">
-                Confirm
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-
-
-
-<!-- ================= FOOTER ================= -->
-
-
-  <script src="../../Shared/HR-shared.js"></script>
-
+    <!-- Scripts -->
+    <script src="../../Shared/HR-shared.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <script src="HR_TASK.js"></script>
 
 </body>
+
 </html>
-
-
-
-
