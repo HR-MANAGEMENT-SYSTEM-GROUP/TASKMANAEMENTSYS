@@ -37,12 +37,65 @@
             </button>
         </header>
 
+        <!-- ========================================== -->
+        <!-- قسم كروت الإحصائيات الأربعة الجديدة (Stats Cards) -->
+        <!-- ========================================== -->
+        <div class="stats-container">
+            <!-- 1. Total Requests -->
+            <div class="stat-card blue">
+                <div class="stat-icon">
+                    <i class="bi bi-folder2-open" aria-hidden="true"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">ALL REQUESTS</span>
+                    <h3 class="stat-title">Total Requests</h3>
+                </div>
+                <div class="stat-number" id="statTotal">0</div>
+            </div>
+
+            <!-- 2. Pending Requests -->
+            <div class="stat-card yellow">
+                <div class="stat-icon">
+                    <i class="bi bi-clock-history" aria-hidden="true"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">AWAITING HR</span>
+                    <h3 class="stat-title">Pending</h3>
+                </div>
+                <div class="stat-number" id="statPending">0</div>
+            </div>
+
+            <!-- 3. Approved Requests -->
+            <div class="stat-card green">
+                <div class="stat-icon">
+                    <i class="bi bi-check-circle" aria-hidden="true"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">ACCEPTED</span>
+                    <h3 class="stat-title">Approved</h3>
+                </div>
+                <div class="stat-number" id="statApproved">0</div>
+            </div>
+
+            <!-- 4. Rejected Requests -->
+            <div class="stat-card red">
+                <div class="stat-icon">
+                    <i class="bi bi-x-circle" aria-hidden="true"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">DECLINED</span>
+                    <h3 class="stat-title">Rejected</h3>
+                </div>
+                <div class="stat-number" id="statRejected">0</div>
+            </div>
+        </div>
+
         <!-- 1. Hidden radio inputs for category filtering -->
         <input type="radio" name="leaveFilter" id="filter-annual" class="filter-radio">
         <input type="radio" name="leaveFilter" id="filter-sick" class="filter-radio">
         <input type="radio" name="leaveFilter" id="filter-departure" class="filter-radio">
 
-        <!-- 2. Shortcut filter cards with  design -->
+        <!-- 2. Shortcut filter cards with design -->
         <nav class="meeting-shortcuts stats-grid" aria-label="Filter leave requests">
             <label for="filter-annual" class="shortcut-card stat-card annual" role="button" tabindex="0"
                 aria-label="Filter by Annual Leave">
@@ -189,7 +242,6 @@
     </div>
 
     <script src="java.js"></script>
-    <script src="../../Shared/navbar-footer.js"></script>
     <script src="../../Shared/navbar-footer.js"></script>
 </body>
 

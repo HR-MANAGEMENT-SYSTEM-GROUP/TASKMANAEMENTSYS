@@ -1,418 +1,303 @@
-let leaveForm = document.getElementById('leaveForm');
-let leaveType = document.getElementById('leaveType');
-let leaveDates = document.getElementById('leaveDates');
-let departureTime = document.getElementById('departureTime');
-let startDate = document.getElementById('startDate');
-let endDate = document.getElementById('endDate');
-let departureDate = document.getElementById('departureDate');
-let startTime = document.getElementById('startTime');
-let endTime = document.getElementById('endTime');
-let reason = document.getElementById('reason'); 
 
-let attachmentInput = document.getElementById('attachment');
-let fileNameDisplay = document.getElementById('fileNameDisplay');
-let removeAttachmentBtn = document.getElementById('removeAttachmentBtn');
+const leaveForm = document.getElementById('leaveForm');
+const leaveType = document.getElementById('leaveType');
+const leaveDates = document.getElementById('leaveDates');
+const departureTime = document.getElementById('departureTime');
+const startDate = document.getElementById('startDate');
+const endDate = document.getElementById('endDate');
+const departureDate = document.getElementById('departureDate');
+const startTime = document.getElementById('startTime');
+const endTime = document.getElementById('endTime');
+const reason = document.getElementById('reason');
 
-// Attachment state variables
+const attachmentInput = document.getElementById('attachment');
+const fileNameDisplay = document.getElementById('fileNameDisplay');
+const removeAttachmentBtn = document.getElementById('removeAttachmentBtn');
+const modal = document.getElementById('leaveModal');
+
+// متغيرات حفظ الملف المرفق
 let fileBase64 = null;
 let fileName = null;
 
-// 1. جلب بيانات الموظف المسجل حالياً من localStorage
-let currentUserObj = {};
-try {
-  currentUserObj = JSON.parse(localStorage.getItem('currentUser')) || {};
-} catch (err) {
-  currentUserObj = {};
-}
-let currentUser = currentUserObj.userName || currentUserObj.name || currentUserObj.username || currentUserObj.fullName || 'Employee';
+// قراءة بيانات المستخدم الحالي
+let currentUserObj = JSON.parse(localStorage.getItem('currentUser')) || {};
+let currentUserName = currentUserObj.name || '';
 
-//////////////////////////////////////////////////////////
 
-let today = new Date().toISOString().split('T')[0];
-if (startDate) startDate.min = today;
-if (endDate) endDate.min = today;
-if (departureDate) departureDate.min = today;
+function getMyRequests() {
+  // جلب كل الطلبات المخزنة في النظام
+  let allRequests = JSON.parse(localStorage.getItem('all_leave_requests')) || [];
+  let myRequests = [];
 
-if (startDate) {
-  startDate.addEventListener('change', function () {
-    if (endDate) {
-      endDate.min = startDate.value;
-      if (endDate.value && endDate.value < startDate.value) {
-        endDate.value = '';                              
-      }
+  // البحث عن الطلبات التي تخص هذا الموظف فقط
+  for (let i = 0; i < allRequests.length; i++) {
+    if (allRequests[i].userName === currentUserName) {
+      myRequests.push(allRequests[i]);
     }
-  });
+  }
+
+  return myRequests;
 }
 
-if (leaveType) {
-  leaveType.addEventListener('change', function() {
-    let selectedType = leaveType.value;
+// 3. تحديث أرقام الكروت (Stats)
+function updateEmployeeStats() {
+  let requests = getMyRequests();
 
-    if (selectedType === 'Departure') {
+  let total = requests.length;
+  let pending = 0;
+  let approved = 0;
+  let rejected = 0;
+
+  for (let i = 0; i < requests.length; i++) {
+    if (requests[i].status === 'Pending') {
+      pending++;
+    } else if (requests[i].status === 'Approved') {
+      approved++;
+    } else if (requests[i].status === 'Rejected') {
+      rejected++;
+    }
+  }
+
+  // عرض الأرقام مباشرة في الكروت
+  if (document.getElementById('statTotal')) document.getElementById('statTotal').textContent = total;
+  if (document.getElementById('statPending')) document.getElementById('statPending').textContent = pending;
+  if (document.getElementById('statApproved')) document.getElementById('statApproved').textContent = approved;
+  if (document.getElementById('statRejected')) document.getElementById('statRejected').textContent = rejected;
+}
+
+// 4. عرض الجدول بالطلبات (Display Table)
+
+function displayRequests() {
+  const requestsTable = document.getElementById('requestsTable');
+  if (!requestsTable) return;
+
+  let requests = getMyRequests();
+  requestsTable.innerHTML = '';
+
+  // إذا لم تكن هناك طلبات
+  if (requests.length === 0) {
+    requestsTable.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px;">No leave requests found.</td></tr>`;
+    updateEmployeeStats();
+    return;
+  }
+
+  // إضافة كل طلب كسطر في الجدول
+  for (let i = 0; i < requests.length; i++) {
+    let req = requests[i];
+
+    // تحديد لون الشارة
+    let badgeClass = 'badge-pending';
+    if (req.status === 'Approved') badgeClass = 'badge-approved';
+    if (req.status === 'Rejected') badgeClass = 'badge-rejected';
+
+    // رابط المرفق
+    let attachmentHTML = '—';
+    if (req.attachment) {
+      attachmentHTML = `<a href="javascript:void(0)" onclick="viewAttachment(${req.id})">${req.attachmentName || 'PDF File'}</a>`;
+    }
+
+    // سبب الرفض إن وجد
+    let rejectionHTML = '';
+    if (req.rejectionReason) {
+      rejectionHTML = `<br><small style="color:red">Reason: ${req.rejectionReason}</small>`;
+    }
+
+    // بناء السطر
+    let row = `
+      <tr>
+        <td><strong>${req.type}</strong></td>
+        <td>${req.dateTime}</td>
+        <td>${req.reason}</td>
+        <td>${attachmentHTML}</td>
+        <td><span class="badge ${badgeClass}">${req.status}</span>${rejectionHTML}</td>
+      </tr>
+    `;
+
+    requestsTable.innerHTML += row;
+  }
+
+  // تحديث الأرقام العلوية
+  updateEmployeeStats();
+
+  // تطبيق الفلترة الحالية إذا كان هناك راديو محدد
+  filterRequestsTable();
+}
+
+// 5. إظهار وإخفاء حقول النموذج عند التغيير
+if (leaveType) {
+  leaveType.addEventListener('change', function () {
+    let type = leaveType.value;
+
+    if (type === 'Departure') {
       departureTime.classList.remove('d-none');
       leaveDates.classList.add('d-none');
-      
-      departureDate.required = true;
-      startTime.required = true;
-      endTime.required = true;
-      startDate.required = false;
-      endDate.required = false;
-    } 
-    else if (selectedType === 'Annual' || selectedType === 'sick') {
+    } else if (type === 'Annual' || type === 'sick') {
       leaveDates.classList.remove('d-none');
       departureTime.classList.add('d-none');
-      
-      startDate.required = true;
-      endDate.required = true;
-      departureDate.required = false;
-      startTime.required = false;
-      endTime.required = false;
-    } 
-    else {
+    } else {
       leaveDates.classList.add('d-none');
       departureTime.classList.add('d-none');
-      
-      startDate.required = false;
-      endDate.required = false;
-      departureDate.required = false;
-      startTime.required = false;
-      endTime.required = false;
     }
   });
 }
 
-// Clear attachment helper
-function clearAttachment() {
-  fileBase64 = null;
-  fileName = null;
-  if (attachmentInput) {
-    attachmentInput.value = '';
-  }
-  if (fileNameDisplay) {
-    fileNameDisplay.textContent = 'No file attached';
-    fileNameDisplay.classList.remove('has-file');
-    fileNameDisplay.style.color = '#64748b';
-  }
-  if (removeAttachmentBtn) {
-    removeAttachmentBtn.classList.add('d-none');
-  }
-}
 
-// PDF Attachment file selection listener
+// 6. التعامل مع رفع ملف الـ PDF
 if (attachmentInput) {
-  attachmentInput.addEventListener('change', function(e) {
-    let file = e.target.files && e.target.files[0];
-    if (!file) {
-      clearAttachment();
+  attachmentInput.addEventListener('change', function (e) {
+    let file = e.target.files[0];
+
+    if (!file) return;
+
+    // التأكد أنه ملف PDF
+    if (file.type !== 'application/pdf') {
+      alert('Please upload a PDF file only.');
       return;
     }
 
-    // Validate PDF file type
-    let isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
-    if (!isPdf) {
-      alert('Only PDF files are supported. Please select a valid .pdf file.');
-      clearAttachment();
-      return;
-    }
-
-    // Validate file size (max 500KB to keep localStorage well within limits)
-    let maxSizeBytes = 500 * 1024;
-    if (file.size > maxSizeBytes) {
-      let sizeKb = (file.size / 1024).toFixed(1);
-      alert(`The selected PDF is too large (${sizeKb} KB). Maximum allowed size is 500KB.`);
-      clearAttachment();
-      return;
-    }
-
-    if (fileNameDisplay) {
-      fileNameDisplay.textContent = 'Reading PDF...';
-      fileNameDisplay.style.color = '#2563eb';
-    }
-
+    // قراءة الملف
     let reader = new FileReader();
-    reader.onload = function(event) {
+    reader.onload = function (event) {
       fileBase64 = event.target.result;
       fileName = file.name;
-      let sizeKb = (file.size / 1024).toFixed(1);
-      if (fileNameDisplay) {
-        fileNameDisplay.textContent = `${file.name} (${sizeKb} KB)`;
-        fileNameDisplay.classList.add('has-file');
-        fileNameDisplay.style.color = '#2563eb';
-      }
-      if (removeAttachmentBtn) {
-        removeAttachmentBtn.classList.remove('d-none');
-      }
-    };
-    reader.onerror = function() {
-      alert('Failed to read the PDF file. Please try again.');
-      clearAttachment();
+      fileNameDisplay.textContent = file.name;
+      removeAttachmentBtn.classList.remove('d-none');
     };
     reader.readAsDataURL(file);
   });
 }
 
-// Remove attachment button listener
+// حذف المرفق
 if (removeAttachmentBtn) {
-  removeAttachmentBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    clearAttachment();
+  removeAttachmentBtn.addEventListener('click', function () {
+    fileBase64 = null;
+    fileName = null;
+    attachmentInput.value = '';
+    fileNameDisplay.textContent = 'No file attached';
+    removeAttachmentBtn.classList.add('d-none');
   });
 }
 
-// Form submission handler
+
+// 7. حفظ وتقديم الطلب (Submit Form)
 if (leaveForm) {
-  leaveForm.addEventListener('submit', function(e){
+  leaveForm.addEventListener('submit', function (e) {
     e.preventDefault();
 
-    let selectedType = leaveType.value;
-    let dateTimeValue = '';
+    let type = leaveType.value;
+    let dateTimeText = '';
 
-    if (selectedType === 'Departure') {
-      if (!departureDate.value || !startTime.value || !endTime.value) {
-        alert('Please fill all required data!');
-        return;
-      }
-
-      if (startTime.value >= endTime.value) {
-        alert('Start time must be before end time!');
-        return;
-      }
-
-      dateTimeValue = `${departureDate.value} (${startTime.value} - ${endTime.value})`;
-    } 
-    else if (selectedType === 'Annual' || selectedType === 'sick') {
-      if (!startDate.value || !endDate.value) {
-        alert('Please fill all required data!');
-        return;
-      }
-
-      if (startDate.value === endDate.value) {
-        alert('The Start Date and End Date must be different!');
-        return;
-      }
-
-      dateTimeValue = `${startDate.value} to ${endDate.value}`;
-    } 
-    else {
-      alert('Please select a leave request type first!');
-      return;
+    // تجميع الوقت والتاريخ
+    if (type === 'Departure') {
+      dateTimeText = `${departureDate.value} (${startTime.value} - ${endTime.value})`;
+    } else {
+      dateTimeText = `${startDate.value} to ${endDate.value}`;
     }
 
-    let requestData = {
+    // إنشاء كائن الطلب الجديد
+    let newRequest = {
       id: Date.now(),
-      userName: currentUser,
-      type: selectedType,
-      dateTime: dateTimeValue,
-      reason: reason.value.trim(),
+      userName: currentUserName,
+      type: type,
+      dateTime: dateTimeText,
+      reason: reason.value,
       status: 'Pending',
-      createdAt: new Date().toISOString(),
-      attachment: fileBase64 || null,      
-      attachmentName: fileName || null,
+      attachment: fileBase64,
+      attachmentName: fileName
     };
 
-    // 1. التحديث في سجل الموظف المحلي
-    if (!Array.isArray(currentUserObj.requests)) {
-      currentUserObj.requests = [];
-    }
-    currentUserObj.requests.push(requestData);
-
-    // 2. التحديث في السجل العام الموحد لصفحة الـ HR
-    let allRequests = [];
-    try {
-      allRequests = JSON.parse(localStorage.getItem('all_leave_requests')) || [];
-    } catch (err) {
-      allRequests = [];
-    }
-    allRequests.push(requestData);
-
-    try {
-      localStorage.setItem('currentUser', JSON.stringify(currentUserObj));
-      localStorage.setItem('all_leave_requests', JSON.stringify(allRequests));
-    } catch (storageError) {
-      console.error('LocalStorage error:', storageError);
-      alert('Storage quota exceeded! Please attach a smaller PDF.');
-      return;
-    }
+    // حفظ الطلب في السجل العام
+    let allRequests = JSON.parse(localStorage.getItem('all_leave_requests')) || [];
+    allRequests.push(newRequest);
+    localStorage.setItem('all_leave_requests', JSON.stringify(allRequests));
 
     alert('Request submitted successfully!');
 
-    leaveForm.reset();
-    clearAttachment();
-    if (leaveDates) leaveDates.classList.add('d-none');
-    if (departureTime) departureTime.classList.add('d-none');
-
+    // إعادة إغلاق المودال وتنظيف البيانات
     closeModal();
     displayRequests();
   });
 }
 
-function escapeHtml(str) {
-  if (!str) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
 
-// Display employee's requests table
-function displayRequests() {
-  let requestsTable = document.getElementById('requestsTable');
-  if (!requestsTable) return;
+// 8. فتح المرفق وقراءة الـ PDF
+window.viewAttachment = function (reqId) {
+  let requests = getMyRequests();
+  let req = null;
 
-  let userObj = {};
-  try {
-    userObj = JSON.parse(localStorage.getItem('currentUser')) || {};
-  } catch (err) {
-    userObj = {};
-  }
-
-  let userRequests = userObj.requests || [];
-
-  requestsTable.innerHTML = '';
-
-  if (userRequests.length === 0) {
-    requestsTable.innerHTML = `
-      <tr>
-        <td colspan="5" style="text-align: center; color: #64748b; padding: 24px;">No leave requests submitted yet.</td>
-      </tr>
-    `;
-    return;
-  }
-
-  userRequests.forEach((req) => {
-    let statusClass = 'badge-pending';
-    if (req.status === 'Approved') {
-      statusClass = 'badge-approved';
-    } 
-    else if (req.status === 'Rejected') {
-      statusClass = 'badge-rejected';
-    } 
-
-    let statusHTML = `
-      <span class="badge ${statusClass}">${escapeHtml(req.status)}</span>
-      ${req.rejectionReason ? `<div style="color: #dc3545; font-size: 12px; margin-top: 4px;"><strong>Reason:</strong> ${escapeHtml(req.rejectionReason)}</div>` : ''}
-    `;
-
-    let attachmentHTML = '<span style="color: #94a3b8;">—</span>';
-    if (req.attachment) {
-      let displayName = req.attachmentName || 'document.pdf';
-      attachmentHTML = `
-        <a href="javascript:void(0)" class="attachment-badge-btn" onclick="viewUserAttachment(${req.id})" title="Click to view/download ${escapeHtml(displayName)}">
-          ${escapeHtml(displayName)}
-        </a>
-      `;
+  for (let i = 0; i < requests.length; i++) {
+    if (requests[i].id === reqId) {
+      req = requests[i];
+      break;
     }
-
-    let typeClass = (req.type || '').toLowerCase();
-
-    let row = `
-      <tr data-type="${typeClass}">
-        <td><strong>${escapeHtml(req.type)}</strong></td>
-        <td>${escapeHtml(req.dateTime)}</td>
-        <td>${escapeHtml(req.reason)}</td>
-        <td>${attachmentHTML}</td>
-        <td>${statusHTML}</td>
-      </tr>
-    `;
-    requestsTable.innerHTML += row;
-  });
-}
-
-// Safe PDF viewer helper using Blob URL
-function openPdfDocument(base64Data, fileName = 'document.pdf') {
-  try {
-    let arr = base64Data.split(',');
-    let mime = 'application/pdf';
-    let bstr;
-    if (arr.length > 1) {
-      let mimeMatch = arr[0].match(/:(.*?);/);
-      if (mimeMatch) mime = mimeMatch[1];
-      bstr = atob(arr[1]);
-    } else {
-      bstr = atob(arr[0]);
-    }
-
-    let n = bstr.length;
-    let u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    let blob = new Blob([u8arr], { type: mime });
-    let blobUrl = URL.createObjectURL(blob);
-
-    let win = window.open(blobUrl, '_blank');
-    if (!win || win.closed || typeof win.closed === 'undefined') {
-      let a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-  } catch (err) {
-    console.error('Error opening PDF document:', err);
-    alert('Unable to open the attached PDF.');
   }
-}
 
-// View attachment for a specific employee request
-window.viewUserAttachment = function(reqId) {
-  let userObj = {};
-  try {
-    userObj = JSON.parse(localStorage.getItem('currentUser')) || {};
-  } catch (err) {
-    userObj = {};
+  if (req && req.attachment) {
+    let win = window.open();
+    win.document.write(`<iframe src="${req.attachment}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
   }
-  let userRequests = userObj.requests || [];
-  let req = userRequests.find(r => r.id === reqId);
-  if (!req || !req.attachment) {
-    alert('Attachment not found.');
-    return;
-  }
-  openPdfDocument(req.attachment, req.attachmentName || 'document.pdf');
 };
 
-displayRequests();
-document.addEventListener('DOMContentLoaded', displayRequests);
 
-// Modal Controls
-const modal = document.getElementById('leaveModal');
-const openModalBtn = document.getElementById('openModalBtn');
-const closeModalBtn = document.getElementById('closeModalBtn');
-const cancelModalBtn = document.getElementById('cancelModalBtn');
+// 9. تشغيل كبسات الراديو (تصفية الجدول)
 
-if (openModalBtn) {
-  openModalBtn.addEventListener('click', () => {
-    if (modal) modal.classList.add('active');
-  });
-}
+const radioButtons = document.querySelectorAll('.filter-radio');
 
-function closeModal() {
-  if (modal) modal.classList.remove('active');
-  if (leaveForm) leaveForm.reset();
-  clearAttachment();
-  if (leaveDates) leaveDates.classList.add('d-none');
-  if (departureTime) departureTime.classList.add('d-none');
-}
-
-if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
-if (cancelModalBtn) cancelModalBtn.addEventListener('click', closeModal);
-
-window.addEventListener('click', (e) => {
-  if (e.target === modal) closeModal();
-});
-
-// Filter card toggle (unchecking if already active)
-document.querySelectorAll('.filter-radio').forEach(radio => {
-  radio.addEventListener('click', function() {
+radioButtons.forEach(radio => {
+  radio.addEventListener('click', function () {
+    // إمكانية إلغاء التحديد عند الضغط مرتين
     if (this.previousChecked) {
       this.checked = false;
       this.previousChecked = false;
     } else {
-      document.querySelectorAll('.filter-radio').forEach(r => r.previousChecked = false);
+      radioButtons.forEach(r => r.previousChecked = false);
       this.previousChecked = true;
     }
+
+    filterRequestsTable();
   });
 });
+
+function filterRequestsTable() {
+  const selectedRadio = document.querySelector('.filter-radio:checked');
+  const rows = document.querySelectorAll('#requestsTable tr');
+
+  if (!selectedRadio) {
+    rows.forEach(row => row.style.display = '');
+    return;
+  }
+
+  let filterType = '';
+  if (selectedRadio.id === 'filter-annual') filterType = 'annual';
+  if (selectedRadio.id === 'filter-sick') filterType = 'sick';
+  if (selectedRadio.id === 'filter-departure') filterType = 'departure';
+
+  rows.forEach(row => {
+    const typeCell = row.cells[0]?.textContent.trim().toLowerCase();
+    if (typeCell && typeCell.includes(filterType)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
+
+// 10. فتح وإغلاق النافذة (Modal)
+
+function closeModal() {
+  if (modal) modal.classList.remove('active');
+  if (leaveForm) leaveForm.reset();
+  if (removeAttachmentBtn) removeAttachmentBtn.click();
+}
+
+const openModalBtn = document.getElementById('openModalBtn');
+const closeModalBtn = document.getElementById('closeModalBtn');
+const cancelModalBtn = document.getElementById('cancelModalBtn');
+
+if (openModalBtn) openModalBtn.onclick = () => modal.classList.add('active');
+if (closeModalBtn) closeModalBtn.onclick = closeModal;
+if (cancelModalBtn) cancelModalBtn.onclick = closeModal;
+
+// تشغيل عرض البيانات فور فتح الصفحة
+displayRequests();
