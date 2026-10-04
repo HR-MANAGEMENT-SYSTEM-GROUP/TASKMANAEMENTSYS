@@ -52,17 +52,17 @@ function displayLeaves(list) {
       <tr class="table-data-row">
         <td>
           <div class="emp-profile-cell">
-            <span class="emp-avatar">${leave.employeeInitials || "--"}</span>
+            <span class="emp-avatar">--</span>
             <div class="emp-details">
-              <span class="emp-name">${leave.employeeName}</span>
-              <span class="emp-role">${leave.employeeRole}</span>
+              <span class="emp-name">${leave.userName}</span>
+              <span class="emp-role">${leave.reason || "No reason provided"}</span>
             </div>
           </div>
         </td>
         <td>
           <span class="leave-type-badge">
-            <i class="bi ${getLeaveIcon(leave.leaveType)}"></i>
-            ${leave.leaveType} &middot; ${leave.duration || "N/A"}
+            <i class="bi ${getLeaveIcon(leave.type)}"></i>
+            ${leave.type} &middot; ${leave.dateTime}
           </span>
         </td>
         <td>
@@ -76,6 +76,7 @@ function displayLeaves(list) {
   });
 }
 
+// دوال مساعدة للأيقونات والألوان
 function getLeaveIcon(type) {
   switch (type?.toLowerCase()) {
     case "annual": return "bi-sun";
@@ -85,12 +86,21 @@ function getLeaveIcon(type) {
     default: return "bi-calendar2-range";
   }
 }
+
 function getStatusClass(status) {
   return status?.toLowerCase() === "approved" ? "badge-approved" : "badge-pending";
 }
+
 function getStatusIcon(status) {
   return status?.toLowerCase() === "approved" ? "bi-check-circle-fill" : "bi-hourglass-bottom";
 }
+
+// استدعاء الدالة عند تحميل الصفحة
+document.addEventListener("DOMContentLoaded", () => {
+  const Leaves = JSON.parse(localStorage.getItem("all_leave_requests")) || [];
+  displayLeaves(Leaves);
+});
+
 
 //------------------- دوال عرض الاجتماعات -------------------
 function displayMeetings(list) {
@@ -107,19 +117,37 @@ function displayMeetings(list) {
     output.innerHTML += `
       <div class="meeting-item">
         <div class="meeting-date-box">
-          <span class="meeting-date-month">${m.month}</span>
-          <span class="meeting-date-day">${m.day}</span>
+          <span class="meeting-date-month">${formatMonth(m.date)}</span>
+          <span class="meeting-date-day">${formatDay(m.date)}</span>
         </div>
         <div class="meeting-info">
           <div class="meeting-title">${m.title}</div>
           <div class="meeting-meta">
             <span><i class="bi bi-clock"></i> ${m.time}</span>
             <span>&middot;</span>
-            <span><i class="bi bi-geo-alt"></i> ${m.location}</span>
+            <span><i class="bi bi-geo-alt"></i> ${m.roomName}</span>
           </div>
         </div>
-        <span class="meeting-tag">${m.tag || ""}</span>
+        <span class="meeting-tag">${m.status}</span>
       </div>
     `;
   });
 }
+
+// دوال مساعدة لتنسيق التاريخ
+function formatMonth(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleString("en-US", { month: "short" });
+}
+
+function formatDay(dateStr) {
+  const d = new Date(dateStr);
+  return d.getDate().toString().padStart(2, "0");
+}
+
+// استدعاء الدالة عند تحميل الصفحة
+document.addEventListener("DOMContentLoaded", () => {
+  const Meetings = JSON.parse(localStorage.getItem("Meetings")) || [];
+  displayMeetings(Meetings);
+});
+
