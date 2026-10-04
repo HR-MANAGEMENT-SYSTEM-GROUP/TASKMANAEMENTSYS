@@ -271,22 +271,35 @@ if (user.status === "Blocked") {
 
 **In baby terms:** Even if we found you, if you've been put in **time-out** (blocked by HR) 🚫, you can't come in.
 
-#### Check 4: First login reset or verify password? (Lines 77–86)
+#### Check 4: Password check & First login popup! (Lines 75–93)
 
 ```js
-if (user.id > 1000 && !user.passwordReset) {
-  let p1 = prompt("First login: Enter new password:"), p2 = prompt("Confirm password:");
-  if (!/^[A-Za-z0-9@#$%^&*!]{8,}$/.test(p1 || "") || p1 !== p2) return alert("Password must be at least 8 characters and match.");
-  user.password = p1; user.passwordReset = true;
-  localStorage.setItem("Employees", JSON.stringify((JSON.parse(localStorage.getItem("Employees")) || []).map(e => e.id === user.id ? user : e)));
-} else if (passInput.value !== correctPass) {
+if (passInput.value !== correctPass) {
   passErr.textContent = "Invalid credentials or role.";
   passErr.style.display = "block";
   return;  // STOP
 }
+
+// موظف جديد لسه ما غير الباسوورد - بفتح له مودال تعيين كلمة سر جديدة
+if (user.id > 1000 && !user.passwordReset) {
+  modal.style.display = "block";
+  modal.classList.add("show");
+  resetEmail.value = user.email;
+  emailGroup.classList.add("d-none");
+  verifiedBadge.classList.remove("d-none");
+  document.getElementById("verifiedUserName").textContent = user.name;
+  newPassSec.classList.remove("d-none");
+  submitText.textContent = "Set New Password";
+  return;
+}
 ```
 
-**In baby terms:** If you are a brand new employee that Omar just created, the system asks you to set and confirm your own strong password (8+ characters with letters, numbers, and symbols) on your first login. Once set, your new password is saved, and on every future login it simply checks your password as usual! 🔐
+**In baby terms:** 
+1. **First, is the password right?** If not, show the red error box ❌.
+2. **Is this a brand new employee created by HR?** (`id > 1000`) And have they never changed their password yet? (`!user.passwordReset`)
+   - If YES, instead of an ugly browser alert, the system automatically pops open our pretty **Reset Password Modal** 🪄!
+   - It skips the email verification step (since we already know who they are), shows their name with a green checkmark ✅, and invites them to enter their own brand-new password!
+   - Once they click **"Set New Password"**, the modal saves it, marks `passwordReset = true`, and they are good to go forever! 🔐
 
 #### ✅ ALL CHECKS PASSED! (Lines 82–86)
 

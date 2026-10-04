@@ -112,9 +112,27 @@
 /* Add, edit and view dialogs. Existing hidden attributes control visibility. */
 .employee-management .modal { position: fixed; inset: 0; z-index: 3000; display: block; overflow-y: auto; padding: 36px 20px; background: rgba(23,32,51,.45); backdrop-filter: blur(5px); }
 .employee-management .modal[hidden] { display: none; }
+.employee-management .modal:not([hidden]) { animation: modalFadeIn 0.25s ease-out; }
 .employee-management:has(.modal:not([hidden])) { overflow: hidden; }
 .employee-management .modal-box { width: 100%; max-width: 720px; margin: 0 auto; border: 1px solid var(--emp-line); border-bottom: 5px solid var(--primary); border-radius: 22px; overflow: hidden; background: white; box-shadow: 0 24px 70px rgba(23,32,51,.25); }
+.employee-management .modal:not([hidden]) .modal-box { animation: modalPopOut 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 .employee-management .view-modal { max-width: 900px; }
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalPopOut {
+    0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(-14px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
 .employee-management .modal-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 25px 28px; background: linear-gradient(135deg, #F0F5FA, #DFECF9); border-bottom: 1px solid var(--emp-tint-border); }
 .employee-management .modal-eyebrow { display: block; margin-bottom: 7px; font: 700 10px/1.5 var(--emp-heading); letter-spacing: .12em; color: var(--primary-dark); }
 .employee-management .modal-header h2 { margin: 0 0 5px; font-size: 26px; line-height: 1.3; }

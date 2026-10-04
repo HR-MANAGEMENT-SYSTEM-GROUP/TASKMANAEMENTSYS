@@ -19,11 +19,17 @@ function switchToHR() {
   document.getElementById("navEmployee").classList.remove("active");
 }
 
-// عناصر الفورم
+// عناصر الفورم والمودال
 let emailInput = document.getElementById("loginEmail");
 let passInput = document.getElementById("loginPassword");
 let emailErr = document.getElementById("emailError");
 let passErr = document.getElementById("passwordError");
+let modal = document.getElementById("forgotPasswordModal");
+let resetEmail = document.getElementById("resetEmail");
+let newPassSec = document.getElementById("newPasswordSection");
+let emailGroup = document.getElementById("resetEmailGroup");
+let verifiedBadge = document.getElementById("resetAccountVerifiedBadge");
+let submitText = document.getElementById("resetSubmitBtnText");
 
 // زر اظهار/اخفاء الباسوورد
 document.getElementById("togglePasswordBtn").onclick = () => {
@@ -74,14 +80,22 @@ document.getElementById("hrLoginForm").onsubmit = (e) => {
     passErr.style.display = "block";
     return;
   }
-  if (user.id > 1000 && !user.passwordReset) {
-    let p1 = prompt("First login: Enter new password:"), p2 = prompt("Confirm password:");
-    if (!/^[A-Za-z0-9@#$%^&*!]{8,}$/.test(p1 || "") || p1 !== p2) return alert("Password must be at least 8 characters and match.");
-    user.password = p1; user.passwordReset = true;
-    localStorage.setItem("Employees", JSON.stringify((JSON.parse(localStorage.getItem("Employees")) || []).map(e => e.id === user.id ? user : e)));
-  } else if (passInput.value !== correctPass) {
+  if (passInput.value !== correctPass) {
     passErr.textContent = "Invalid credentials or role.";
     passErr.style.display = "block";
+    return;
+  }
+
+  // موظف جديد لسه ما غير الباسوورد - بفتح له مودال تعيين كلمة سر جديدة
+  if (user.id > 1000 && !user.passwordReset) {
+    modal.style.display = "block";
+    modal.classList.add("show");
+    resetEmail.value = user.email;
+    emailGroup.classList.add("d-none");
+    verifiedBadge.classList.remove("d-none");
+    document.getElementById("verifiedUserName").textContent = user.name;
+    newPassSec.classList.remove("d-none");
+    submitText.textContent = "Set New Password";
     return;
   }
 
@@ -90,14 +104,6 @@ document.getElementById("hrLoginForm").onsubmit = (e) => {
   localStorage.setItem("isLoggedIn", "true");
   window.location.href = role === "hr" ? "../NADA/hrdashboard/hrdashboard.html" : "../NADA/home/home.html";
 };
-
-// مودال نسيت الباسوورد
-let modal = document.getElementById("forgotPasswordModal");
-let resetEmail = document.getElementById("resetEmail");
-let newPassSec = document.getElementById("newPasswordSection");
-let emailGroup = document.getElementById("resetEmailGroup");
-let verifiedBadge = document.getElementById("resetAccountVerifiedBadge");
-let submitText = document.getElementById("resetSubmitBtnText");
 
 // فتح المودال
 document.getElementById("forgotPasswordLink").onclick = (e) => {
@@ -146,6 +152,10 @@ document.getElementById("forgotPasswordForm").onsubmit = (e) => {
     let passMap = JSON.parse(localStorage.getItem("user_passwords")) || {};
     passMap[found.email.toLowerCase()] = p1;
     localStorage.setItem("user_passwords", JSON.stringify(passMap));
+    found.password = p1;
+    found.passwordReset = true;
+    let emps = JSON.parse(localStorage.getItem("Employees")) || [];
+    localStorage.setItem("Employees", JSON.stringify(emps.map(e => e.id === found.id ? found : e)));
     emailInput.value = found.email;
     passInput.value = p1;
     emailInput.dispatchEvent(new Event("input"));
