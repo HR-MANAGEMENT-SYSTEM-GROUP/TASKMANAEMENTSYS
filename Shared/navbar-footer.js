@@ -168,57 +168,28 @@
     const root = document.documentElement;
     const btn = document.getElementById('themeToggle');
     const lab = document.getElementById('themeLabel');
-
-    function syncBody(dark) {
-      if (document.body) {
-        if (dark) {
-          document.body.classList.add('dark-mode');
-        } else {
-          document.body.classList.remove('dark-mode');
-        }
-      }
-    }
+    if (!btn) return;
 
     function paint() {
       const dark = root.getAttribute('data-theme') === 'dark';
-      syncBody(dark);
-      if (btn) btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
       if (lab) lab.textContent = dark ? 'Light' : 'Dark';
     }
 
-    const savedTheme = localStorage.getItem('theme') || localStorage.getItem('journey-theme');
-    if (savedTheme === 'dark') {
-      root.setAttribute('data-theme', 'dark');
-      syncBody(true);
-    } else {
-      root.removeAttribute('data-theme');
-      syncBody(false);
-    }
+    btn.addEventListener('click', function () {
+      const dark = root.getAttribute('data-theme') !== 'dark';
+      root.classList.add('theme-anim');
+      setTimeout(() => root.classList.remove('theme-anim'), 450);
 
-    if (btn) {
-      btn.addEventListener('click', function () {
-        const dark = root.getAttribute('data-theme') !== 'dark';
-        root.classList.add('theme-anim');
-        setTimeout(() => root.classList.remove('theme-anim'), 450);
-
-        if (dark) {
-          root.setAttribute('data-theme', 'dark');
-          syncBody(true);
-          try {
-            localStorage.setItem('journey-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-          } catch (e) {}
-        } else {
-          root.removeAttribute('data-theme');
-          syncBody(false);
-          try {
-            localStorage.setItem('journey-theme', 'light');
-            localStorage.setItem('theme', 'light');
-          } catch (e) {}
-        }
-        paint();
-      });
-    }
+      if (dark) {
+        root.setAttribute('data-theme', 'dark');
+        try { localStorage.setItem('journey-theme', 'dark'); } catch (e) {}
+      } else {
+        root.removeAttribute('data-theme');
+        try { localStorage.setItem('journey-theme', 'light'); } catch (e) {}
+      }
+      paint();
+    });
 
     paint();
   }

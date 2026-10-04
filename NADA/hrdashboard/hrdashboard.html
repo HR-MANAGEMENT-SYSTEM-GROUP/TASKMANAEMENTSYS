@@ -93,14 +93,6 @@
         <button type="button" class="filter-chip" data-filter="feedback">Feedback (2)</button>
         <button type="button" class="filter-chip" data-filter="meetings">Meetings (2)</button>
     </div>
-
-    <!-- Primary Action Button -->
-    <a
-        href="../../OMAR/ManageEmployeesPage/ManageEmployeesPage.html"
-        class="btn-masar">
-        <i class="bi bi-plus-lg"></i>
-        <span>Add Employee</span>
-    </a>
 </div>
 
 <!-- ================= SUMMARY METRIC CARDS ================= -->
@@ -115,8 +107,8 @@
                 </div>
                 <span class="summary-pill">+4 this month</span>
             </div>
-            <div class="summary-value">15</div>
-            <div class="summary-label">Total Active Employees</div>
+            <div class="summary-value" >15</div>
+            <div class="summary-label" id="activeEmployees">Total Active Employees</div>
             <a
                 href="../../OMAR/ManageEmployeesPage/ManageEmployeesPage.html"
                 class="dashboard-view-btn"
@@ -137,7 +129,7 @@
                 <span class="summary-pill">Requires review</span>
             </div>
             <div class="summary-value">7</div>
-            <div class="summary-label">Pending Leave Requests</div>
+            <div class="summary-label" id="pendingLeavesLabel">Pending Leave Requests</div>
             <a
                 href="../../Amneh/HR/leaves-hr.html"
                 class="dashboard-view-btn"
@@ -158,12 +150,12 @@
                 <span class="summary-pill">12 due today</span>
             </div>
             <div class="summary-value">4</div>
-            <div class="summary-label">Open Department Tasks</div>
+            <div class="summary-label" id="openTasksLabel">Open Department Tasks</div>
             <a
                 href="../../TAREQ/HR%20TASK/HR_TASK.html"
                 class="dashboard-view-btn"
                 aria-label="View open tasks">
-                <span><i class="bi bi-kanban"></i> View tasks</span>
+                <span><i class="bi bi-kanban" id="openTasksIcon"></i> View tasks</span>
                 <i class="bi bi-arrow-right arrow-ico"></i>
             </a>
         </div>
@@ -179,7 +171,7 @@
                 <span class="summary-pill">2 urgent</span>
             </div>
             <div class="summary-value">2</div>
-            <div class="summary-label">Employee Feedbacks Received</div>
+            <div class="summary-label" id="employeeFeedbackLabel">Employee Feedbacks Received</div>
             <a
                 href="../../YAQEEN/feedBackHr/feedBackHr.html"
                 class="dashboard-view-btn"

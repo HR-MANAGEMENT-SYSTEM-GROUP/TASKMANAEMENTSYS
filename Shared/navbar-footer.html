@@ -11,7 +11,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
   <!-- فحص الثيم فورياً لمنع الوميض -->
-  <script>try{const t=localStorage.getItem("journey-theme")||localStorage.getItem("theme");if(t==="dark"){document.documentElement.setAttribute("data-theme","dark");}else{document.documentElement.removeAttribute("data-theme");}}catch(e){}</script>
+  <script>
+    try {
+      if (localStorage.getItem("journey-theme") === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    } catch(e) {}
+  </script>
 
   <!-- ملف الستايل الخاص بالنافبار والفوتر -->
   <link rel="stylesheet" href="navbar-footer.css">
@@ -29,8 +35,8 @@
 
   <nav class="journey-nav-menu" aria-label="Main">
   <a href="../../NADA/home/home.html" class="nav-menu-link">Home</a>
-  <a href="../../NADA/home/team.html" class="nav-menu-link">About us</a>
   <a href="../../NADA/home/home.html" class="nav-menu-link">Services</a>
+  <a href="../../NADA/home/team.html" class="nav-menu-link">About us</a>
   <a href="#footer" class="nav-menu-link">Contact us</a>
 </nav>
 

@@ -26,6 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentFilter = 'all';
   let currentSearchQuery = '';
 
+      document.getElementById("activeEmployees").textContent = Employees.filter(employee => employee.status === "Active").length;
+
+
   // 3. دالة الفلترة والبحث الرئيسية: تتحكم في ظهور الكروت، الأقسام، والجداول
   function applyFilters() {
 
