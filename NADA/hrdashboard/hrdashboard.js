@@ -117,3 +117,37 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 });
+
+
+//--------------------------------------
+
+
+let  activeEmployeesCount =document.getElementById("activeEmployees");
+let  pendingLeavesCount =document.getElementById("pendingLeaves");
+let  openTasksCount =document.getElementById("openTasks");
+let  employeeFeedbackCount =document.getElementById("employeeFeedback");
+
+
+//-------------------جبت البيانات من localStorage-------------------
+
+let Employees=JSON.parse(localStorage.getItem("Employees")) || [];
+let Leaves=JSON.parse(localStorage.getItem("all_leave_requests")) || [];
+let Tasks=JSON.parse(localStorage.getItem("tasks")) || [];
+let Feedbacks=JSON.parse(localStorage.getItem("feedbacks")) || [];
+let Meetings=JSON.parse(localStorage.getItem("Meetings")) || [];
+
+activeEmployeesCount.textContent=Employees.filter(employee => employee.status === "Active").length;
+pendingLeavesCount.textContent=Leaves.filter(leave => leave.status === "Pending").length;
+openTasksCount.textContent=Tasks.filter(task => task.status === "New").length;
+employeeFeedbackCount.textContent=Feedbacks.length;
+
+//-------------------------اللي فوق عند الsearch-------------------------
+let LeavesCount=document.getElementById("LeavesCount");
+let TasksCount=document.getElementById("TasksCount");
+let MeetingsCount=document.getElementById("MeetingsCount");
+let FeedbackCount=document.getElementById("FeedbackCount");
+
+LeavesCount.textContent=Leaves.length;
+TasksCount.textContent=Tasks.length;
+MeetingsCount.textContent=Meetings.length;  
+FeedbackCount.textContent=Feedbacks.length;
