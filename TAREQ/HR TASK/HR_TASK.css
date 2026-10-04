@@ -529,7 +529,56 @@ body {
     color: var(--primary);
     font-size: 16px;
 }
+.attachments-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
 
+.hidden-file-input {
+    display: none;
+}
+
+.upload-pill-btn {
+    width: fit-content;
+ margin-top: 24px;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-height: 44px;
+    padding: 0 20px;
+
+    border: 1.5px solid #0079F1;
+    border-radius: 999px;
+
+    background: #FFFFFF;
+    color: #0079F1 !important;
+
+    font-size: 14px !important;
+    font-weight: 800 !important;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.upload-pill-btn:hover {
+    background: #E8F3FF;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(0, 121, 241, 0.18);
+}
+
+.upload-pill-btn i {
+    font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    .attachments-row {
+        grid-template-columns: 1fr;
+    }
+}
 
 /* =========================================
    ANIMATIONS

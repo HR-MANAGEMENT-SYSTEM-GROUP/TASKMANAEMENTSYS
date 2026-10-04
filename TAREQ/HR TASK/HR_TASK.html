@@ -280,141 +280,174 @@
 
 
 
-
 <!-- CREATE TASK MODAL -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
 
+    <div class="modal-dialog modal-lg modal-dialog-centered">
 
-<div class="modal fade" id="createModal">
+        <div class="modal-content create-task-modal">
 
+            <div class="modal-header create-task-header">
+                <div>
+                    <span class="modal-eyebrow">HR Task Cycle</span>
+                    <h4 class="modal-title">Create Task</h4>
+                    <p class="modal-subtitle">
+                        Fill in the task information and assign it to one or more employees.
+                    </p>
+                </div>
 
-    <div class="modal-dialog modal-lg">
-
-
-        <div class="modal-content">
-
-
-            <div class="modal-header">
-
-                <h4>
-                    Create Task
-                </h4>
-
+                <button 
+                    type="button" 
+                    class="btn-close" 
+                    data-bs-dismiss="modal" 
+                    aria-label="Close">
+                </button>
             </div>
 
+            <div class="modal-body create-task-body">
 
+                <!-- Task Title -->
+                <div class="form-group">
+                    <label for="taskTitleInput">
+                        Task Title <span class="required">*</span>
+                    </label>
 
-            <div class="modal-body">
+                    <input
+                        type="text"
+                        id="taskTitleInput"
+                        class="form-control"
+                        placeholder="Enter task title">
+                </div>
 
+                <!-- Task Description -->
+                <div class="form-group">
+                    <label for="taskDescriptionInput">
+                        Task Description <span class="required">*</span>
+                    </label>
 
-                <input
-                    id="taskTitleInput"
-                    class="form-control mb-2"
-                    placeholder="Title">
+                    <textarea
+                        id="taskDescriptionInput"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Enter task description"></textarea>
+                </div>
 
+                <!-- Priority -->
+                <div class="form-group">
+                    <label for="taskPriorityInput">
+                        Priority <span class="required">*</span>
+                    </label>
 
+                    <select
+                        id="taskPriorityInput"
+                        class="form-control">
 
-                <textarea
-                    id="taskDescriptionInput"
-                    class="form-control mb-2"
-                    placeholder="Description">
-                </textarea>
+                        <option value="">Select priority</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
 
+                    </select>
+                </div>
 
+                <!-- Deadline -->
+                <div class="form-row">
 
-                <select
-                    id="taskPriorityInput"
-                    class="form-control mb-2">
+                    <div class="form-group">
+                        <label for="deadlineDate">
+                            Deadline Date <span class="required">*</span>
+                        </label>
 
+                        <input
+                            type="date"
+                            id="deadlineDate"
+                            class="form-control">
+                    </div>
 
-                    <option>
-                        High
-                    </option>
+                    <div class="form-group">
+                        <label for="deadlineTime">
+                            Deadline Time <span class="required">*</span>
+                        </label>
 
-
-                    <option>
-                        Medium
-                    </option>
-
-
-                    <option>
-                        Low
-                    </option>
-
-
-                </select>
-
-
-
-
-                <input
-                    type="date"
-                    id="deadlineDate"
-                    class="form-control mb-2">
-
-
-
-                <input
-                    type="time"
-                    id="deadlineTime"
-                    class="form-control mb-2">
-
-
-
-
-
-                <label>
-                    Assign Employees
-                </label>
-
-
-                <div id="employeeList">
+                        <input
+                            type="time"
+                            id="deadlineTime"
+                            class="form-control">
+                    </div>
 
                 </div>
 
+                <!-- Assign Employees -->
+                <div class="form-group">
+                    <label>
+                        Assign Employees <span class="required">*</span>
+                    </label>
 
+                    <div id="employeeList" class="employee-list-box">
+                        <!-- Employee checkboxes will be loaded here by JavaScript -->
+                    </div>
+                </div>
+<!-- Attachments -->
+<div class="form-row attachments-row">
 
+    <div class="form-group">
+        <label>
+            Upload Task File
+        </label>
 
+        <label for="taskFile" class="upload-pill-btn">
+            <i class="bi bi-upload"></i>
+            Upload File
+        </label>
 
-                <input
-                    type="file"
-                    id="taskFile"
-                    class="form-control mt-2">
+        <input
+            type="file"
+            id="taskFile"
+            class="hidden-file-input">
+    </div>
 
+    <div class="form-group">
+        <label>
+            Upload Task Image
+        </label>
 
+        <label for="taskImage" class="upload-pill-btn">
+            <i class="bi bi-image"></i>
+            Upload Photo
+        </label>
 
+        <input
+            type="file"
+            id="taskImage"
+            class="hidden-file-input"
+            accept="image/*">
+    </div>
 
-
-                <input
-                    type="file"
-                    id="taskImage"
-                    class="form-control mt-2">
-
-
-
-
+</div>
+            <div class="modal-footer create-task-footer">
 
                 <button
-                    onclick="createTask()"
-                    class="btn btn-primary mt-3">
-
-                    Create
-
+                    type="button"
+                    class="btn btn-light cancel-create-btn"
+                    data-bs-dismiss="modal"
+                    onclick="resetCreateTaskForm()">
+                    Cancel
                 </button>
 
-
+                <button
+                    type="button"
+                    onclick="createTask()"
+                    class="btn btn-primary create-task-btn">
+                    Create Task
+                </button>
 
             </div>
 
-
         </div>
-
 
     </div>
 
-
 </div>
-
-
 
 
 

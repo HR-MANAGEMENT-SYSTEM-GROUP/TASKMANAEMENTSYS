@@ -263,7 +263,7 @@ function applyTimeoutStatus() { let changed = false;
 
     tasks.forEach(function (task) {  const status =  normalizeStatus(task.status);
 
-        if (  status === "Completed" || status === "Blocked" ||  status === "Submitted" || status === "Time Out" ) {   return; }
+        if (  status === "Completed"  ||  status === "Submitted" || status === "Time Out" ) {   return; }
 
         if (!task.deadline) {  return;  }
 
@@ -463,7 +463,7 @@ function getFilteredTasks() {
 
 function getStatusWeight(status) {
 
- const weights = {    "Submitted": 1,    "In Progress": 2,    "New": 3,  "Pending": 3,   "Not Complete": 4,    "Completed": 5,   "Time Out": 6,  "Blocked": 7 };
+ const weights = {    "Submitted": 1,    "In Progress": 2,    "New": 3,  "Pending": 3,   "Not Complete": 4,    "Completed": 5,   "Time Out": 6 };
 
  return weights[normalizeStatus(status)] || 99;
 
@@ -527,18 +527,14 @@ function displayTasks() {
 
 function buildTaskActions(task) {
 
-    const status = normalizeStatus(task.status);
-    let buttons = ` <button class="btn btn-primary btn-sm"    onclick="viewTask(${task.id})">    View </button> `;
+    return `
+        <button 
+            class="btn btn-primary btn-sm"  onclick="viewTask(${task.id})">  View  </button>
 
-    if (status === "Blocked") {
+        <button     class="btn btn-warning btn-sm"  onclick="openEdit(${task.id})">    Edit  </button>
 
-        buttons += `   <button   class="btn btn-success btn-sm"   onclick="unblockTask(${task.id})">🔓 Unblock  </button> `;return buttons; }
-
-    buttons += `
-     <button class="btn btn-warning btn-sm" onclick="openEdit(${task.id})"> Edit  </button>
-     <button   class="btn btn-danger btn-sm"   onclick="blockTask(${task.id})">   🚫 Block</button>`;
-
- return buttons;}
+        <button      class="btn btn-danger btn-sm"     onclick="deleteTask(${task.id})">     Delete  </button> `;
+}
 /* VIEW / REVIEW*/
 function viewTask(id) {
 
@@ -703,37 +699,52 @@ function saveEditTask() {
 
 
 /* =========================================================
-   BLOCK / UNBLOCK
+   Delete Task
 ========================================================= */
 
-function blockTask(id) {
 
-    const task =
-        getTaskById(id);
+function deleteTask(id) {
 
-    if (!task) {  return;}
-    if (!confirm("Are you sure you want to block this task?")) { return; }
-    task.previousStatus = task.status;
-    task.status = "Blocked";
-    task.notification = "Blocked by HR";
-    task.blockedAt = new Date().toISOString();
-    task.updatedAt = new Date().toISOString();
+    const task = getTaskById(id);
+
+    if (!task) {
+        alert("Task not found.");
+        return;
+    }
+
+    const confirmDelete = confirm(
+        "Are you sure you want to delete this task? This will remove it from HR and employee pages."
+    );
+
+    if (!confirmDelete) {
+        return;
+    }
+
+    tasks = tasks.filter(function (item) {
+        return Number(item.id) !== Number(id);
+    });
+
     saveTasks();
     refreshPageData();
 
+    alert("Task deleted successfully.");
 }
-function unblockTask(id) {
+function resetCreateTaskForm() {
 
-    const task =getTaskById(id);
-    if (!task) { return;}
-    task.status = task.previousStatus || "New";
-    task.notification = "Task unblocked by HR";
-    task.updatedAt = new Date().toISOString();
-    saveTasks();
-    refreshPageData();
+    document.getElementById("taskTitleInput").value = "";
+    document.getElementById("taskDescriptionInput").value = "";
+    document.getElementById("taskPriorityInput").value = "";
+    document.getElementById("deadlineDate").value = "";
+    document.getElementById("deadlineTime").value = "";
+    document.getElementById("taskFile").value = "";
+    document.getElementById("taskImage").value = "";
 
+    const employeeCheckboxes = document.querySelectorAll("#employeeList input[type='checkbox']");
+
+    employeeCheckboxes.forEach(function (checkbox) {
+        checkbox.checked = false;
+    });
 }
-
 
 /* DASHBOARD*/
 
@@ -770,8 +781,7 @@ window.approveTask = approveTask;
 window.requestChanges = requestChanges;
 window.openEdit = openEdit;
 window.saveEditTask = saveEditTask;
-window.blockTask = blockTask;
-window.unblockTask = unblockTask;
+window.deleteTask = deleteTask;
 window.toggleEmployeeDropdown = toggleEmployeeDropdown;
 window.toggleAllEmployees = toggleAllEmployees;
 window.updateEmployeeSelectSummary = updateEmployeeSelectSummary;
