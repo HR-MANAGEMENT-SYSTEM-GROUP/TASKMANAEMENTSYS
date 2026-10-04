@@ -1,9 +1,7 @@
 // HR_TASK.js
 // MASAR HR Task Management (simple version)
 
-/* =========================================================
-   1) VARIABLES
-========================================================= */
+/* 1) VARIABLES */
 let tasks = [];
 let employees = [];
 let selectedTaskId = null;
@@ -15,11 +13,9 @@ const USERS_JSON_PATH = "../../jsonFiles/Users.json";
 const LOGIN_PAGE = "/GAITH/login.html";
 
 
-/* =========================================================
-   2) FUNCTIONS
-========================================================= */
+/*   2) FUNCTIONS */
 
-/* ---------- Current HR user ---------- */
+/*  Current HR user  */
 
 // Get the logged in user from localStorage
 function getCurrentUser() {
@@ -75,7 +71,7 @@ function setupDarkMode() {
 }
 
 
-/* ---------- Local Storage ---------- */
+/*  Local Storage  */
 
 // Read tasks from localStorage
 function getTasksFromStorage() {
@@ -149,7 +145,7 @@ function setupStorageSync() {
 }
 
 
-/* ---------- Small helpers ---------- */
+/*  Small helpers  */
 
 function getNow() {
     return new Date().toISOString();
@@ -303,7 +299,7 @@ function hideModal(modalId) {
 }
 
 
-/* ---------- Employees from JSON ---------- */
+/*  Employees from JSON  */
 
 function loadEmployees() {
     fetch(USERS_JSON_PATH)
@@ -349,7 +345,7 @@ function getEmployeeNameById(employeeId) {
 }
 
 
-/* ---------- Employees multi select (checkboxes) ---------- */
+/*  Employees multi select (checkboxes)  */
 
 // Text shown on the dropdown button
 function getSelectedSummary(selectedIds) {
@@ -486,7 +482,7 @@ function getSelectedEmployees(containerId) {
 }
 
 
-/* ---------- Popups ---------- */
+/*  Popups  */
 
 // Small message at the screen (success / error / info)
 function showPopup(message, type = "success") {
@@ -566,7 +562,7 @@ function showConfirmPopup(options) {
 }
 
 
-/* ---------- Validation ---------- */
+/*  Validation  */
 
 // Remove all red error messages
 function clearFieldErrors() {
@@ -660,7 +656,7 @@ function validateEditTaskForm() {
 }
 
 
-/* ---------- Create task ---------- */
+/*  Create task  */
 
 async function createTask() {
     if (!validateCreateTaskForm()) {
@@ -774,7 +770,7 @@ function resetCreateTaskForm() {
 }
 
 
-/* ---------- Filters ---------- */
+/*  Filters  */
 
 // Fill the two filters (employees and task titles)
 function loadFilters() {
@@ -861,7 +857,7 @@ function getFilteredTasks() {
 }
 
 
-/* ---------- Sort ---------- */
+/*  Sort  */
 
 // Smaller number = shown first
 function getStatusWeight(status) {
@@ -914,7 +910,7 @@ function sortHRTasks(a, b) {
 }
 
 
-/* ---------- Display tasks ---------- */
+/*  Display tasks  */
 
 function displayTasks() {
     const table = document.getElementById("tasksTable");
@@ -959,7 +955,7 @@ function buildTaskActions(task) {
 }
 
 
-/* ---------- View / Review ---------- */
+/*  View / Review  */
 
 function viewTask(id) {
     selectedTaskId = Number(id);
@@ -1055,7 +1051,7 @@ function requestChanges() {
 }
 
 
-/* ---------- Edit task (one employee only) ---------- */
+/*  Edit task (one employee only)  */
 
 function openEdit(id) {
     selectedTaskId = Number(id);
@@ -1162,7 +1158,7 @@ async function saveEditTask() {
 }
 
 
-/* ---------- Delete task ---------- */
+/*  Delete task  */
 
 async function deleteTask(id) {
     const task = getTaskById(id);
@@ -1196,7 +1192,7 @@ async function deleteTask(id) {
 }
 
 
-/* ---------- Dashboard ---------- */
+/*  Dashboard  */
 
 function updateDashboard() {
     const hrTasks = getHRTasks();
@@ -1223,9 +1219,7 @@ function updateDashboard() {
 }
 
 
-/* =========================================================
-   3) EVENTS
-========================================================= */
+/*  3) EVENTS */
 
 // Filters: refresh the table when the user changes them
 function setupFiltersEvents() {
@@ -1266,9 +1260,7 @@ window.toggleAllEmployees = toggleAllEmployees;
 window.updateEmployeeSelectSummary = updateEmployeeSelectSummary;
 
 
-/* =========================================================
-   4) FIRST RUN
-========================================================= */
+/*   4) FIRST RUN */
 document.addEventListener("DOMContentLoaded", function () {
     currentHR = getCurrentUser();
 

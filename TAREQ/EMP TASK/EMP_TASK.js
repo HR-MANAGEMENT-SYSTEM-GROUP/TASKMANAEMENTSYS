@@ -722,9 +722,9 @@ function animateCounter(element, startValue, endValue) {
         element.textContent = Math.floor(startValue + (endValue - startValue) * progress);
 
         if (progress < 1) {     requestAnimationFrame(update);} 
-        else {     element.textContent = endValue;      element.dataset.value = endValue;    }  }
-
-    requestAnimationFrame(update);}
+        else {     element.textContent = endValue;      element.dataset.value = endValue;    } }
+    requestAnimationFrame(update);
+}
 
 
 /* ---------- Navbar + footer + dark mode ---------- */
