@@ -12,10 +12,7 @@ let meetingFields = { title: "meetingTitle", date: "meetingDate", time: "meeting
 // بس بجيب ال employees 
 function loadEmployees() {
     fetch("../../jsonFiles/Users.json")
-        .then(response => {
-            if (!response.ok) throw new Error("Users.json could not be loaded");
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             Employees = data.filter(user => user.role === "employee");
             startPage();
@@ -36,7 +33,7 @@ function saveMeetings() {
 function displayParticipantOptions() {
     let employeesBox = document.getElementById("employeesCheckboxes");
     let departmentsBox = document.getElementById("departmentsCheckboxes");
-    let departments = [];
+    let departments = ["IT", "Marketing", "Finance", "Operations", "Sales"];
 
     employeesBox.innerHTML = "";
     departmentsBox.innerHTML = "";
@@ -48,10 +45,6 @@ function displayParticipantOptions() {
                     value="${employee.id}" onchange="updateSelection()">
                 <span>${employee.name}</span>
             </label>`;
-
-        if (employee.department && !departments.includes(employee.department)) {
-            departments.push(employee.department);
-        }
     });
 
     departments.forEach(department => {
@@ -80,7 +73,7 @@ function selectDepartment(departmentBox) {
     document.querySelectorAll(".employee-option").forEach(box => {
         let employee = Employees.find(user => user.id == box.value);
 
-        if (employee && employee.department === departmentBox.value) {
+        if (employee.department === departmentBox.value) {
             box.checked = departmentBox.checked;
         }
     });
@@ -107,29 +100,16 @@ function updateSelection() {
 }
 // بجيب كل الموظفين الي اخترتهم بالليست 
 function getSelectedEmployees() {
-    let selected = [];
-
-    document.querySelectorAll(".employee-option:checked").forEach(box => {
-        selected.push(Number(box.value));
-    });
-
-    return selected;
+    return Array.from(document.querySelectorAll(".employee-option:checked"), box => Number(box.value));
 }
 //هون عشان اعرض الموظفين بال Participants
 function updateParticipantsText() {
     let selected = getSelectedEmployees();
     let text = document.getElementById("participantsText");
 
-    if (selected.length === 0) {
-        text.textContent = "Select participants";
-    } else if (selected.length === Employees.length) {
-        text.textContent = "All Employees";
-    } else if (selected.length === 1) {
-        let employee = Employees.find(user => user.id === selected[0]);
-        text.textContent = employee ? employee.name : "1 participant";
-    } else {
-        text.textContent = selected.length + " participants selected";
-    }
+    text.textContent = selected.length
+        ? selected.length + " participants selected"
+        : "Select participants";
 }
 // عشان لما يعمل uncheck
 function clearParticipants() {
@@ -177,13 +157,10 @@ function saveMeeting(event) {
         meeting = { id: id, createdBy: "HR", status: "Scheduled", responses: [], roomName: "HRMeeting_" + id };
         Meetings.push(meeting);
     }
-    if (meeting) {
-        for (let field in meetingFields) {
-            let value = document.getElementById(meetingFields[field]).value;
-            meeting[field] = field === "title" || field === "notes" ? value.trim() : value;
-        }
-        meeting.participants = participants;
+    for (let field in meetingFields) {
+        meeting[field] = document.getElementById(meetingFields[field]).value.trim();
     }
+    meeting.participants = participants;
 
     saveMeetings();
     hideMeetingForm();
@@ -200,7 +177,7 @@ function editMeeting(id) {
 
     editingMeetingId = id;
     for (let field in meetingFields) {
-        document.getElementById(meetingFields[field]).value = field === "notes" ? meeting.notes || "" : meeting[field];
+        document.getElementById(meetingFields[field]).value = meeting[field] || "";
     }
 
     clearParticipants();
@@ -230,42 +207,23 @@ function displayMeetings() {
         (meeting.createdBy === "Employee" && meeting.status === "Accepted")
     );
 
-    if (scheduled.length === 0) {
-        container.innerHTML = `<p class="empty-message">No scheduled meetings.</p>`;
-        return;
-    }
-
-    container.innerHTML = "";
+    container.innerHTML = scheduled.length ? "" : `<p class="empty-message">No scheduled meetings.</p>`;
 
     scheduled.forEach(meeting => {
         let employeeRequest = meeting.createdBy === "Employee";
         let status = employeeRequest ? "Accepted" : "Upcoming";
-        let statusClass = employeeRequest ? "status-accepted" : "status-upcoming";
-        let count = meeting.participants ? meeting.participants.length : 0;
+        let count = meeting.participants.length;
 
-        container.innerHTML += `
-            <div class="meeting-card">
-                <div class="meeting-card-header">
-                    <h3>${meeting.title}</h3>
-                    <span class="status ${statusClass}">${status}</span>
-                </div>
-
-                <div class="meeting-details">
-                    <p class="meeting-info"><strong>Date</strong><span>${formatDate(meeting.date)}</span></p>
-                    <p class="meeting-info"><strong>Time</strong><span>${formatTime(meeting.time)}</span></p>
-                    <p class="meeting-info"><strong>Participants</strong><span>${count}</span></p>
-                    ${meeting.notes ? `<div class="notes-preview">${meeting.notes}</div>` : ""}
-                </div>
-
-                <div class="card-actions">
-                    <button class="join-button" onclick="joinMeeting(${meeting.id})">Join Meeting</button>
-                    <button class="view-button" onclick="viewMeeting(${meeting.id})">View</button>
-                    ${employeeRequest ? "" : `
-                        <button class="edit-button" onclick="editMeeting(${meeting.id})">Edit</button>
-                        <button class="delete-button" onclick="deleteMeeting(${meeting.id})">Delete</button>
-                    `}
-                </div>
-            </div>`;
+        let details = `
+            <p class="meeting-info"><strong>Participants</strong><span>${count}</span></p>
+            ${meeting.notes ? `<div class="notes-preview">${meeting.notes}</div>` : ""}`;
+        let actions = `
+            <button class="join-button" onclick="joinMeeting(${meeting.id})">Join Meeting</button>
+            <button class="view-button" onclick="viewMeeting(${meeting.id})">View</button>
+            ${employeeRequest ? "" : `
+                <button class="edit-button" onclick="editMeeting(${meeting.id})">Edit</button>
+                <button class="delete-button" onclick="deleteMeeting(${meeting.id})">Delete</button>`}`;
+        container.innerHTML += meetingCard(meeting, status, details, actions);
     });
 }
 // لما اكبس على join meeting بفتح ال zoom meeting
@@ -299,7 +257,7 @@ function displayViewParticipants(meeting) {
     let container = document.getElementById("viewMeetingParticipants");
     container.innerHTML = "";
 
-    (meeting.participants || []).forEach(id => {
+    meeting.participants.forEach(id => {
         let person = Employees.find(user => user.id === id);
         if (!person) return;
 
@@ -322,14 +280,12 @@ function displayViewResponses(meeting) {
         return;
     }
 
-    (meeting.participants || []).forEach(id => {
-        let employee = Employees.find(user => user.id === id && user.role === "employee");
+    meeting.participants.forEach(id => {
+        let employee = Employees.find(user => user.id === id);
         if (!employee) return;
 
-        let response = (meeting.responses || []).find(item => item.employeeId === id);
-        let status = response ? response.status : "Pending";
-
-        container.innerHTML += responseCard(employee.name, status, response ? response.message : "");
+        let response = (meeting.responses || []).find(item => item.employeeId === id) || { status: "Pending", message: "" };
+        container.innerHTML += responseCard(employee.name, response.status, response.message);
     });
 }
 
@@ -356,34 +312,31 @@ function displayMeetingRequests() {
         meeting.createdBy === "Employee" && meeting.status === "Pending"
     );
 
-    if (requests.length === 0) {
-        container.innerHTML = `<p class="empty-message">No pending meeting requests.</p>`;
-        return;
-    }
-
-    container.innerHTML = "";
+    container.innerHTML = requests.length ? "" : `<p class="empty-message">No pending meeting requests.</p>`;
 
     requests.forEach(request => {
         let employee = Employees.find(user => user.id === request.requestedBy);
 
-        container.innerHTML += `
-            <div class="meeting-card">
-                <div class="meeting-card-header">
-                    <h3>${request.title}</h3>
-                    <span class="status status-pending">Pending</span>
-                </div>
-
-                <div class="meeting-details">
-                    <p class="meeting-info"><strong>Employee</strong><span>${employee ? employee.name : "Employee"}</span></p>
-                    <p class="meeting-info"><strong>Date</strong><span>${formatDate(request.date)}</span></p>
-                    <p class="meeting-info"><strong>Time</strong><span>${formatTime(request.time)}</span></p>
-                </div>
-
-                <div class="card-actions">
-                    <button class="view-button" onclick="viewRequest(${request.id})">Review Request</button>
-                </div>
-            </div>`;
+        let details = `<p class="meeting-info"><strong>Employee</strong><span>${employee ? employee.name : "Employee"}</span></p>`;
+        let actions = `<button class="view-button" onclick="viewRequest(${request.id})">Review Request</button>`;
+        container.innerHTML += meetingCard(request, "Pending", details, actions);
     });
+}
+
+function meetingCard(meeting, status, details, actions) {
+    return `
+        <div class="meeting-card">
+            <div class="meeting-card-header">
+                <h3>${meeting.title}</h3>
+                <span class="status status-${status.toLowerCase()}">${status}</span>
+            </div>
+            <div class="meeting-details">
+                <p class="meeting-info"><strong>Date</strong><span>${formatDate(meeting.date)}</span></p>
+                <p class="meeting-info"><strong>Time</strong><span>${formatTime(meeting.time)}</span></p>
+                ${details}
+            </div>
+            <div class="card-actions">${actions}</div>
+        </div>`;
 }
 // هون بعرض كل الريكوست وبحفظ ال id 
 function viewRequest(id) {
@@ -406,6 +359,7 @@ function viewRequest(id) {
 function respondToCurrentRequest(status) {
     let request = Meetings.find(item => item.id === currentRequestId);
     if (!request) return;
+    if (status === "Rejected" && !confirm("Are you sure you want to reject this meeting request?")) return;
 
     request.status = status;
     request.hrMessage = document.getElementById("requestResponseMessage").value.trim();
@@ -419,7 +373,7 @@ function respondToCurrentRequest(status) {
     displayMeetingRequests();
     displayMeetings();
 }
-//لما افتح ريكوست
+//لما اسكر ريكوست
 function closeRequestView() {
     document.getElementById("viewRequestModal").hidden = true;
     currentRequestId = null;
@@ -437,11 +391,7 @@ function formatDate(date) {
     let parts = date.split("-");
     let value = new Date(parts[0], parts[1] - 1, parts[2]);
 
-    return value.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric"
-    });
+    return value.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 //time
 function formatTime(time) {

@@ -100,8 +100,9 @@ function hideForm() {
 //لما بدي اعمل ادد او ابديت
 form.addEventListener("submit", event => {
     event.preventDefault();
+    const isNewEmployee = editingId === null;
     let employee = Employees.find(employee => employee.id === editingId);
-    if (editingId === null) {
+    if (isNewEmployee) {
         employee = { id: Date.now(), role: "employee", password: DEFAULT_EMPLOYEE_PASSWORD, profilePicture: "" };
         Employees.push(employee);
     }
@@ -111,6 +112,9 @@ form.addEventListener("submit", event => {
     }
     saveEmployees();
     hideForm();
+    if (isNewEmployee) {
+        alert("Employee added successfully.");
+    }
 });
 //بجيب معلومات الموظف وبجهزها للابديت
 function editEmployee(id) {
@@ -149,6 +153,7 @@ function closeEmployeeView() {
 function toggleBlock(id) {
     let employee = Employees.find(employee => employee.id === id);
     if (!employee) return;
+    if (employee.status !== "Blocked" && !confirm("Are you sure you want to block this employee?")) return;
     employee.status = employee.status === "Blocked" ? "Active" : "Blocked";
     saveEmployees();
 }
