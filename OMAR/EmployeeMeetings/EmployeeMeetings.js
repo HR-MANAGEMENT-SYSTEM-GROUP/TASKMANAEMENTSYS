@@ -172,7 +172,7 @@ function displayInvitations() {
         if (!isInvited(meeting)) return false;
 
         let response = getEmployeeResponse(meeting);
-        return !response || response.status !== "Accepted";
+        return !response || response.status === "Pending";
     });
 
     container.innerHTML = invitations.length ? "" : `<p class="empty-message">You have no pending meeting invitations.</p>`;
@@ -199,6 +199,7 @@ function respondToMeeting(id, status) {
     if (!ensureEmployeeSession()) return;
     let meeting = Meetings.find(item => item.id === id);
     if (!meeting) return;
+    if (status === "Rejected" && !confirm("Are you sure you want to reject this meeting?")) return;
 
     let message = document.getElementById("employeeMessage-" + id).value.trim();
     let response = getEmployeeResponse(meeting);
@@ -292,7 +293,7 @@ window.MASAR_BASE_PATH = "../../NADA/home/";
 function syncSharedTheme() {
     let dark = false;
     try {
-        dark = (localStorage.getItem("journey-theme") || localStorage.getItem("theme")) === "dark";
+        dark = localStorage.getItem("journey-theme") === "dark";
     } catch (_) {}
     let root = document.documentElement;
     if (dark) root.setAttribute("data-theme", "dark");

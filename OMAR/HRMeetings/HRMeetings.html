@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>try{const t=localStorage.getItem("journey-theme")||localStorage.getItem("theme");if(t==="dark"){document.documentElement.setAttribute("data-theme","dark");}else{document.documentElement.removeAttribute("data-theme");}}catch(e){}</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masar — HR Meetings</title>
@@ -20,30 +19,16 @@
 <main class="page">
 
     <!-- Header -->
-    <header class="page-header" id="dashboardHero">
-        <div class="header-inner">
-            <div class="header-content">
-                <span class="page-eyebrow">
-                    <span class="eyebrow-pulse"></span>
-                    HR Portal &middot; Masar Platform
-                </span>
-                <h1 class="page-title">
-                    HR <span class="accent">Meetings</span>
-                </h1>
-                <p class="page-subtitle">
-                    Schedule meetings, review requests, and track employee responses.
-                </p>
-            </div>
-            <div class="header-widgets">
-                <div class="header-meta-pill">
-                    <span class="meta-status-dot"></span>
-                    <span>Platform Live</span>
-                </div>
-                <button type="button" class="btn-masar add-button" onclick="showMeetingForm()">
-                    <i class="bi bi-plus-lg" aria-hidden="true"></i> Schedule Meeting
-                </button>
-            </div>
+    <header class="page-header">
+        <div class="hero-copy">
+            <span class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> HR Portal &middot; Masar Platform</span>
+            <h1>HR <span>Meetings</span></h1>
+            <p class="subtitle">Schedule meetings, review requests, and track employee responses.</p>
         </div>
+
+        <button type="button" class="add-button" onclick="showMeetingForm()">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i> Schedule Meeting
+        </button>
     </header>
 
     <!-- Meeting Requests -->
