@@ -15,31 +15,45 @@ const fileNameDisplay = document.getElementById('fileNameDisplay');
 const removeAttachmentBtn = document.getElementById('removeAttachmentBtn');
 const modal = document.getElementById('leaveModal');
 
-// متغيرات حفظ الملف المرفق
+
 let fileBase64 = null;
 let fileName = null;
 
-// قراءة بيانات المستخدم الحالي
+
 let currentUserObj = JSON.parse(localStorage.getItem('currentUser')) || {};
 let currentUserName = currentUserObj.name || '';
 
+const today = new Date().toISOString().split('T')[0];
+if (startDate) startDate.min = today;
+if (endDate) endDate.min = today;
+if (departureDate) departureDate.min = today;
 
+// ربط تاريخ النهاية بحيث لا يكون قبل تاريخ البداية
+if (startDate) {
+  startDate.addEventListener('change', function () {
+    if (endDate) {
+      endDate.min = startDate.value;
+      if (endDate.value && endDate.value < startDate.value) {
+        endDate.value = '';
+      }
+    }
+  });
+}
+
+//  جلب طلبات الموظف الحالي
 function getMyRequests() {
-  // جلب كل الطلبات المخزنة في النظام
   let allRequests = JSON.parse(localStorage.getItem('all_leave_requests')) || [];
   let myRequests = [];
 
-  // البحث عن الطلبات التي تخص هذا الموظف فقط
   for (let i = 0; i < allRequests.length; i++) {
     if (allRequests[i].userName === currentUserName) {
       myRequests.push(allRequests[i]);
     }
   }
-
   return myRequests;
 }
 
-// 3. تحديث أرقام الكروت (Stats)
+// تحديث أرقام الكروت (Stats)
 function updateEmployeeStats() {
   let requests = getMyRequests();
 
@@ -49,24 +63,18 @@ function updateEmployeeStats() {
   let rejected = 0;
 
   for (let i = 0; i < requests.length; i++) {
-    if (requests[i].status === 'Pending') {
-      pending++;
-    } else if (requests[i].status === 'Approved') {
-      approved++;
-    } else if (requests[i].status === 'Rejected') {
-      rejected++;
-    }
+    if (requests[i].status === 'Pending') pending++;
+    else if (requests[i].status === 'Approved') approved++;
+    else if (requests[i].status === 'Rejected') rejected++;
   }
 
-  // عرض الأرقام مباشرة في الكروت
   if (document.getElementById('statTotal')) document.getElementById('statTotal').textContent = total;
   if (document.getElementById('statPending')) document.getElementById('statPending').textContent = pending;
   if (document.getElementById('statApproved')) document.getElementById('statApproved').textContent = approved;
   if (document.getElementById('statRejected')) document.getElementById('statRejected').textContent = rejected;
 }
 
-// 4. عرض الجدول بالطلبات (Display Table)
-
+//  عرض الجدول بالطلبات
 function displayRequests() {
   const requestsTable = document.getElementById('requestsTable');
   if (!requestsTable) return;
@@ -74,35 +82,29 @@ function displayRequests() {
   let requests = getMyRequests();
   requestsTable.innerHTML = '';
 
-  // إذا لم تكن هناك طلبات
   if (requests.length === 0) {
     requestsTable.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px;">No leave requests found.</td></tr>`;
     updateEmployeeStats();
     return;
   }
 
-  // إضافة كل طلب كسطر في الجدول
   for (let i = 0; i < requests.length; i++) {
     let req = requests[i];
 
-    // تحديد لون الشارة
     let badgeClass = 'badge-pending';
     if (req.status === 'Approved') badgeClass = 'badge-approved';
     if (req.status === 'Rejected') badgeClass = 'badge-rejected';
 
-    // رابط المرفق
     let attachmentHTML = '—';
     if (req.attachment) {
-      attachmentHTML = `<a href="javascript:void(0)" onclick="viewAttachment(${req.id})">${req.attachmentName || 'PDF File'}</a>`;
+      attachmentHTML = `<a href="javascript:void(0)" onclick="viewAttachment(${req.id})" >${req.attachmentName || 'PDF File'}</a>`;
     }
 
-    // سبب الرفض إن وجد
     let rejectionHTML = '';
     if (req.rejectionReason) {
       rejectionHTML = `<br><small style="color:red">Reason: ${req.rejectionReason}</small>`;
     }
 
-    // بناء السطر
     let row = `
       <tr>
         <td><strong>${req.type}</strong></td>
@@ -116,46 +118,51 @@ function displayRequests() {
     requestsTable.innerHTML += row;
   }
 
-  // تحديث الأرقام العلوية
   updateEmployeeStats();
-
-  // تطبيق الفلترة الحالية إذا كان هناك راديو محدد
   filterRequestsTable();
 }
 
-// 5. إظهار وإخفاء حقول النموذج عند التغيير
+//  التحكم بالحقول وتحديدالـ Required حسب نوع الإجازة
 if (leaveType) {
   leaveType.addEventListener('change', function () {
     let type = leaveType.value;
+    let isDeparture = (type === 'Departure');
+    let isLeave = (type === 'Annual' || type === 'sick');
 
-    if (type === 'Departure') {
+    // إظهار وإخفاء الحقول المناسبة
+    if (isDeparture) {
       departureTime.classList.remove('d-none');
       leaveDates.classList.add('d-none');
-    } else if (type === 'Annual' || type === 'sick') {
+    } else if (isLeave) {
       leaveDates.classList.remove('d-none');
       departureTime.classList.add('d-none');
     } else {
       leaveDates.classList.add('d-none');
       departureTime.classList.add('d-none');
     }
+
+    //
+    if (departureDate) departureDate.required = isDeparture;
+    if (startTime) startTime.required = isDeparture;
+    if (endTime) endTime.required = isDeparture;
+
+    if (startDate) startDate.required = isLeave;
+    if (endDate) endDate.required = isLeave;
   });
-}
+} 
 
-
-// 6. التعامل مع رفع ملف الـ PDF
+//  رفع ملف PDF
 if (attachmentInput) {
   attachmentInput.addEventListener('change', function (e) {
     let file = e.target.files[0];
-
     if (!file) return;
 
-    // التأكد أنه ملف PDF
     if (file.type !== 'application/pdf') {
       alert('Please upload a PDF file only.');
+      attachmentInput.value = '';
       return;
     }
 
-    // قراءة الملف
     let reader = new FileReader();
     reader.onload = function (event) {
       fileBase64 = event.target.result;
@@ -167,7 +174,6 @@ if (attachmentInput) {
   });
 }
 
-// حذف المرفق
 if (removeAttachmentBtn) {
   removeAttachmentBtn.addEventListener('click', function () {
     fileBase64 = null;
@@ -178,8 +184,7 @@ if (removeAttachmentBtn) {
   });
 }
 
-
-// 7. حفظ وتقديم الطلب (Submit Form)
+//  حفظ وتقديم الطلب مع التحقق من الشروط (Validations)
 if (leaveForm) {
   leaveForm.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -187,40 +192,57 @@ if (leaveForm) {
     let type = leaveType.value;
     let dateTimeText = '';
 
-    // تجميع الوقت والتاريخ
+    // التحقق من صحة الشروط قبل الحفظ
     if (type === 'Departure') {
+      if (!departureDate.value || !startTime.value || !endTime.value) {
+        alert('Please fill in all departure details.');
+        return;
+      }
+      if (startTime.value >= endTime.value) {
+        alert('Start time must be earlier than end time.');
+        return;
+      }
       dateTimeText = `${departureDate.value} (${startTime.value} - ${endTime.value})`;
-    } else {
+
+    } else if (type === 'Annual' || type === 'sick') {
+      if (!startDate.value || !endDate.value) {
+        alert('Please select both start and end dates.');
+        return;
+      }
+      if (startDate.value === endDate.value) {
+        alert('Start Date and End Date cannot be the same day.');
+        return;
+      }
       dateTimeText = `${startDate.value} to ${endDate.value}`;
+
+    } else {
+      alert('Please select a valid leave type.');
+      return;
     }
 
-    // إنشاء كائن الطلب الجديد
     let newRequest = {
       id: Date.now(),
       userName: currentUserName,
       type: type,
       dateTime: dateTimeText,
       reason: reason.value,
-      status: 'Pending',
+      status: 'Pending', 
       attachment: fileBase64,
       attachmentName: fileName
     };
 
-    // حفظ الطلب في السجل العام
     let allRequests = JSON.parse(localStorage.getItem('all_leave_requests')) || [];
     allRequests.push(newRequest);
     localStorage.setItem('all_leave_requests', JSON.stringify(allRequests));
 
     alert('Request submitted successfully!');
 
-    // إعادة إغلاق المودال وتنظيف البيانات
     closeModal();
     displayRequests();
   });
 }
 
-
-// 8. فتح المرفق وقراءة الـ PDF
+// فتح المرفق وقراءة ה- PDF
 window.viewAttachment = function (reqId) {
   let requests = getMyRequests();
   let req = null;
@@ -238,14 +260,11 @@ window.viewAttachment = function (reqId) {
   }
 };
 
-
-// 9. تشغيل كبسات الراديو (تصفية الجدول)
-
+//  تشغيل كبسات الراديو (تصفية الجدول)
 const radioButtons = document.querySelectorAll('.filter-radio');
-
+ 
 radioButtons.forEach(radio => {
   radio.addEventListener('click', function () {
-    // إمكانية إلغاء التحديد عند الضغط مرتين
     if (this.previousChecked) {
       this.checked = false;
       this.previousChecked = false;
@@ -253,7 +272,6 @@ radioButtons.forEach(radio => {
       radioButtons.forEach(r => r.previousChecked = false);
       this.previousChecked = true;
     }
-
     filterRequestsTable();
   });
 });
@@ -262,7 +280,7 @@ function filterRequestsTable() {
   const selectedRadio = document.querySelector('.filter-radio:checked');
   const rows = document.querySelectorAll('#requestsTable tr');
 
-  if (!selectedRadio) {
+  if (!selectedRadio) {  
     rows.forEach(row => row.style.display = '');
     return;
   }
@@ -282,13 +300,13 @@ function filterRequestsTable() {
   });
 }
 
-
-// 10. فتح وإغلاق النافذة (Modal)
-
+// إغلاق وفتح المودال
 function closeModal() {
   if (modal) modal.classList.remove('active');
   if (leaveForm) leaveForm.reset();
   if (removeAttachmentBtn) removeAttachmentBtn.click();
+  if (leaveDates) leaveDates.classList.add('d-none');
+  if (departureTime) departureTime.classList.add('d-none');
 }
 
 const openModalBtn = document.getElementById('openModalBtn');
@@ -299,5 +317,4 @@ if (openModalBtn) openModalBtn.onclick = () => modal.classList.add('active');
 if (closeModalBtn) closeModalBtn.onclick = closeModal;
 if (cancelModalBtn) cancelModalBtn.onclick = closeModal;
 
-// تشغيل عرض البيانات فور فتح الصفحة
 displayRequests();
