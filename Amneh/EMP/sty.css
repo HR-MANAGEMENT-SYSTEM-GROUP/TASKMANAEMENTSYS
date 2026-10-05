@@ -367,7 +367,7 @@ a {
 }
 
 /* ==========================================================================
-   SECTION HEADER (Matching Omar's section styling)
+   SECTION HEADER (Matching section styling)
    ========================================================================== */
 .employee-leaves .section {
     scroll-margin-top: 25px;
@@ -494,7 +494,7 @@ a {
 }
 
 /* ==========================================================================
-   STATUS BADGES & ATTACHMENTS (Matching Omar's .status pills)
+   STATUS BADGES & ATTACHMENTS (Matching .status pills)
    ========================================================================== */
 .employee-leaves .badge {
     display: inline-flex;
@@ -563,7 +563,7 @@ a {
 }
 
 /* ==========================================================================
-   MODAL & FORM DIALOG (Matching Omar's requestFormContainer modal)
+   MODAL & FORM DIALOG (Matching  requestFormContainer modal)
    ========================================================================== */
 .employee-leaves .modal-overlay,
 .employee-leaves .modal {
@@ -873,7 +873,7 @@ a[href*="leaves-hr"] {
 }
 
 /* ==========================================================================
-   RESPONSIVE LAYOUT (Matching Omar's breakpoints)
+   RESPONSIVE LAYOUT (Matching breakpoints)
    ========================================================================== */
 .d-none {
     display: none !important;
