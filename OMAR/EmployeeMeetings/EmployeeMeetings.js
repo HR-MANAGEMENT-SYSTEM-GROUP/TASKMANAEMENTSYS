@@ -124,6 +124,7 @@ function sendReq(event) {
     saveData();
     displayReq();
     closeForm();
+    alert("Meeting request sent successfully.");
 }
 
 // عرض دعوات الموظف واجتماعاته المقبولة.
