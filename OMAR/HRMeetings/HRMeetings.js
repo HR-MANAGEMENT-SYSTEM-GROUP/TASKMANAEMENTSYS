@@ -146,8 +146,9 @@ function saveMeet(event) {
         alert("Please select at least one employee.");
         return;
     }
+    let isNew = editId === null;
     let meet = getMeet(editId);
-    if (editId === null) {
+    if (isNew) {
         let id = Date.now();
         meet = { id: id, createdBy: "HR", status: "Scheduled", responses: [], roomName: "HRMeeting_" + id };
         Meetings.push(meet);
@@ -160,6 +161,7 @@ function saveMeet(event) {
     meet.participants = ids;
     saveData();
     closeForm();
+    if (isNew) alert("Meeting scheduled successfully.");
 }
 function deleteMeet(id) {
     if (!confirm("Are you sure you want to delete this meeting?")) return;
